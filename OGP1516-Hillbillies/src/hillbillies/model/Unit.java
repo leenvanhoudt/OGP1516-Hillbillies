@@ -11,7 +11,7 @@ import ogp.framework.util.Util;
  * 
  * @author Laura Vranken & Leen Van Houdt,
  * 			 2e bach Ingenieurswetenschappen: Objectgericht Programmeren
- * 
+ * 			 link code repository: https://github.com/leenvanhoudt/OGP1516-Hillbillies
  * 
  * @invar The name of each unit must be a valid name for any unit. 
  * 		| isValidName(getName())
