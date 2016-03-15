@@ -11,8 +11,11 @@ import ogp.framework.util.Util;
 // hitpoints zelf niet nul maken OK
 // move to (adjacent) position via set (bij alles checken) OK
 // advance time opsplitsen OK
-// documentation postconditions en niet perse if's
 // advance time testen + attack + defend + .... testen op unit en niet facade
+
+//vragen:
+// documentation postconditions en niet perse if's
+// createUnit of Unit als constructor?
 
 
 /**
@@ -1400,7 +1403,7 @@ public class Unit {
 	 * 		If the unit has dodged, he will move to a random adjacent cube. Else if the unit has lost, it loses hitPoints.
 	 * 		| if (random.nextInt(100) <= (Pd * 100))
 	 * 		| 	then this.setPosition(dodgePosition)
-	 * 		| else
+	 * 		| else if (random.nextInt(100) > (Pb * 100))
 	 * 		| 	then this.setHitPoints(this.getCurrentHitPoints() - attacker.getStrength() / 10)
 	 */
 	public void defend(Unit attacker) throws IllegalArgumentException {
