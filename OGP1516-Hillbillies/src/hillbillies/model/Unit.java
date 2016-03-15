@@ -850,6 +850,13 @@ public class Unit {
 
 	}
 	
+	/**
+	 * Called when the unit is sprinting.
+	 * When the unit is sprinting and his staminaPoints are 0, the unit will stop sprinting.
+	 * When the unit is sprinting, the staminaPoints will reduce with 1 every 0.1 seconds.
+	 * @param dt
+	 * 		The time between each update of the unit.
+	 */
 	public void sprintingAdvanceTime(double dt) {
 		if (this.isSprinting() && this.getCurrentStaminaPoints() == 0) {
 			this.stopSprinting();
@@ -862,6 +869,12 @@ public class Unit {
 		}
 	}
 	
+	/**
+	 * Called when the unit is moving to an adjacent cube.
+	 * When the unit is moving, the speed, orientation and position will be updated.
+	 * @param dt
+	 * 		The time between each update of the unit.
+	 */
 	public void isMovingAdvanceTime(double dt) {
 		double[] v = this.getMovingSpeed(dt);
 		double[] fuzzyPositionUnder = new double[] { 0, 0, 0 };
@@ -892,6 +905,13 @@ public class Unit {
 		}
 	}
 	
+	/**
+	 * Called when the unit is moving a long distance.
+	 * When the unit is moving a long distance, he can be interrupted by working, 
+	 * 		attacking and resting.
+	 * @param dt
+	 * 		The time between each update of the unit.
+	 */
 	public void isMovingToAdvanceTime(double dt) {
 		if(this.isResting() || this.isAttacking() || this.isWorking() ){
 			this.setCurrentSpeed(0);
@@ -903,6 +923,15 @@ public class Unit {
 		}
 	}
 	
+	/**
+	 * Called when the unit is resting.
+	 * When the unit is resting, he will recover first hitPoints and secondly staminaPoints 
+	 * 		until he is recovered fully. He will recover at least one hitPoint, unless he is
+	 * 		interrupted by attacking. After longer recovery, he can be interrupted by all other
+	 * 		possible actions.
+	 * @param dt
+	 * 		The time between each update of the unit.
+	 */
 	public void isRestingAdvanceTime(double dt) {
 		if (this.getCurrentHitPoints() - this.hitPointsBeforeRest <= 1 && this.isAttacking()){
 			this.isResting = false;
@@ -938,6 +967,13 @@ public class Unit {
 		}
 	}
 	
+	/**
+	 * Called when the unit is working.
+	 * When the unit is working, he can be interrupted by attacking, resting, but not by moving.
+	 * 		Working lasts 500/strength seconds.
+	 * @param dt
+	 * 		The time between each update of the unit.
+	 */
 	public void isWorkingAdvanceTime(double dt) {
 		if (this.isAttacking() || this.isResting()){
 			this.isWorking = false;
@@ -955,6 +991,12 @@ public class Unit {
 		}
 	}
 	
+	/**
+	 * Called when the unit is attacking.
+	 * When the unit is attacking, he will attack for 1 second.
+	 * @param dt
+	 * 		The time between each update of the unit.
+	 */
 	public void isAttackingAdvanceTime(double dt){
 		this.attackingTime += dt;
 		if (this.attackingTime >= 1){
@@ -963,6 +1005,13 @@ public class Unit {
 		}
 	}
 	
+	/**
+	 * Called when the default behavior of the unit is enabled.
+	 * When the default behavior is enabled and the unit isn't doing anything, he will execute
+	 * 		a random behavior.
+	 * @param dt
+	 * 		The time between each update of the unit.
+	 */
 	public void defaultBehaviorEnabledAdvanceTime(double dt){
 		if (!this.isAttacking() && !this.isMoving() && !this.isWorking()
 				&& !this.isResting()){
