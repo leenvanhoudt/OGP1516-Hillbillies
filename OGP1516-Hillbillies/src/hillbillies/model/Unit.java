@@ -621,7 +621,7 @@ public class Unit {
 	 * 		| new.getHitPoints() == hitPoints
 	 */
 	@Raw
-	public void setHitPoints(int hitPoints) {
+	private void setHitPoints(int hitPoints) {
 		assert isValidHitPoints(hitPoints);
 		this.hitPoints = hitPoints;
 	}
@@ -1344,7 +1344,9 @@ public class Unit {
 			double Pb = 0.25
 					* ((this.getStrength() + this.getAgility()) / (attacker.getStrength() + attacker.getAgility()));
 			if (random.nextInt(100) > (Pb * 100)) {
-				this.setHitPoints(this.getCurrentHitPoints() - attacker.getStrength() / 10);
+				if (this.getCurrentHitPoints()>= attacker.getStrength()/10){
+					this.setHitPoints(this.getCurrentHitPoints() - attacker.getStrength() / 10);
+				}
 			}
 		}
 	}
