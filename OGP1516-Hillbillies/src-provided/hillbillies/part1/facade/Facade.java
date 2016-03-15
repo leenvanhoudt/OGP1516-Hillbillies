@@ -30,19 +30,32 @@ public class Facade implements IFacade{
 	@Override
 	public double[] getPosition(Unit unit) throws ModelException {
 		// TODO Auto-generated method stub
-		return unit.getPosition();
+		try{
+			return unit.getPosition();
+		} catch (IllegalArgumentException e){
+			throw new ModelException();
+		}
 	}
 
 	@Override
 	public int[] getCubeCoordinate(Unit unit) throws ModelException {
 		// TODO Auto-generated method stub
-		return unit.getCubeCoordinate();
+		try{
+			return unit.getCubeCoordinate();			
+		} catch (IllegalArgumentException e){
+			throw new ModelException();
+		}
 	}
 
 	@Override
 	public String getName(Unit unit) throws ModelException {
 		// TODO Auto-generated method stub
-		return unit.getName();
+		try{
+			return unit.getName();	
+		} catch (IllegalArgumentException e){
+			throw new ModelException();
+		}
+		
 	}
 
 	@Override
@@ -58,7 +71,12 @@ public class Facade implements IFacade{
 	@Override
 	public int getWeight(Unit unit) throws ModelException {
 		// TODO Auto-generated method stub
-		return unit.getWeight();
+		try{
+			return unit.getWeight();
+		} catch (IllegalArgumentException e){
+			throw new ModelException();
+		}
+		
 	}
 
 	@Override
@@ -74,7 +92,11 @@ public class Facade implements IFacade{
 	@Override
 	public int getStrength(Unit unit) throws ModelException {
 		// TODO Auto-generated method stub
-		return unit.getStrength();			
+		try{
+			return unit.getStrength();	
+		} catch (IllegalArgumentException e){
+			throw new ModelException();
+		}
 	}
 
 	@Override
@@ -90,7 +112,11 @@ public class Facade implements IFacade{
 	@Override
 	public int getAgility(Unit unit) throws ModelException {
 		// TODO Auto-generated method stub
-		return unit.getAgility();
+		try{
+			return unit.getAgility();	
+		} catch (IllegalArgumentException e){
+			throw new ModelException();
+		}
 	}
 
 	@Override
@@ -106,7 +132,11 @@ public class Facade implements IFacade{
 	@Override
 	public int getToughness(Unit unit) throws ModelException {
 		// TODO Auto-generated method stub
-		return unit.getToughness();			
+		try{
+			return unit.getToughness();	
+		} catch (IllegalArgumentException e){
+			throw new ModelException();
+		}
 	}
 
 	@Override
@@ -122,25 +152,41 @@ public class Facade implements IFacade{
 	@Override
 	public int getMaxHitPoints(Unit unit) throws ModelException {
 		// TODO Auto-generated method stub
-		return unit.getMaxHitPoints();			
+		try{
+			return unit.getMaxHitPoints();	
+		} catch (IllegalArgumentException e){
+			throw new ModelException();
+		}
 	}
 
 	@Override
 	public int getCurrentHitPoints(Unit unit) throws ModelException {
 		// TODO Auto-generated method stub
-		return unit.getCurrentHitPoints();	
+		try{
+			return unit.getCurrentHitPoints();	
+		} catch (IllegalArgumentException e){
+			throw new ModelException();
+		}
 	}
 
 	@Override
 	public int getMaxStaminaPoints(Unit unit) throws ModelException {
 		// TODO Auto-generated method stub
-		return unit.getMaxStaminaPoints();	
+		try{
+			return unit.getMaxStaminaPoints();	
+		} catch (IllegalArgumentException e){
+			throw new ModelException();
+		}
 	}
 
 	@Override
 	public int getCurrentStaminaPoints(Unit unit) throws ModelException {
 		// TODO Auto-generated method stub
-		return unit.getCurrentStaminaPoints();	
+		try{
+			return unit.getCurrentStaminaPoints();	
+		} catch (IllegalArgumentException e){
+			throw new ModelException();
+		}
 	}
 
 	@Override
@@ -166,7 +212,11 @@ public class Facade implements IFacade{
 	@Override
 	public double getCurrentSpeed(Unit unit) throws ModelException {
 		// TODO Auto-generated method stub
-		return unit.getCurrentSpeed();
+		try{
+			return unit.getCurrentSpeed();
+		} catch (IllegalArgumentException e){
+			throw new ModelException();
+		}
 	}
 
 	@Override
@@ -212,7 +262,11 @@ public class Facade implements IFacade{
 	@Override
 	public double getOrientation(Unit unit) throws ModelException {
 		// TODO Auto-generated method stub
-		return unit.getOrientation();	
+		try{
+			return unit.getOrientation();	
+		} catch (IllegalArgumentException e){
+			throw new ModelException();
+		}
 	}
 
 	@Override
