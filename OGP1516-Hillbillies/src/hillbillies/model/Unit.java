@@ -1405,8 +1405,6 @@ public class Unit {
 	 * 		| 	then this.setPosition(dodgePosition)
 	 * 		| else if (random.nextInt(100) > (Pb * 100))
 	 * 		| 	then this.setHitPoints(this.getCurrentHitPoints() - attacker.getStrength() / 10)
-	 * 		| else if (random.nextInt(100) <= (Pb * 100)) 
-	 * 		| 	then this.block
 	 */
 	public void defend(Unit attacker) throws IllegalArgumentException {
 		double Pd = 0.20 * this.getAgility() / attacker.getAgility();
