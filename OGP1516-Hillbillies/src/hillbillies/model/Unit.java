@@ -167,7 +167,7 @@ public class Unit {
 	 */
 	@Basic
 	@Raw
-	public String getName(){
+	public String getName() {
 		return this.name;
 	}
 
