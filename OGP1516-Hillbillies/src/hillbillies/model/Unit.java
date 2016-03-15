@@ -829,16 +829,16 @@ public class Unit {
 					double[] newPosition = new double[] { this.getPosition()[0] + v[0] * dt,
 							this.getPosition()[1] + v[1] * dt, this.getPosition()[2] + v[2] * dt };
 					this.setOrientation(Math.atan2(v[1], v[0]));
-					this.position = newPosition;
+					this.setPosition(newPosition);
 				}
 				else{
-					this.position = this.getNextPosition();
+					this.setPosition(this.getNextPosition());
 					if (!this.isMovingTo)
 						this.setCurrentSpeed(0);
 				}
 			}
 			
-			if(this.isMovingTo && this.position == this.getNextPosition()){
+			if(this.isMovingTo && this.getPosition() == this.getNextPosition()){
 				if(this.isResting() || this.isAttacking() || this.isWorking() ){
 					this.setCurrentSpeed(0);
 				}
@@ -863,7 +863,7 @@ public class Unit {
 				}
 				else if ((this.getCurrentHitPoints() == this.getMaxHitPoints())
 						&& (this.getCurrentStaminaPoints() == this.getMaxStaminaPoints())){
-					this.position = this.getNextPosition();
+					this.setPosition(this.getNextPosition());
 					this.isResting = false;
 				}
 				else if ((this.getCurrentHitPoints() != this.getMaxHitPoints())) {
@@ -889,7 +889,7 @@ public class Unit {
 				}
 				else if (this.isMoving()){
 					this.setCurrentSpeed(0);
-					this.position = this.getNextPosition(); 
+					this.setPosition(this.getNextPosition()); 
 				}
 				else{
 					this.workingTime += dt;
