@@ -6,10 +6,11 @@ import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Raw;
 import ogp.framework.util.Util;
 
-// private maken bij nominaal
-// hitpoints zelf niet nul maken
-// move to (adjacent) position via set (bij alles checken)
-// advance time opsplitsen
+// feedback part 1:
+// private maken bij nominaal OK
+// hitpoints zelf niet nul maken OK
+// move to (adjacent) position via set (bij alles checken) OK
+// advance time opsplitsen OK
 // documentation postconditions en niet perse if's
 // advance time testen + attack + defend + .... testen op unit en niet facade
 
