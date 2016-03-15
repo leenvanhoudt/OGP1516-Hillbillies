@@ -811,121 +811,30 @@ public class Unit {
 	 */
 	public void advanceTime(double dt) throws IllegalArgumentException {
 		if (isValidDuration(dt)) {
-			if (this.isSprinting() && this.getCurrentStaminaPoints() == 0) {
-				this.stopSprinting();
-			} else if (this.isSprinting()) {
-				this.fractionOfSprintStaminaPoint += 1*(dt / 0.1);
-				if (this.fractionOfSprintStaminaPoint >= 1){
-					this.setStaminaPoints((this.getStaminaPoints()- 1));
-					this.fractionOfSprintStaminaPoint -= 1;
-				}
-			}
+			this.sprintingAdvanceTime(dt);
 
 			if (this.isMoving()) {
-				double[] v = this.getMovingSpeed(dt);
-				double[] fuzzyPositionUnder = new double[] { 0, 0, 0 };
-				double[] fuzzyPositionUpper = new double[] { 0, 0, 0 };
-				double[] distance = new double[] { 0, 0, 0 };
-				for (int i = 0; i < v.length; i++) {
-					distance[i] = Math.abs(v[i] * dt);
-					fuzzyPositionUnder[i] = this.getNextPosition()[i] - distance[i];
-					fuzzyPositionUpper[i] = this.getNextPosition()[i] + distance[i];
-				}
-				if (this.getPosition()[0] < fuzzyPositionUnder[0] || this.getPosition()[0] > fuzzyPositionUpper[0]
-						|| this.getPosition()[1] < fuzzyPositionUnder[1] || this.getPosition()[1] > fuzzyPositionUpper[1]
-						|| this.getPosition()[2] < fuzzyPositionUnder[2] || this.getPosition()[2] > fuzzyPositionUpper[2]) {
-					double[] newPosition = new double[] { this.getPosition()[0] + v[0] * dt,
-							this.getPosition()[1] + v[1] * dt, this.getPosition()[2] + v[2] * dt };
-					this.setOrientation(Math.atan2(v[1], v[0]));
-					if (isValidPosition(newPosition)){
-						this.setPosition(newPosition);
-					}
-					else{
-						this.setCurrentSpeed(0);
-					}
-				}
-				else{
-					this.setPosition(this.getNextPosition());
-					if (!this.isMovingTo)
-						this.setCurrentSpeed(0);
-				}
+				this.isMovingAdvanceTime(dt);
 			}
 			
 			if(this.isMovingTo && this.getPosition() == this.getNextPosition()){
-				if(this.isResting() || this.isAttacking() || this.isWorking() ){
-					this.setCurrentSpeed(0);
-				}
-				else{
-					if (!this.isSprinting())
-						this.setCurrentSpeed(this.walkingSpeed);
-					this.moveTo(this.cubeEndPosition);
-				}
+				this.isMovingToAdvanceTime(dt);
 			}
+			
 			if (this.isResting()) {
-				if (this.getCurrentHitPoints() - this.hitPointsBeforeRest <= 1 && this.isAttacking()){
-					this.isResting = false;
-					this.setHitPoints(this.hitPointsBeforeRest);
-					this.setStaminaPoints(this.staminaPointsBeforeRest);
-				}
-				else if (((this.getCurrentHitPoints() - this.hitPointsBeforeRest > 1)
-						|| this.getCurrentHitPoints() == this.getMaxHitPoints())
-						&& (this.isMoving() || this.isAttacking() || this.isWorking())) {
-					if (!this.restAfterWork)
-						this.isResting = false;
-					this.restAfterWork = false;
-				}
-				else if ((this.getCurrentHitPoints() == this.getMaxHitPoints())
-						&& (this.getCurrentStaminaPoints() == this.getMaxStaminaPoints())){
-					this.setPosition(this.getNextPosition());
-					this.isResting = false;
-				}
-				else if ((this.getCurrentHitPoints() != this.getMaxHitPoints())) {
-					this.fractionOfHitPoint += (this.getToughness() / 200.0)*(dt/0.2);
-					if (this.fractionOfHitPoint >= 1){
-						this.setHitPoints(this.getHitPoints()+1);
-						this.fractionOfHitPoint -= 1;
-					}
-				}
-				else if ((this.getCurrentHitPoints() == this.getMaxHitPoints()) 
-						&& (this.getCurrentStaminaPoints() != this.getMaxStaminaPoints())){
-					this.fractionOfStaminaPoint += (this.getToughness() / 100.0)*(dt/0.2);
-					if (this.fractionOfStaminaPoint >= 1){
-						this.setStaminaPoints(this.getStaminaPoints()+1);
-						this.fractionOfStaminaPoint -= 1;
-					}
-				}
+				this.isRestingAdvanceTime(dt);
 			}
 			
 			if(this.isWorking()){
-				if (this.isAttacking() || this.isResting()){
-					this.isWorking = false;
-				}
-				else if (this.isMoving()){
-					this.setCurrentSpeed(0);
-					this.setPosition(this.getNextPosition()); 
-				}
-				else{
-					this.workingTime += dt;
-					if (this.workingTime >= (500 / this.getStrength())){
-						this.isWorking = false;
-						this.workingTime = 0;
-					}
-				}
+				this.isWorkingAdvanceTime(dt);
 			}			
 			
 			if (this.isAttacking()){
-				this.attackingTime += dt;
-				if (this.attackingTime >= 1){
-					this.isAttacking = false;
-					this.attackingTime = 0;
-				}
+				this.isAttackingAdvanceTime(dt);
 			}
 			
 			if (this.isDefaultBehaviorEnabled()){
-				if (!this.isAttacking() && !this.isMoving() && !this.isWorking()
-						&& !this.isResting()){
-					this.defaultBehavior();
-				}
+				this.defaultBehaviorEnabledAdvanceTime(dt);
 			}
 			
 			
@@ -939,6 +848,126 @@ public class Unit {
 			throw new IllegalArgumentException();
 			}
 
+	}
+	
+	public void sprintingAdvanceTime(double dt) {
+		if (this.isSprinting() && this.getCurrentStaminaPoints() == 0) {
+			this.stopSprinting();
+		} else if (this.isSprinting()) {
+			this.fractionOfSprintStaminaPoint += 1*(dt / 0.1);
+			if (this.fractionOfSprintStaminaPoint >= 1){
+				this.setStaminaPoints((this.getStaminaPoints()- 1));
+				this.fractionOfSprintStaminaPoint -= 1;
+			}
+		}
+	}
+	
+	public void isMovingAdvanceTime(double dt) {
+		double[] v = this.getMovingSpeed(dt);
+		double[] fuzzyPositionUnder = new double[] { 0, 0, 0 };
+		double[] fuzzyPositionUpper = new double[] { 0, 0, 0 };
+		double[] distance = new double[] { 0, 0, 0 };
+		for (int i = 0; i < v.length; i++) {
+			distance[i] = Math.abs(v[i] * dt);
+			fuzzyPositionUnder[i] = this.getNextPosition()[i] - distance[i];
+			fuzzyPositionUpper[i] = this.getNextPosition()[i] + distance[i];
+		}
+		if (this.getPosition()[0] < fuzzyPositionUnder[0] || this.getPosition()[0] > fuzzyPositionUpper[0]
+				|| this.getPosition()[1] < fuzzyPositionUnder[1] || this.getPosition()[1] > fuzzyPositionUpper[1]
+				|| this.getPosition()[2] < fuzzyPositionUnder[2] || this.getPosition()[2] > fuzzyPositionUpper[2]) {
+			double[] newPosition = new double[] { this.getPosition()[0] + v[0] * dt,
+					this.getPosition()[1] + v[1] * dt, this.getPosition()[2] + v[2] * dt };
+			this.setOrientation(Math.atan2(v[1], v[0]));
+			if (isValidPosition(newPosition)){
+				this.setPosition(newPosition);
+			}
+			else{
+				this.setCurrentSpeed(0);
+			}
+		}
+		else{
+			this.setPosition(this.getNextPosition());
+			if (!this.isMovingTo)
+				this.setCurrentSpeed(0);
+		}
+	}
+	
+	public void isMovingToAdvanceTime(double dt) {
+		if(this.isResting() || this.isAttacking() || this.isWorking() ){
+			this.setCurrentSpeed(0);
+		}
+		else{
+			if (!this.isSprinting())
+				this.setCurrentSpeed(this.walkingSpeed);
+			this.moveTo(this.cubeEndPosition);
+		}
+	}
+	
+	public void isRestingAdvanceTime(double dt) {
+		if (this.getCurrentHitPoints() - this.hitPointsBeforeRest <= 1 && this.isAttacking()){
+			this.isResting = false;
+			this.setHitPoints(this.hitPointsBeforeRest);
+			this.setStaminaPoints(this.staminaPointsBeforeRest);
+		}
+		else if (((this.getCurrentHitPoints() - this.hitPointsBeforeRest > 1)
+				|| this.getCurrentHitPoints() == this.getMaxHitPoints())
+				&& (this.isMoving() || this.isAttacking() || this.isWorking())) {
+			if (!this.restAfterWork)
+				this.isResting = false;
+			this.restAfterWork = false;
+		}
+		else if ((this.getCurrentHitPoints() == this.getMaxHitPoints())
+				&& (this.getCurrentStaminaPoints() == this.getMaxStaminaPoints())){
+			this.setPosition(this.getNextPosition());
+			this.isResting = false;
+		}
+		else if ((this.getCurrentHitPoints() != this.getMaxHitPoints())) {
+			this.fractionOfHitPoint += (this.getToughness() / 200.0)*(dt/0.2);
+			if (this.fractionOfHitPoint >= 1){
+				this.setHitPoints(this.getHitPoints()+1);
+				this.fractionOfHitPoint -= 1;
+			}
+		}
+		else if ((this.getCurrentHitPoints() == this.getMaxHitPoints()) 
+				&& (this.getCurrentStaminaPoints() != this.getMaxStaminaPoints())){
+			this.fractionOfStaminaPoint += (this.getToughness() / 100.0)*(dt/0.2);
+			if (this.fractionOfStaminaPoint >= 1){
+				this.setStaminaPoints(this.getStaminaPoints()+1);
+				this.fractionOfStaminaPoint -= 1;
+			}
+		}
+	}
+	
+	public void isWorkingAdvanceTime(double dt) {
+		if (this.isAttacking() || this.isResting()){
+			this.isWorking = false;
+		}
+		else if (this.isMoving()){
+			this.setCurrentSpeed(0);
+			this.setPosition(this.getNextPosition()); 
+		}
+		else{
+			this.workingTime += dt;
+			if (this.workingTime >= (500 / this.getStrength())){
+				this.isWorking = false;
+				this.workingTime = 0;
+			}
+		}
+	}
+	
+	public void isAttackingAdvanceTime(double dt){
+		this.attackingTime += dt;
+		if (this.attackingTime >= 1){
+			this.isAttacking = false;
+			this.attackingTime = 0;
+		}
+	}
+	
+	public void defaultBehaviorEnabledAdvanceTime(double dt){
+		if (!this.isAttacking() && !this.isMoving() && !this.isWorking()
+				&& !this.isResting()){
+			this.defaultBehavior();
+		}
 	}
 
 	/**
