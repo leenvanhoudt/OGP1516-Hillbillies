@@ -6,6 +6,14 @@ import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Raw;
 import ogp.framework.util.Util;
 
+// private maken bij nominaal
+// hitpoints zelf niet nul maken
+// move to (adjacent) position via set (bij alles checken)
+// advance time opsplitsen
+// documentation postconditions en niet perse if's
+// advance time testen + attack + defend + .... testen op unit en niet facade
+
+
 /**
  * A class of Hillbillies and their basic movements, work, attack and rest motions.
  * 
@@ -692,7 +700,7 @@ public class Unit {
 	 *       | new.getStaminaPoints() == staminaPoints
 	 */
 	@Raw
-	public void setStaminaPoints(int staminaPoints) {
+	private void setStaminaPoints(int staminaPoints) {
 		assert isValidStaminaPoints(staminaPoints);
 		this.staminaPoints = staminaPoints;
 	}
@@ -829,10 +837,10 @@ public class Unit {
 					double[] newPosition = new double[] { this.getPosition()[0] + v[0] * dt,
 							this.getPosition()[1] + v[1] * dt, this.getPosition()[2] + v[2] * dt };
 					this.setOrientation(Math.atan2(v[1], v[0]));
-					this.position = newPosition;
+					this.setPosition(newPosition);
 				}
 				else{
-					this.position = this.getNextPosition();
+					this.setPosition(this.getNextPosition());
 					if (!this.isMovingTo)
 						this.setCurrentSpeed(0);
 				}
