@@ -812,32 +812,24 @@ public class Unit {
 	public void advanceTime(double dt) throws IllegalArgumentException {
 		if (isValidDuration(dt)) {
 			this.sprintingAdvanceTime(dt);
-
 			if (this.isMoving()) {
 				this.isMovingAdvanceTime(dt);
 			}
-			
 			if(this.isMovingTo && this.getPosition() == this.getNextPosition()){
 				this.isMovingToAdvanceTime(dt);
 			}
-			
 			if (this.isResting()) {
 				this.isRestingAdvanceTime(dt);
 			}
-			
 			if(this.isWorking()){
 				this.isWorkingAdvanceTime(dt);
 			}			
-			
 			if (this.isAttacking()){
 				this.isAttackingAdvanceTime(dt);
 			}
-			
 			if (this.isDefaultBehaviorEnabled()){
 				this.defaultBehaviorEnabledAdvanceTime(dt);
 			}
-			
-			
 			this.resting3MinutesTime += dt;
 			if (this.resting3MinutesTime >= 3*60) {
 				this.resting3MinutesTime = 0;
@@ -847,7 +839,6 @@ public class Unit {
 		else if (dt >= MAX_DURATION) {
 			throw new IllegalArgumentException();
 			}
-
 	}
 	
 	/**
