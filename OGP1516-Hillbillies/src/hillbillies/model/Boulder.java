@@ -22,11 +22,12 @@ public class Boulder {
 	private int boulderWeight;
 	
 	public double[] getPosition(){
+		// TODO schrijf deze methode
 		return null;
 	}
 	
 	public void advanceTime(double dt){
-		
+		// TODO schrijf deze methode
 	}
 	
 

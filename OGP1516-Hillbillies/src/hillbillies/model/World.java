@@ -1,19 +1,23 @@
 package hillbillies.model;
 
-import java.util.Collections;
+import java.lang.reflect.Array;
+import java.util.*;
 
 import hillbillies.part2.listener.TerrainChangeListener;
 import hillbillies.util.ConnectedToBorder;
 
 public class World {
 	
-	ConnectedToBorder connectedToBorder;
 	
 	public World(int[][][] terrainTypes, TerrainChangeListener modelListener){
 		this.dimension = terrainTypes.length;
 		this.terrainType = terrainTypes;
+		//System.out.println(terrainTypes[0][0][3]);
+		//System.out.println(this.isSolidConnectedToBorder(1, 2, 3));
 		//zet solids van connectedtoborder naar lucht zie terraintype
 	}
+	
+	ConnectedToBorder connectedToBorder = new ConnectedToBorder(this.getNbCubesX(),this.getNbCubesY(),this.getNbCubesZ());
 	
 	private int dimension;
 	private int[][][] terrainType;
@@ -55,6 +59,57 @@ public class World {
 	public Unit spawnUnit(boolean enableDefaultBehavior){
 		//unit direct in faction met kleinste aantal mensen of maakt een nieuwe
 		//check minder dan 100 units in totaal
+	//	if (this.getUnits().size() <= 100){
+		Faction faction = new Faction(FactionNames.DEATH_EATERS);
+		this.setActiveFaction(faction);
+		System.out.println(this.activeFactionSet.contains(faction));
+			ArrayList<FactionNames> allFactions = new ArrayList<FactionNames>(Arrays.asList(FactionNames.values()));
+			ArrayList<FactionNames> nonExistingFactions = new ArrayList<> (allFactions.size());
+			nonExistingFactions.addAll(allFactions);
+			nonExistingFactions.removeAll(this.getActiveFactions());
+			System.out.println(nonExistingFactions);
+			
+			FactionNames factionName = FactionNames.GRYFFINDOR;
+			if (this.getActiveFactions().size()<5){
+				if (!this.getActiveFactions().contains(factionName)){
+					Unit unit = this.addUnitToNonExistingFaction(factionName, enableDefaultBehavior);
+					return unit;
+				}
+				return null;
+			}
+			
+			else{
+				return null;
+			}
+		//	else (faction.getUnitsOfFaction().size() <=50){
+			//	min();
+		//	}
+			
+		}
+
+
+	
+	public Unit addUnitToNonExistingFaction(FactionNames factionName, boolean enableDefaultBehavior){
+		Faction faction = new Faction(factionName);
+		this.setActiveFaction(faction);
+		Unit unit = new Unit(factionName.getName(), new int[] { 1, 2, 1 } ,factionName.getWeight(), factionName.getAgility(),
+				factionName.getStrength(), factionName.getToughness(), enableDefaultBehavior);
+		unit.setFaction(faction);
+		//faction.addUnitToFaction(unit);
+		return unit;
+	}
+	
+	public Set<Unit> getUnits() {
 		return null;
 	}
+	
+	public Set<Faction> getActiveFactions(){
+		return this.activeFactionSet;
+	}
+	
+	public void setActiveFaction(Faction faction){
+		this.activeFactionSet.add(faction);
+	}
+	
+	private Set<Faction> activeFactionSet = new HashSet<Faction>();
 }
