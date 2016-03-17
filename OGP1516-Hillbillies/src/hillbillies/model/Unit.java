@@ -7,15 +7,13 @@ import be.kuleuven.cs.som.annotate.Raw;
 import ogp.framework.util.Util;
 
 // feedback part 1:
-// private maken bij nominaal OK
-// hitpoints zelf niet nul maken OK
-// move to (adjacent) position via set (bij alles checken) OK
-// advance time opsplitsen OK
+// formele commentaar bij gesplitste advance time
 // advance time testen + attack + defend + .... testen op unit en niet facade
 
 //vragen:
 // documentation postconditions en niet perse if's
 // createUnit of Unit als constructor?
+// facade try catch
 
 
 /**
@@ -278,7 +276,7 @@ public class Unit {
 	 *       | then new.getStrength() == MAX_VALUE
 	 */
 	@Raw
-	public void setStrength(int strength) throws IllegalArgumentException {
+	public void setStrength(int strength){
 		if (isValidStrength(strength))
 			this.strength = strength;
 		else if (strength < MIN_VALUE)
@@ -344,7 +342,7 @@ public class Unit {
 	 *       | then new.getAgility() == MAX_VALUE
 	 */
 	@Raw
-	public void setAgility(int agility) throws IllegalArgumentException{
+	public void setAgility(int agility){
 		if (isValidStrength(agility))
 			this.agility = agility;
 		else if (agility < MIN_VALUE)
@@ -410,7 +408,7 @@ public class Unit {
 	 *       | then new.getToughness() == MAX_VALUE 		
 	 */
 	@Raw
-	public void setToughness(int toughness) throws IllegalArgumentException {
+	public void setToughness(int toughness) {
 		if (isValidStrength(toughness))
 			this.toughness = toughness;
 		else if (toughness < MIN_VALUE)
@@ -477,7 +475,7 @@ public class Unit {
 	 *       | then new.getWeight() == MAX_VALUE;
 	 */
 	@Raw
-	public void setWeight(int weight) throws IllegalArgumentException {
+	public void setWeight(int weight){
 		if (isValidStrength(weight))
 			this.weight = weight;
 		else if (weight < MIN_VALUE)
@@ -816,24 +814,18 @@ public class Unit {
 	public void advanceTime(double dt) throws IllegalArgumentException {
 		if (isValidDuration(dt)) {
 			this.sprintingAdvanceTime(dt);
-			if (this.isMoving()) {
+			if (this.isMoving())
 				this.isMovingAdvanceTime(dt);
-			}
-			if(this.isMovingTo && this.getPosition() == this.getNextPosition()){
+			if(this.isMovingTo && this.getPosition() == this.getNextPosition())
 				this.isMovingToAdvanceTime(dt);
-			}
-			if (this.isResting()) {
+			if (this.isResting())
 				this.isRestingAdvanceTime(dt);
-			}
-			if(this.isWorking()){
-				this.isWorkingAdvanceTime(dt);
-			}			
-			if (this.isAttacking()){
+			if(this.isWorking())
+				this.isWorkingAdvanceTime(dt);		
+			if (this.isAttacking())
 				this.isAttackingAdvanceTime(dt);
-			}
-			if (this.isDefaultBehaviorEnabled()){
+			if (this.isDefaultBehaviorEnabled())
 				this.defaultBehaviorEnabledAdvanceTime(dt);
-			}
 			this.resting3MinutesTime += dt;
 			if (this.resting3MinutesTime >= 3*60) {
 				this.resting3MinutesTime = 0;
@@ -852,7 +844,7 @@ public class Unit {
 	 * @param dt
 	 * 		The time between each update of the unit.
 	 */
-	public void sprintingAdvanceTime(double dt) {
+	public void sprintingAdvanceTime(double dt) throws IllegalArgumentException{
 		if (this.isSprinting() && this.getCurrentStaminaPoints() == 0) {
 			this.stopSprinting();
 		} else if (this.isSprinting()) {
@@ -870,7 +862,7 @@ public class Unit {
 	 * @param dt
 	 * 		The time between each update of the unit.
 	 */
-	public void isMovingAdvanceTime(double dt) {
+	public void isMovingAdvanceTime(double dt) throws IllegalArgumentException {
 		double[] v = this.getMovingSpeed(dt);
 		double[] fuzzyPositionUnder = new double[] { 0, 0, 0 };
 		double[] fuzzyPositionUpper = new double[] { 0, 0, 0 };
@@ -886,9 +878,8 @@ public class Unit {
 			double[] newPosition = new double[] { this.getPosition()[0] + v[0] * dt,
 					this.getPosition()[1] + v[1] * dt, this.getPosition()[2] + v[2] * dt };
 			this.setOrientation(Math.atan2(v[1], v[0]));
-			if (isValidPosition(newPosition)){
+			if (isValidPosition(newPosition))
 				this.setPosition(newPosition);
-			}
 			else{
 				this.setCurrentSpeed(0);
 			}
@@ -907,7 +898,7 @@ public class Unit {
 	 * @param dt
 	 * 		The time between each update of the unit.
 	 */
-	public void isMovingToAdvanceTime(double dt) {
+	public void isMovingToAdvanceTime(double dt) throws IllegalArgumentException{
 		if(this.isResting() || this.isAttacking() || this.isWorking() ){
 			this.setCurrentSpeed(0);
 		}
@@ -927,7 +918,7 @@ public class Unit {
 	 * @param dt
 	 * 		The time between each update of the unit.
 	 */
-	public void isRestingAdvanceTime(double dt) {
+	public void isRestingAdvanceTime(double dt) throws IllegalArgumentException {
 		if (this.getCurrentHitPoints() - this.hitPointsBeforeRest <= 1 && this.isAttacking()){
 			this.isResting = false;
 			this.setHitPoints(this.hitPointsBeforeRest);
@@ -969,10 +960,9 @@ public class Unit {
 	 * @param dt
 	 * 		The time between each update of the unit.
 	 */
-	public void isWorkingAdvanceTime(double dt) {
-		if (this.isAttacking() || this.isResting()){
+	public void isWorkingAdvanceTime(double dt) throws IllegalArgumentException{
+		if (this.isAttacking() || this.isResting())
 			this.isWorking = false;
-		}
 		else if (this.isMoving()){
 			this.setCurrentSpeed(0);
 			this.setPosition(this.getNextPosition()); 
@@ -1007,7 +997,7 @@ public class Unit {
 	 * @param dt
 	 * 		The time between each update of the unit.
 	 */
-	public void defaultBehaviorEnabledAdvanceTime(double dt){
+	public void defaultBehaviorEnabledAdvanceTime(double dt) throws IllegalArgumentException{
 		if (!this.isAttacking() && !this.isMoving() && !this.isWorking()
 				&& !this.isResting()){
 			this.defaultBehavior();
@@ -1026,7 +1016,6 @@ public class Unit {
 	private double fractionOfStaminaPoint = 0;
 	private double fractionOfSprintStaminaPoint = 0;
 	
-	
 	/**
 	 * Return the actual moving speed, calculated by
 	 *  [v_x * (x' - x)/d, v_y * (y' - y)/d, v_z * (z' - z)/d],
@@ -1040,7 +1029,7 @@ public class Unit {
 	 * 		the actual moving speed v 
 	 * 		| result == v		
 	 */
-	public double[] getMovingSpeed(double dt) throws IllegalArgumentException {
+	public double[] getMovingSpeed(double dt) {
 		double d = Math.sqrt(Math.pow(this.getNextPosition()[0] - this.getPosition()[0], 2)
 				+ Math.pow(this.getNextPosition()[1] - this.getPosition()[1], 2)
 				+ Math.pow(this.getNextPosition()[2] - this.getPosition()[2], 2));
@@ -1071,7 +1060,7 @@ public class Unit {
 	 *      | 	then new.getCurrentSpeed() == this.sprintingSpeed
 	 *      | else new.getCurrentSpeed() == this.walkingSpeed
 	 */
-	public void moveToAdjacent(int dx, int dy, int dz) throws IllegalArgumentException{
+	public void moveToAdjacent(int dx, int dy, int dz)throws IllegalArgumentException{
 		 if ((!this.isMoving() || this.isMovingTo) && !this.isWorking()) {
 			if (this.isSprinting()){
 				this.calculateNextPosition(dx, dy, dz);
@@ -1219,7 +1208,7 @@ public class Unit {
 	 * @return ...
 	 * 		| result == !Util.fuzzyEquals(this.getCurrentSpeed(), 0);
 	 */
-	public boolean isMoving() throws IllegalArgumentException {
+	public boolean isMoving() {
 		return !Util.fuzzyEquals(this.getCurrentSpeed(), 0);
 	}
 
@@ -1250,7 +1239,7 @@ public class Unit {
 	 * @return ...
 	 * 		| result == Util.fuzzyEquals(this.getCurrentSpeed(), this.sprintingSpeed) && this.sprintingSpeed != 0
 	 */
-	public boolean isSprinting() throws IllegalArgumentException {
+	public boolean isSprinting() {
 		return Util.fuzzyEquals(this.getCurrentSpeed(), this.sprintingSpeed) && this.sprintingSpeed != 0;
 	}
 
@@ -1312,7 +1301,7 @@ public class Unit {
 	 * 		Make the unit work.
 	 * 		| new.isWorking = true
 	 */
-	public void work() throws IllegalArgumentException{
+	public void work(){
 		this.isWorking = true;
 	}
 
@@ -1321,7 +1310,7 @@ public class Unit {
 	 * @return ...
 	 * 		| result == return this.isWorking
 	 */
-	public boolean isWorking() throws IllegalArgumentException {
+	public boolean isWorking() {
 		return this.isWorking;
 	}
 
@@ -1343,7 +1332,7 @@ public class Unit {
 	 * 		| this.attack(defender);
 	 *		| defender.defend(this);
 	 */
-	public void fight(Unit defender) throws IllegalArgumentException {
+	public void fight(Unit defender) {
 		this.attack(defender);
 		defender.defend(this);
 	}
@@ -1362,7 +1351,7 @@ public class Unit {
 	 * 		Make the unit attack.
 	 * 		| new.isAttacking = true
 	 */
-	public void attack(Unit defender) throws IllegalArgumentException {
+	public void attack(Unit defender) {
 		double d = Math.sqrt(Math.pow(defender.getPosition()[0] - this.getPosition()[0], 2)
 				+ Math.pow(defender.getPosition()[1] - this.getPosition()[1], 2)
 				+ Math.pow(defender.getPosition()[2] - this.getPosition()[2], 2));
@@ -1380,7 +1369,7 @@ public class Unit {
 	 * @return ...
 	 * 		| result == this.isAttacking
 	 */
-	public boolean isAttacking() throws IllegalArgumentException {
+	public boolean isAttacking() {
 		return this.isAttacking;
 	}
 	
@@ -1436,7 +1425,7 @@ public class Unit {
 	 * 		| new.isResting = true
 	 * 		| new.currentSpeed = 0
 	 */
-	public void rest() throws IllegalArgumentException{
+	public void rest(){
 		this.isResting = true;
 		if (this.isWorking()){
 			this.restAfterWork = true;
@@ -1457,7 +1446,7 @@ public class Unit {
 	 * @return ...
 	 * 		| result == this.isResting
 	 */
-	public boolean isResting() throws IllegalArgumentException{
+	public boolean isResting(){
 		return this.isResting;
 	}
 
@@ -1477,7 +1466,7 @@ public class Unit {
 	 * 		Set the default behaviour true.
 	 * 		| this.setDefaultBehaviorEnabled(true);
 	 */
-	public void startDefaultBehaviour() throws IllegalArgumentException {
+	public void startDefaultBehaviour() {
 		this.setDefaultBehaviorEnabled(true);
 	}
 
@@ -1487,19 +1476,19 @@ public class Unit {
 	 * 		Set the default behaviour false.
 	 * 		| this.setDefaultBehaviorEnabled(false);
 	 */
-	public void stopDefaultBehaviour() throws IllegalArgumentException {
+	public void stopDefaultBehaviour(){
 		this.setDefaultBehaviorEnabled(false);
 	}
 
 	/**
-	 * Set the default behavior to the given value. 
+	 * Set the default behaviour to the given value. 
 	 * @param value
-	 * 		Value setting the default behavior on or off. 
+	 * 		Value setting the default behaviour on or off. 
 	 * @post ...
-	 * 		Default behavior is set to the given value.
+	 * 		Default behaviour is set to the given value.
 	 * 		| new.defaultBehaviorEnabled = value
 	 */
-	public void setDefaultBehaviorEnabled(boolean value) throws IllegalArgumentException {
+	public void setDefaultBehaviorEnabled(boolean value){
 		this.defaultBehaviorEnabled = value;
 	}
 
@@ -1508,7 +1497,7 @@ public class Unit {
 	 * @return ...
 	 * 		| result == this.defaultBehaviorEnabled
 	 */
-	public boolean isDefaultBehaviorEnabled() throws IllegalArgumentException {
+	public boolean isDefaultBehaviorEnabled(){
 		return this.defaultBehaviorEnabled;
 	}
 	
