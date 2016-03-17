@@ -12,12 +12,13 @@ public class World {
 	public World(int[][][] terrainTypes, TerrainChangeListener modelListener){
 		this.dimension = terrainTypes.length;
 		this.terrainType = terrainTypes;
-		//System.out.println(terrainTypes[0][0][3]);
-		//System.out.println(this.isSolidConnectedToBorder(1, 2, 3));
+		ConnectedToBorder connectedToBorder = new ConnectedToBorder(this.getNbCubesX(),this.getNbCubesY(),this.getNbCubesZ());
+		// 3 for lussen
+		// eigen methodes om kubussen te getten en setten naar passable in aparte klasse
 		//zet solids van connectedtoborder naar lucht zie terraintype
 	}
 	
-	ConnectedToBorder connectedToBorder = new ConnectedToBorder(this.getNbCubesX(),this.getNbCubesY(),this.getNbCubesZ());
+	ConnectedToBorder connectedToBorder;
 	
 	private int dimension;
 	private int[][][] terrainType;
