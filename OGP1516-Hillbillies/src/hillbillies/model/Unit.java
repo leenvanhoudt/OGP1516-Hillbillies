@@ -41,8 +41,6 @@ import ogp.framework.util.Util;
  *        unit. | isValidStaminaPoints(getStaminaPoints())
  * @invar The orientation of each unit must be a valid orientation for any unit.
  *        | isValidOrientation(getOrientation())
- * @invar The faction of each unit must be a valid faction for any unit. |
- *        isValidFaction(getFaction())
  */
 public class Unit {
 	/**
@@ -737,21 +735,20 @@ public class Unit {
 	private static final double MAX_DURATION = 0.2;
 
 	/**
-	 * Update the program every valid dt seconds. - When the unit is sprinting
-	 * and his staminaPoints are 0, the unit will stop sprinting. - When the
-	 * unit is sprinting, the staminaPoints will reduce with 1 every 0.1
-	 * seconds. - When the unit is moving, the speed, orientation and position
-	 * will be updated. - When the unit is moving a long distance, he can be
-	 * interrupted by working, attacking and resting. - When the unit is
-	 * resting, he will recover first hitPoints and secondly staminaPoints until
-	 * he is recovered fully. He will recover at least one hitPoint, unless he
-	 * is interrupted by attacking. After longer recovery, he can be interrupted
-	 * by all other possible actions. - When the unit is working, he can be
-	 * interrupted by attacking, resting, but not by moving. Working lasts
-	 * 500/strength seconds. - When the unit is attacking, he will attack for 1
-	 * second. - When the default behavior is enabled and the unit isn't doing
-	 * anything, he will execute a random behavior. - The unit will rest
-	 * automatically every 3 minutes.
+	 * Update the program every valid dt seconds. 
+	 * - When the unit is sprinting and his staminaPoints are 0, the unit will stop sprinting. 
+	 * - When the unit is sprinting, the staminaPoints will reduce with 1 every 0.1 seconds. 
+	 * - When the unit is moving, the speed, orientation and position will be updated. 
+	 * - When the unit is moving a long distance, he can be interrupted by working, attacking and resting. 
+	 * - When the unit is resting, he will recover first hitPoints and secondly staminaPoints until
+	 * 		he is recovered fully. He will recover at least one hitPoint, unless he
+	 * 		is interrupted by attacking. After longer recovery, he can be interrupted
+	 * 		by all other possible actions. - When the unit is working, he can be
+	 * 		interrupted by attacking, resting, but not by moving. Working lasts
+	 * 		500/strength seconds. 
+	 * - When the unit is attacking, he will attack for 1 second. 
+	 * - When the default behavior is enabled and the unit isn't doing anything, he will execute 
+	 * 		a random behavior. - The unit will rest automatically every 3 minutes.
 	 * 
 	 * @param dt
 	 *            The time between each update of the unit.
@@ -1498,42 +1495,8 @@ public class Unit {
 	@Basic
 	@Raw
 	public Faction getFaction() {
-		return this.faction;
+		return null;
 	}
 
-	/**
-	 * Check whether the given faction is a valid faction for any unit.
-	 * 
-	 * @param faction
-	 *            The faction to check.
-	 * @return | result ==
-	 */
-	public static boolean isValidFaction(Faction faction) {
-		FactionNames[] factions = FactionNames.values();
-		System.out.println(factions);
-		return Arrays.asList(factions).contains(faction.getFactionName());
-	}
 
-	/**
-	 * Set the faction of this unit to the given faction.
-	 * 
-	 * @param faction
-	 *            The new faction for this unit.
-	 * @post The faction of this new unit is equal to the given faction. |
-	 *       new.getFaction() == faction
-	 * @throws IllegalArgumentException
-	 *             The given faction is not a valid faction for any unit. | !
-	 *             isValidFaction(getFaction())
-	 */
-	@Raw
-	public void setFaction(Faction faction) throws IllegalArgumentException {
-		if (!isValidFaction(faction))
-			throw new IllegalArgumentException();
-		this.faction = faction;
-	}
-
-	/**
-	 * Variable registering the faction of this unit.
-	 */
-	private Faction faction;
 }

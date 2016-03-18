@@ -1,67 +1,33 @@
 package hillbillies.model;
 
-import java.util.Arrays;
-import java.util.Set;
-
-import be.kuleuven.cs.som.annotate.Basic;
-import be.kuleuven.cs.som.annotate.Immutable;
-import be.kuleuven.cs.som.annotate.Raw;
+import java.util.*;
 
 
-/**
- * @invar Each faction can have its factionName as factionName. |
- *        canHaveAsFactionName(this.getFactionName())
- */
+
+
 public class Faction {
 
-	/**
-	 * @param factionName
-	 *            The factionName for this new faction.
-	 * @post The factionName of this new faction is equal to the given
-	 *       factionName. | new.getFactionName() == factionName
-	 * @throws IllegalArgumentException
-	 *             This new faction cannot have the given factionName as its
-	 *             factionName. | ! canHaveAsFactionName(this.getFactionName())
-	 */
-	public Faction(FactionNames factionName) {
-		this.factionName = factionName;
+	
+	public Faction() {
 	}
 
+	private Set<Unit> unitsInFaction = new HashSet<Unit>();
 	
-	/**
-	 * Return the factionName of this faction.
-	 */
-	@Basic
-	@Raw
-	@Immutable
-	public FactionNames getFactionName() {
-		return this.factionName;
+	public void addUnit(Unit unit){
+		// als er al 50 zitten in set (lengte set), exception gooien?
+		this.unitsInFaction.add(unit);
 	}
-
-	/**
-	 * Check whether this faction can have the given factionName as its
-	 * factionName.
-	 * 
-	 * @param factionName
-	 *            The factionName to check.
-	 * @return | result ==
-	 */
-	@Raw
-	public boolean canHaveAsFactionName(FactionNames factionName) {
-		FactionNames[] factions = FactionNames.values();
-		System.out.println(factions);
-		return Arrays.asList(factions).contains(factionName);
+	
+	public void removeUnit(Unit unit){
+		this.unitsInFaction.remove(unit);
 	}
-
-	/**
-	 * Variable registering the factionName of this faction.
-	 */
-	private final FactionNames factionName;
 	
-	
-
 	public Set<Unit> getUnitsOfFaction() {
-		return null;
+		return this.unitsInFaction;
+	}
+	
+	public int getNbUnitsOfFaction(){
+		return this.getUnitsOfFaction().size();
 	}
 
 	// kan alleen vechten tegen andere faction
