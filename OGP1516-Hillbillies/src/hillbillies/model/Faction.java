@@ -2,9 +2,6 @@ package hillbillies.model;
 
 import java.util.*;
 
-
-
-
 public class Faction {
 
 	
@@ -13,12 +10,12 @@ public class Faction {
 
 	private Set<Unit> unitsInFaction = new HashSet<Unit>();
 	
-	public void addUnit(Unit unit){
+	public void addUnitToFaction(Unit unit){
 		// als er al 50 zitten in set (lengte set), exception gooien?
 		this.unitsInFaction.add(unit);
 	}
 	
-	public void removeUnit(Unit unit){
+	public void removeUnitToFaction(Unit unit){
 		this.unitsInFaction.remove(unit);
 	}
 	
@@ -27,7 +24,7 @@ public class Faction {
 	}
 	
 	public int getNbUnitsOfFaction(){
-		return this.getUnitsOfFaction().size();
+		return (this.getUnitsOfFaction()).size();
 	}
 
 	// kan alleen vechten tegen andere faction

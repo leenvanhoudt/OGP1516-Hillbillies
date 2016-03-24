@@ -33,14 +33,6 @@ public class World {
 	
 	private List<int[]> temporary;
 	private ConnectedToBorder connectedToBorder;
-	
-	// zelf creeeren wegdoen en in de plaats moeten we dit zelf aanmaken in spawn unit
-	private Faction Gryffindor = new Faction();
-	private Faction Hufflepuff = new Faction();
-	private Faction Ravenclaw = new Faction();
-	private Faction Slytherin = new Faction();
-	private Faction Death_Eaters = new Faction();
-	private Faction[] factions = new Faction[]{Gryffindor,Hufflepuff,Ravenclaw, Slytherin, Death_Eaters};
 
 	private int dimension;
 	private int[][][] terrainType;
@@ -66,8 +58,6 @@ public class World {
 		
 		//GEEN FOR LUS, NOG AANPASSEN
 		for (int[] cube : this.getCubesChanged()){
-			this.setCubeType(cube[0], cube[1], cube[2], 0);
-			modelListener.notifyTerrainChanged(cube[0], cube[1], cube[2]);
 			double P = 0.25;
 			Random random = new Random();
 			if (random.nextInt(100) <= (P*100)){
@@ -75,13 +65,17 @@ public class World {
 				if (this.getCubeType(cube[0], cube[1], cube[2])==1){
 					Boulder boulder = new Boulder();
 					boulder.setPosition(cube[0], cube[1], cube[2]);
+					this.bouldersSet.add(boulder);
 				}
 				//wood
 				else if (this.getCubeType(cube[0], cube[1], cube[2])==2){
 					Log log = new Log();
 					log.setPosition(cube[0], cube[1], cube[2]);
+					this.logsSet.add(log);
 				}
 			}
+			this.setCubeType(cube[0], cube[1], cube[2], 0);
+			modelListener.notifyTerrainChanged(cube[0], cube[1], cube[2]);
 		}
 	}
 	
@@ -104,34 +98,83 @@ public class World {
 	}
 	
 	public Unit spawnUnit(boolean enableDefaultBehavior){
-		//unit direct in faction met kleinste aantal mensen of maakt een nieuwe
-		
-		// in plaats van zelf factions te maken en naam te geven: if aantal factions (lengte lijst/set) kleiner dan 5:
-		// creeer nieuwe faction en voeg toe aan lijst/set. (deze lijst mss dezelfde set als de die met actieve factions?)(als je dit via variabele doet, alle factions zelfde naam in set, probleem?)
-		// en zet een manneke in deze lijst
-		// als al 5 factions bestaan: kijken of kleiner dan 100 units in totaal en dan unit toevoegen aan kleinste faction
-		
-		//check minder dan 100 units in totaal
-		if (this.getUnits().size() <= 100){
-			// aantal units per faction tellen, bij minste bijvoegen -> Math.minimum
-			Math.min(Gryffindor.getNbUnitsOfFaction(), Math.min(Hufflepuff.getNbUnitsOfFaction(),
-					Math.min(Ravenclaw.getNbUnitsOfFaction(), Math.min(Slytherin.getNbUnitsOfFaction(), 
-							Death_Eaters.getNbUnitsOfFaction()))));
-			//Arrays.sort(factions, ); lijst sorteren met comparator?
-			// unit maken: new Unit (random waarden)
-			// unit toevoegen aan faction: faction.addUnit
-			// ?? omgekeerd: bij unit ook faction onthouden??
+		// lijst maken van actieve factions om daar bewerkingen op uit te voeren
+		if (this.getUnits().size() < 100){
+			if (this.activeFactionSet.size()<5){
+				Faction newFaction = new Faction();
+				this.activeFactionSet.add(newFaction);
+				this.activeFactionList.add(newFaction);
+			}			
+			this.sort();
+			Random random = new Random();
+			//zoek valid positie
+			int x = random.nextInt(this.getNbCubesX());
+			int y = random.nextInt(this.getNbCubesY());
+			int z = random.nextInt(this.getNbCubesZ());
+			//zoek betere oplossing
+			while (!this.isValidStandingPosition(x,y,z)){
+				System.out.println(x + " " + y + " " + z);
+				if (x < this.getNbCubesX()-1)
+					x++;
+				else if(y < this.getNbCubesY()-1){
+					x = 0;
+					y++;
+				}
+				else if (z< this.getNbCubesZ()-1){
+					x = 0;
+					y = 0;
+					z++;	
+				}
+				else{
+					x = 0;
+					y = 0;
+					z = 0;
+				}
+			}
+			int characteristics = 25 + random.nextInt(76);
+			Unit newUnit = new Unit("Jan",new int[] {x,y,z}, characteristics, characteristics,characteristics,characteristics, enableDefaultBehavior);
+			this.activeFactionList.get(0).addUnitToFaction(newUnit);
+			newUnit.setFaction(this.activeFactionList.get(0));
+			newUnit.setWorld(this);
+			return newUnit;
 		}
+		// vreemde unit zonder faction en niet tot world behorend maken of null returnen?
+		System.out.println("null");
 		return null;
 	}
+	
+	public void sort(){
+		Collections.sort(this.activeFactionList, new Comparator<Faction>() {
+	        @Override
+	        public int compare(Faction faction1, Faction faction2)
+	        {
+	            if(faction2.getNbUnitsOfFaction() < faction1.getNbUnitsOfFaction())
+	            	return 1;
+	            else if(faction2.getNbUnitsOfFaction() > faction1.getNbUnitsOfFaction())
+	            	return -1;
+	            else{
+	            	return 0;
+	            }
+	        }
+	    });
+	}
 
+	public void addUnit(Unit unit){
+		this.sort();
+		this.activeFactionList.get(0).addUnitToFaction(unit);
+		unit.setFaction(this.activeFactionList.get(0));
+		unit.setWorld(this);
+	}
+	
+	public boolean isValidStandingPosition(int x,int y,int z){
+		return ((z == 0 || this.terrainType[x][y][z-1] == 1 || this.terrainType[x][y][z-1] == 2) 
+				&& (this.terrainType[x][y][z] == 0 || this.terrainType[x][y][z] == 3));
+	}
 	
 	public Set<Unit> getUnits() {
 		Set<Unit> worldUnits = new HashSet<>();
-		Set<Faction> activeFactions = this.getActiveFactions();
-		for (Faction f : activeFactions){
-			Set<Unit> factionUnits = f.getUnitsOfFaction();
-			worldUnits.addAll(factionUnits);
+		for (Faction f : this.activeFactionSet){
+			worldUnits.addAll(f.getUnitsOfFaction());
 		}
 		return worldUnits;
 		// for alle factions in activeFactionSet: getUnitsOfFaction(-> set) 
@@ -143,11 +186,11 @@ public class World {
 		return this.activeFactionSet;
 	}
 	
-	public void setActiveFaction(Faction faction){
-		this.activeFactionSet.add(faction);
-	}
-	
 	private Set<Faction> activeFactionSet = new HashSet<Faction>();
+	private ArrayList<Faction> activeFactionList = new ArrayList<Faction>();
+	
+	
+	
 	
 	//NOG DOEN: (in Unit) als je werkt op een cube en solid cube verdwijnt:
 	//	connectedToBorder.changeSolidToPassable(coordinaten cube)
@@ -169,4 +212,15 @@ public class World {
 	private List<int[]> cubesChanged;
 	
 	private TerrainChangeListener modelListener;
+	
+	public Set<Log> getLogs(){
+		return this.logsSet;
+	}
+	
+	public Set<Boulder> getBoulders(){
+		return this.bouldersSet;
+	}
+	
+	private Set<Log> logsSet;
+	private Set<Boulder> bouldersSet;
 }

@@ -5,7 +5,7 @@ import java.util.Set;
 
 public class Boulder {
 	
-	//NOG DOEN: soms wordt Boulder op vaste plaats gelegt (bij instorten Rock)
+	//NOG DOEN: soms wordt Boulder op vaste plaats gelegd (bij instorten Rock)
 	//		maar anders random plaats dus geen coordinaten nodig
 	//		--> hoe lossen we dit op?
 	public Boulder(){
@@ -25,15 +25,14 @@ public class Boulder {
 	private int boulderWeight;
 	
 	public double[] getPosition(){
-		// TODO schrijf deze methode
-		return this.position;
+		return this.boulderPosition;
 	}
 	
 	public void setPosition(int x, int y, int z){
-		position = new double[]{x,y,z};
+		this.boulderPosition = new double[]{x,y,z};
 	}
 	
-	private double[] position;
+	private double[] boulderPosition;
 	
 	public void advanceTime(double dt){
 		// TODO schrijf deze methode

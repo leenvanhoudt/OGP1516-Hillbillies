@@ -41,6 +41,8 @@ import ogp.framework.util.Util;
  *        unit. | isValidStaminaPoints(getStaminaPoints())
  * @invar The orientation of each unit must be a valid orientation for any unit.
  *        | isValidOrientation(getOrientation())
+ * @invar The experiencePoints of each unit must be a valid experiencePoints for
+ *        any unit. | isValidExperiencePoints(getExperiencePoints())
  */
 public class Unit {
 	/**
@@ -469,12 +471,16 @@ public class Unit {
 	 *         equal and larger than 0 and smaller than 50.
 	 */
 	public static boolean isValidPosition(double[] position) {
-		if (position.length == 3)
+		// TODO check of blok is passable, dan moet je jammergenoeg wereld
+		// initialiseren :(
+		if (position.length == 3) {
 			for (double coordinate : position) {
 				if (coordinate >= 50 || coordinate < 0)
 					return false;
 			}
-		return true;
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -718,6 +724,51 @@ public class Unit {
 	private double orientation = Math.PI / 2;
 
 	/**
+	 * Return the experiencePoints of this unit.
+	 */
+	@Basic
+	@Raw
+	public int getExperiencePoints() {
+		return this.experiencePoints;
+	}
+
+	/**
+	 * Check whether the given experiencePoints is a valid experiencePoints for
+	 * any unit.
+	 * 
+	 * @param experiencePoints
+	 *            The experiencePoints to check.
+	 * @return | result ==
+	 */
+	public static boolean isValidExperiencePoints(int experiencePoints) {
+		return experiencePoints >= 0;
+	}
+
+	/**
+	 * Set the experiencePoints of this unit to the given experiencePoints.
+	 * 
+	 * @param experiencePoints
+	 *            The new experiencePoints for this unit.
+	 * @post The experiencePoints of this new unit is equal to the given
+	 *       experiencePoints. | new.getExperiencePoints() == experiencePoints
+	 * @throws ExceptionName_Java
+	 *             The given experiencePoints is not a valid experiencePoints
+	 *             for any unit. | !
+	 *             isValidExperiencePoints(getExperiencePoints())
+	 */
+	@Raw
+	public void setExperiencePoints(int experiencePoints) throws IllegalArgumentException {
+		if (!isValidExperiencePoints(experiencePoints))
+			throw new IllegalArgumentException();
+		this.experiencePoints = experiencePoints;
+	}
+
+	/**
+	 * Variable registering the experiencePoints of this unit.
+	 */
+	private int experiencePoints = 0;
+
+	/**
 	 * Check whether the given duration is a valid duration for any unit. It is
 	 * valid when it doesn't exceed the boundaries (0 and MAX_DURATION(=0.2)).
 	 * 
@@ -735,20 +786,21 @@ public class Unit {
 	private static final double MAX_DURATION = 0.2;
 
 	/**
-	 * Update the program every valid dt seconds. 
-	 * - When the unit is sprinting and his staminaPoints are 0, the unit will stop sprinting. 
-	 * - When the unit is sprinting, the staminaPoints will reduce with 1 every 0.1 seconds. 
-	 * - When the unit is moving, the speed, orientation and position will be updated. 
-	 * - When the unit is moving a long distance, he can be interrupted by working, attacking and resting. 
-	 * - When the unit is resting, he will recover first hitPoints and secondly staminaPoints until
-	 * 		he is recovered fully. He will recover at least one hitPoint, unless he
-	 * 		is interrupted by attacking. After longer recovery, he can be interrupted
-	 * 		by all other possible actions. - When the unit is working, he can be
-	 * 		interrupted by attacking, resting, but not by moving. Working lasts
-	 * 		500/strength seconds. 
-	 * - When the unit is attacking, he will attack for 1 second. 
-	 * - When the default behavior is enabled and the unit isn't doing anything, he will execute 
-	 * 		a random behavior. - The unit will rest automatically every 3 minutes.
+	 * Update the program every valid dt seconds. - When the unit is sprinting
+	 * and his staminaPoints are 0, the unit will stop sprinting. - When the
+	 * unit is sprinting, the staminaPoints will reduce with 1 every 0.1
+	 * seconds. - When the unit is moving, the speed, orientation and position
+	 * will be updated. - When the unit is moving a long distance, he can be
+	 * interrupted by working, attacking and resting. - When the unit is
+	 * resting, he will recover first hitPoints and secondly staminaPoints until
+	 * he is recovered fully. He will recover at least one hitPoint, unless he
+	 * is interrupted by attacking. After longer recovery, he can be interrupted
+	 * by all other possible actions. - When the unit is working, he can be
+	 * interrupted by attacking, resting, but not by moving. Working lasts
+	 * 500/strength seconds. - When the unit is attacking, he will attack for 1
+	 * second. - When the default behavior is enabled and the unit isn't doing
+	 * anything, he will execute a random behavior. - The unit will rest
+	 * automatically every 3 minutes. - EXPERIENCEPOINTS
 	 * 
 	 * @param dt
 	 *            The time between each update of the unit.
@@ -772,14 +824,45 @@ public class Unit {
 				this.isAttackingAdvanceTime(dt);
 			if (this.isDefaultBehaviorEnabled())
 				this.defaultBehaviorEnabledAdvanceTime(dt);
+			this.falling();
 			this.resting3MinutesTime += dt;
 			if (this.resting3MinutesTime >= 3 * 60) {
 				this.resting3MinutesTime = 0;
 				this.rest();
 			}
+			if (this.experiencePoints >= 10)
+				this.experiencePointsAdvanceTime();
 		} else if (dt >= MAX_DURATION) {
 			throw new IllegalArgumentException();
 		}
+	}
+	
+	public boolean isFallingPosition(int x,int y,int z){
+		for (int i=-1; i<2; i++){
+			for (int j=-1; j<2; j++){
+				for (int k=-1; k<2; k++){
+					if (this.getWorld().getCubeType(x+i, y+j, z+k)==1 
+							|| this.getWorld().getCubeType(x+i, y+j, z+k)==2){
+						return false;
+					}
+						
+				}
+			}
+		}
+		return true;
+	}
+
+	public void experiencePointsAdvanceTime() {
+		// TODO als karakteristiek al vol is, bij een andere toevoegen.
+		Random random = new Random();
+		int randomNumber = random.nextInt(3);
+		if (randomNumber == 0)
+			this.setAgility(this.getAgility() + 1);
+		else if (randomNumber == 1)
+			this.setStrength(this.getStrength() + 1);
+		else if (randomNumber == 2)
+			this.setToughness(this.getToughness() + 1);
+		this.experiencePoints -= 10;
 	}
 
 	/**
@@ -1003,6 +1086,8 @@ public class Unit {
 	 */
 	public void moveToAdjacent(int dx, int dy, int dz) throws IllegalArgumentException {
 		if ((!this.isMoving() || this.isMovingTo) && !this.isWorking()) {
+			if (this.isFalling)
+				this.setCurrentSpeed(this.fallingSpeed);
 			if (this.isSprinting()) {
 				this.calculateNextPosition(dx, dy, dz);
 				this.calculateSpeed(this.getNextPosition());
@@ -1140,6 +1225,7 @@ public class Unit {
 	private double baseSpeed;
 	private double walkingSpeed;
 	private double sprintingSpeed;
+	private final double fallingSpeed = 3;
 
 	/**
 	 * Check if a unit is moving by comparing the current speed and 0.
@@ -1482,30 +1568,58 @@ public class Unit {
 	 */
 	private boolean defaultBehaviorEnabled = false;
 
-	
-	
-	
-	
-	
-	
-	
 	/**
 	 * Return the faction of this unit.
 	 */
 	@Basic
 	@Raw
 	public Faction getFaction() {
-		return null;
+		return this.faction;
 	}
-	
+
+	public boolean isValidFaction(Faction faction) throws IllegalArgumentException {
+		return faction.getNbUnitsOfFaction() < 50;
+	}
+
+	public void setFaction(Faction faction) {
+		if (!isValidFaction(faction))
+			throw new IllegalArgumentException();
+		this.faction = faction;
+	}
+
+	private Faction faction;
+
 	/**
 	 * Return the world of this unit.
 	 */
 	@Basic
 	@Raw
 	public World getWorld() {
-		return null;
+		return this.world;
+	}
+	
+	public void setWorld(World world){
+		this.world = world;
+	}
+	
+	private World world;
+
+	public boolean isAlive() {
+		return (this.getHitPoints() != 0);
 	}
 
-
+	//TODO voorrang geven aan vallen
+	public void falling(){
+		if (this.isFallingPosition(this.getCubeCoordinate()[0], this.getCubeCoordinate()[1], this.getCubeCoordinate()[2])){
+			this.isFalling = true;
+			this.moveToAdjacent(0, 0, -1);
+			//TODO check of per blok punten af of per stap(advtime)
+			this.setHitPoints(this.getCurrentHitPoints()-10);
+		}
+		else{
+			this.isFalling = false;
+		}		
+	}
+	
+	private boolean isFalling;
 }
