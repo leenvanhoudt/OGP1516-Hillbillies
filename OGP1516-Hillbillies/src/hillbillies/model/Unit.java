@@ -1497,6 +1497,15 @@ public class Unit {
 	public Faction getFaction() {
 		return null;
 	}
+	
+	/**
+	 * Return the world of this unit.
+	 */
+	@Basic
+	@Raw
+	public World getWorld() {
+		return null;
+	}
 
 
 }

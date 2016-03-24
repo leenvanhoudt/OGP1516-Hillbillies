@@ -341,7 +341,7 @@ public class Facade implements IFacade{
 	@Override
 	public double[] getPosition(Boulder boulder) throws ModelException {
 		// TODO Auto-generated method stub
-		return null;
+		return boulder.getPosition();
 	}
 
 	@Override
@@ -353,7 +353,7 @@ public class Facade implements IFacade{
 	@Override
 	public double[] getPosition(Log log) throws ModelException {
 		// TODO Auto-generated method stub
-		return null;
+		return log.getPosition();
 	}
 
 	@Override

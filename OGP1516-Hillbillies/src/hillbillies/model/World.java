@@ -11,7 +11,19 @@ public class World {
 	public World(int[][][] terrainTypes, TerrainChangeListener modelListener){
 		this.dimension = terrainTypes.length;
 		this.terrainType = terrainTypes;
+		this.modelListener = modelListener;
 		ConnectedToBorder connectedToBorder = new ConnectedToBorder(this.getNbCubesX(),this.getNbCubesY(),this.getNbCubesZ());
+		for (int x=0;x<this.getNbCubesX();x++){
+			for (int y=0;y<this.getNbCubesY();y++){
+				for (int z=0;z<this.getNbCubesZ();z++){
+					int value = terrainTypes[x][y][z];
+					if (value == 0 || value == 3){
+						connectedToBorder.changeSolidToPassable(x, y, z);
+					}
+					//if geen terrainType meegegeven voor cube --> default air
+				}
+			}
+		}
 		// 3 for lussen
 		// eigen methodes om kubussen te getten en setten naar passable in aparte klasse cube
 		
@@ -45,6 +57,28 @@ public class World {
 	
 	public void advanceTime(double dt){
 		//check solid cube niet aan border verbonden -> afbreken binnen max 5sec
+		//cubes die van terrainType zijn veranderd: 
+				//		modelListener.notifyTerrainChanged(x, y, z)
+				//		--> hoe laat het spel ons weten of een cube veranderd is??
+				//			--> heb ik denk ik opgelost (zie lijst cubesChanged)
+		for (int[] cube : this.getCubesChanged()){
+			this.setCubeType(cube[0], cube[1], cube[2], 0);
+			modelListener.notifyTerrainChanged(cube[0], cube[1], cube[2]);
+			double P = 0.25;
+			Random random = new Random();
+			if (random.nextInt(100) <= (P*100)){
+				//rock
+				if (this.getCubeType(cube[0], cube[1], cube[2])==1){
+					Boulder boulder = new Boulder();
+					boulder.setPosition(cube[0], cube[1], cube[2]);
+				}
+				//wood
+				else if (this.getCubeType(cube[0], cube[1], cube[2])==2){
+					Log log = new Log();
+					log.setPosition(cube[0], cube[1], cube[2]);
+				}
+			}
+		}
 	}
 	
 	public int getCubeType(int x, int y, int z){
@@ -89,8 +123,16 @@ public class World {
 
 	
 	public Set<Unit> getUnits() {
-		return null;
-		// for alle factions in activeFactionSet: getUnitsOfFaction(-> set) en die verschillende sets samenvoegen?
+		Set<Unit> worldUnits = new HashSet<>();
+		Set<Faction> activeFactions = this.getActiveFactions();
+		for (Faction f : activeFactions){
+			Set<Unit> factionUnits = f.getUnitsOfFaction();
+			worldUnits.addAll(factionUnits);
+		}
+		return worldUnits;
+		// for alle factions in activeFactionSet: getUnitsOfFaction(-> set) 
+		// en die verschillende sets samenvoegen?
+		// -> GEDAAN
 	}
 	
 	public Set<Faction> getActiveFactions(){
@@ -102,4 +144,25 @@ public class World {
 	}
 	
 	private Set<Faction> activeFactionSet = new HashSet<Faction>();
+	
+	//NOG DOEN: (in Unit) als je werkt op een cube en solid cube verdwijnt:
+	//	connectedToBorder.changeSolidToPassable(coordinaten cube)
+	//	dit geeft een lijst terug van de cubes die niet langer aan de border hangen
+	//	deze lijst opslaan: world.addCubesChanged(lijst)
+	//		+ tijdens werken cubes bijhouden die air worden en deze ook in de lijst
+	//			opslaan
+	//  dan in advanceTime (al gedaan):
+	//		itereren over deze lijst en aanpassing doen (cubes afbreken +
+	//		GUI op de hoogte brengen adhv modelListener)
+	public void addCubesChanged(List<int[]> cubes){
+		this.cubesChanged.addAll(cubes);
+	}
+	
+	public List<int[]> getCubesChanged(){
+		return this.cubesChanged;
+	}
+	
+	private List<int[]> cubesChanged;
+	
+	private TerrainChangeListener modelListener;
 }
