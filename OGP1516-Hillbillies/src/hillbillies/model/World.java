@@ -18,7 +18,8 @@ public class World {
 				for (int z=0;z<this.getNbCubesZ();z++){
 					int value = terrainTypes[x][y][z];
 					if (value == 0 || value == 3){
-						connectedToBorder.changeSolidToPassable(x, y, z);
+						this.temporary = connectedToBorder.changeSolidToPassable(x, y, z);
+						this.temporary.clear();
 					}
 					//if geen terrainType meegegeven voor cube --> default air
 				}
@@ -30,6 +31,7 @@ public class World {
 		//zet solids van connectedtoborder naar lucht zie terraintype
 	}
 	
+	private List<int[]> temporary;
 	private ConnectedToBorder connectedToBorder;
 	
 	// zelf creeeren wegdoen en in de plaats moeten we dit zelf aanmaken in spawn unit
@@ -61,6 +63,8 @@ public class World {
 				//		modelListener.notifyTerrainChanged(x, y, z)
 				//		--> hoe laat het spel ons weten of een cube veranderd is??
 				//			--> heb ik denk ik opgelost (zie lijst cubesChanged)
+		
+		//GEEN FOR LUS, NOG AANPASSEN
 		for (int[] cube : this.getCubesChanged()){
 			this.setCubeType(cube[0], cube[1], cube[2], 0);
 			modelListener.notifyTerrainChanged(cube[0], cube[1], cube[2]);
