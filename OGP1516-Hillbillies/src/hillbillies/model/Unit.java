@@ -1346,31 +1346,33 @@ public class Unit {
 				for (int j=-1; j<2; j++){
 					for (int k=-1; k<2; k++){
 						Cube adjacent = new Cube(current.getX()+i,current.getY()+j,current.getZ()+k);
+						adjacent.setHCost(this.cubeEndPosition);
 						neighbours.add(adjacent);
 						if (((i==-1 || i==1) && j==0 && k==0) || ((j==-1 || j==1) && i==0 && k==0) || ((k==-1 || k==1) && j==0 && i==0)){
-							adjacent.setFCost(adjacent.getFCost()+10);
+							this.updateCost(current, adjacent, current.getGCost()+10, open, closed);
 						}
 						else if (((i==-1||i==1)&&(j==-1||j==1)&&k==0)||((i==-1||i==1)&&(k==-1||k==1)&&j==0)||((k==-1||k==1)&&(j==-1||j==1)&&i==0)){
-							adjacent.setFCost(adjacent.getFCost()+14);
+							this.updateCost(current, adjacent, current.getGCost()+14, open, closed);
 						}
 						else if ((i==-1||i==1)&&(j==-1||j==1)&&(k==-1||k==1)){
-							adjacent.setFCost(adjacent.getFCost()+17);
+							this.updateCost(current, adjacent, current.getGCost()+17, open, closed);
 						}
 					}
 				}
 			}
-			
-			for (Cube adjacent: neighbours){
-				if ((world.isPassable(adjacent.getX(),adjacent.getY(),adjacent.getZ()) && !closed.contains(adjacent))
-						&& (// als nieuwe path naar adjacent korter is
-								|| !open.contains(adjacent))){
-					adjacent.setParent(current);
-					if (!open.contains(adjacent)){
-						open.add(adjacent);
-					}
-				}
+		}
+	}
+	
+	public void updateCost(Cube current, Cube adjacent, int cost,ArrayList<Cube> open, ArrayList<Cube> closed){
+		int finalCost = adjacent.getHCost()+cost;
+		if ((world.isPassable(adjacent.getX(),adjacent.getY(),adjacent.getZ()) && !closed.contains(adjacent))
+				&& (finalCost < adjacent.getFCost() || !open.contains(adjacent))){
+			adjacent.setFCost(finalCost);
+			adjacent.setGCost(cost);
+			adjacent.setParent(current);
+			if (!open.contains(adjacent)){
+				open.add(adjacent);
 			}
-			
 		}
 	}
 
