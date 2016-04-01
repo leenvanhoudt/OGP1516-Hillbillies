@@ -841,11 +841,14 @@ public class Unit {
 		for (int i=-1; i<2; i++){
 			for (int j=-1; j<2; j++){
 				for (int k=-1; k<2; k++){
-					if (this.getWorld().getCubeType(x+i, y+j, z+k)==1 
-							|| this.getWorld().getCubeType(x+i, y+j, z+k)==2){
-						return false;
-					}
-						
+					if (x+i>=0 && x+i<15 
+							&& y+j>=0 && y+j<15
+							&& z+k>=0 && z+k<15){
+						if (this.getWorld().getCubeType(x+i, y+j, z+k)==1 
+								|| this.getWorld().getCubeType(x+i, y+j, z+k)==2){
+							return false;
+						}
+					}						
 				}
 			}
 		}
