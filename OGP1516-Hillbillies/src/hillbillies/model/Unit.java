@@ -1315,6 +1315,64 @@ public class Unit {
 			this.setCurrentSpeed(0);
 		}
 	}
+	
+	public void findPath(){
+		ArrayList<Cube> open = new ArrayList<Cube>();
+		ArrayList<Cube> closed = new ArrayList<Cube>();
+		open.add(new Cube (this.getCubeCoordinate()[0],this.getCubeCoordinate()[1],this.getCubeCoordinate()[2]));
+		Cube current = new Cube (this.getCubeCoordinate()[0],this.getCubeCoordinate()[1],this.getCubeCoordinate()[2]);
+		Cube minimum = open.get(0);
+		
+		while (!(Util.fuzzyEquals(current.getX(), this.cubeEndPosition[0]))
+				|| !(Util.fuzzyEquals(current.getY(), this.cubeEndPosition[1]))
+				|| !(Util.fuzzyEquals(current.getZ(), this.cubeEndPosition[2]))){
+			for (int i = 0;i<open.size();i++){
+				minimum = open.get(0);
+				if (open.size()==1){
+					current = open.get(0);
+				}
+				else if (open.get(i).getFCost()< minimum.getFCost()){
+					minimum = open.get(i);
+					current = minimum;
+				}
+			}
+			open.remove(current);
+			closed.add(current);
+			
+			//checken of current gelijk is aan eind positie als het fout loopt 
+			
+			ArrayList<Cube> neighbours = new ArrayList<Cube>();
+			for (int i=-1; i<2; i++){
+				for (int j=-1; j<2; j++){
+					for (int k=-1; k<2; k++){
+						Cube adjacent = new Cube(current.getX()+i,current.getY()+j,current.getZ()+k);
+						neighbours.add(adjacent);
+						if (((i==-1 || i==1) && j==0 && k==0) || ((j==-1 || j==1) && i==0 && k==0) || ((k==-1 || k==1) && j==0 && i==0)){
+							adjacent.setFCost(adjacent.getFCost()+10);
+						}
+						else if (((i==-1||i==1)&&(j==-1||j==1)&&k==0)||((i==-1||i==1)&&(k==-1||k==1)&&j==0)||((k==-1||k==1)&&(j==-1||j==1)&&i==0)){
+							adjacent.setFCost(adjacent.getFCost()+14);
+						}
+						else if ((i==-1||i==1)&&(j==-1||j==1)&&(k==-1||k==1)){
+							adjacent.setFCost(adjacent.getFCost()+17);
+						}
+					}
+				}
+			}
+			
+			for (Cube adjacent: neighbours){
+				if ((world.isPassable(adjacent.getX(),adjacent.getY(),adjacent.getZ()) && !closed.contains(adjacent))
+						&& (// als nieuwe path naar adjacent korter is
+								|| !open.contains(adjacent))){
+					adjacent.setParent(current);
+					if (!open.contains(adjacent)){
+						open.add(adjacent);
+					}
+				}
+			}
+			
+		}
+	}
 
 	/**
 	 * Variable referencing to the destination cube of the method moveTo(int[]

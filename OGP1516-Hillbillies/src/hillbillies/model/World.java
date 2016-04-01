@@ -93,6 +93,11 @@ public class World {
 		this.terrainType[x][y][z] = value;
 	}
 	
+	public boolean isPassable(int x, int y, int z){
+		return (terrainType[x][y][z]==0 
+				|| terrainType[x][y][z]==3);
+	}
+	
 	public boolean isSolidConnectedToBorder(int x, int y, int z) {
 		return connectedToBorder.isSolidConnectedToBorder(x,y,z);
 	}
