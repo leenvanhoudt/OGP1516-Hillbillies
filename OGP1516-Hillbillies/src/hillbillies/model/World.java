@@ -106,33 +106,10 @@ public class World {
 				this.activeFactionList.add(newFaction);
 			}			
 			this.sort();
+			int[] validPosition = this.searchValidPosition();
 			Random random = new Random();
-			//zoek valid positie
-			int x = random.nextInt(this.getNbCubesX());
-			int y = random.nextInt(this.getNbCubesY());
-			int z = random.nextInt(this.getNbCubesZ());
-			//zoek betere oplossing
-			while (!this.isValidStandingPosition(x,y,z)){
-				System.out.println(x + " " + y + " " + z);
-				if (x < this.getNbCubesX()-1)
-					x++;
-				else if(y < this.getNbCubesY()-1){
-					x = 0;
-					y++;
-				}
-				else if (z< this.getNbCubesZ()-1){
-					x = 0;
-					y = 0;
-					z++;	
-				}
-				else{
-					x = 0;
-					y = 0;
-					z = 0;
-				}
-			}
 			int characteristics = 25 + random.nextInt(76);
-			Unit newUnit = new Unit("Jan",new int[] {x,y,z}, characteristics, characteristics,characteristics,characteristics, enableDefaultBehavior);
+			Unit newUnit = new Unit("Jan",validPosition, characteristics, characteristics,characteristics,characteristics, enableDefaultBehavior);
 			this.activeFactionList.get(0).addUnitToFaction(newUnit);
 			newUnit.setFaction(this.activeFactionList.get(0));
 			newUnit.setWorld(this);
@@ -141,6 +118,35 @@ public class World {
 		// vreemde unit zonder faction en niet tot world behorend maken of null returnen?
 		System.out.println("null");
 		return null;
+	}
+	
+	public int[] searchValidPosition() {
+		Random random = new Random();
+		//zoek valid positie
+		int x = random.nextInt(this.getNbCubesX());
+		int y = random.nextInt(this.getNbCubesY());
+		int z = random.nextInt(this.getNbCubesZ());
+		//zoek betere oplossing
+		while (!this.isValidStandingPosition(x,y,z)){
+			System.out.println(x + " " + y + " " + z);
+			if (x < this.getNbCubesX()-1)
+				x++;
+			else if(y < this.getNbCubesY()-1){
+				x = 0;
+				y++;
+			}
+			else if (z< this.getNbCubesZ()-1){
+				x = 0;
+				y = 0;
+				z++;	
+			}
+			else{
+				x = 0;
+				y = 0;
+				z = 0;
+			}
+		}
+		return new int[] {x,y,z};
 	}
 	
 	public void sort(){

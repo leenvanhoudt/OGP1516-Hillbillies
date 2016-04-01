@@ -1616,7 +1616,7 @@ public class Unit {
 			//TODO check of per blok punten af of per stap(advtime)
 			this.setHitPoints(this.getCurrentHitPoints()-10);
 		}
-		else{
+		else if (this.getWorld().isValidStandingPosition(this.getCubeCoordinate()[0], this.getCubeCoordinate()[1], this.getCubeCoordinate()[2])){
 			this.isFalling = false;
 		}		
 	}
