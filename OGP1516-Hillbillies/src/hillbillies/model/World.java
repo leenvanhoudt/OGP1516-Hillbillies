@@ -49,8 +49,11 @@ public class World {
 		return this.dimension;
 	}
 	
-	public void advanceTime(double dt){
-		//check solid cube niet aan border verbonden -> afbreken binnen max 5sec
+	public void advanceTime(double dt) throws IllegalArgumentException{
+		for (Unit unit: this.getUnits()){
+			unit.advanceTime(dt);
+		}
+	/*	//check solid cube niet aan border verbonden -> afbreken binnen max 5sec
 		//cubes die van terrainType zijn veranderd: 
 				//		modelListener.notifyTerrainChanged(x, y, z)
 				//		--> hoe laat het spel ons weten of een cube veranderd is??
@@ -76,7 +79,7 @@ public class World {
 			}
 			this.setCubeType(cube[0], cube[1], cube[2], 0);
 			modelListener.notifyTerrainChanged(cube[0], cube[1], cube[2]);
-		}
+		}*/
 	}
 	
 	public int getCubeType(int x, int y, int z){
@@ -94,8 +97,8 @@ public class World {
 	}
 	
 	public boolean isPassable(int x, int y, int z){
-		return (terrainType[x][y][z]==0 
-				|| terrainType[x][y][z]==3);
+		return (this.terrainType[x][y][z]==0 
+				|| this.terrainType[x][y][z]==3);
 	}
 	
 	public boolean isSolidConnectedToBorder(int x, int y, int z) {
@@ -133,7 +136,6 @@ public class World {
 		int z = random.nextInt(this.getNbCubesZ());
 		//zoek betere oplossing
 		while (!this.isValidStandingPosition(x,y,z)){
-			System.out.println(x + " " + y + " " + z);
 			if (x < this.getNbCubesX()-1)
 				x++;
 			else if(y < this.getNbCubesY()-1){

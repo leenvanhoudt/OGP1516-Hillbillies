@@ -4,7 +4,7 @@ public class Cube {
 	
 	private int hCost = 0;
 	private int gCost = 0;
-	private int fCost = 0;
+	private int fCost = Integer.MAX_VALUE;
 	private int x, y, z;
 	Cube parent;
 	

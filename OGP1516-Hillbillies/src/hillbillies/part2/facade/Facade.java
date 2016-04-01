@@ -243,6 +243,11 @@ public class Facade implements IFacade{
 	@Override
 	public void advanceTime(World world, double dt) throws ModelException {
 		// TODO Auto-generated method stub
+		try{
+			world.advanceTime(dt);
+		} catch (IllegalArgumentException e){
+			throw new ModelException();
+		}
 		
 	}
 
