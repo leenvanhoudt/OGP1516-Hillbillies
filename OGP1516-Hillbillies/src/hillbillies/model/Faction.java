@@ -15,7 +15,7 @@ public class Faction {
 		this.unitsInFaction.add(unit);
 	}
 	
-	public void removeUnitToFaction(Unit unit){
+	public void removeUnitFromFaction(Unit unit){
 		this.unitsInFaction.remove(unit);
 	}
 	

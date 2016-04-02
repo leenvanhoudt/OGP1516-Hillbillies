@@ -799,6 +799,7 @@ public class Unit {
 	 */
 	public void advanceTime(double dt) throws IllegalArgumentException {
 		if (this.getWorld().isValidDuration(dt)) {
+			this.death(); //TODO moet je dan van unit changen?
 			this.sprintingAdvanceTime(dt);
 			if (this.isMoving())
 				this.isMovingAdvanceTime(dt);
@@ -1083,10 +1084,11 @@ public class Unit {
 	 *       new.getCurrentSpeed() == this.walkingSpeed
 	 */
 	public void moveToAdjacent(int dx, int dy, int dz) throws IllegalArgumentException {
-		System.out.println("move to adjacent");
 		if ((!this.isMoving() || this.isMovingTo) && !this.isWorking()) {
-			if (this.isFalling)
+			if (this.isFalling){
 				this.setCurrentSpeed(this.fallingSpeed);
+				this.calculateNextPosition(dx, dy, dz);
+			}
 			else if (this.isSprinting()) {
 				this.calculateNextPosition(dx, dy, dz);
 				this.calculateSpeed(this.getNextPosition());
@@ -1445,7 +1447,6 @@ public class Unit {
 	 * @post ... Make the unit work. | new.isWorking = true
 	 */
 	public void work() {
-		System.out.println("work");
 		this.isWorking = true;
 	}
 
@@ -1476,8 +1477,10 @@ public class Unit {
 	 *         itself. | this.attack(defender); | defender.defend(this);
 	 */
 	public void fight(Unit defender) {
-		this.attack(defender);
-		defender.defend(this);
+		if (!this.isFalling){
+			this.attack(defender);
+			defender.defend(this);
+		}
 	}
 
 	/**
@@ -1570,13 +1573,15 @@ public class Unit {
 	 *       true | new.currentSpeed = 0
 	 */
 	public void rest() {
-		this.isResting = true;
-		if (this.isWorking()) {
-			this.restAfterWork = true;
+		if (!this.isFalling){
+			this.isResting = true;
+			if (this.isWorking()) {
+				this.restAfterWork = true;
+			}
+			this.hitPointsBeforeRest = this.getCurrentHitPoints();
+			this.staminaPointsBeforeRest = this.getCurrentStaminaPoints();
+			this.setCurrentSpeed(0);
 		}
-		this.hitPointsBeforeRest = this.getCurrentHitPoints();
-		this.staminaPointsBeforeRest = this.getCurrentStaminaPoints();
-		this.setCurrentSpeed(0);
 	}
 
 	/**
@@ -1723,13 +1728,18 @@ public class Unit {
 	private World world;
 
 	public boolean isAlive() {
-		return (this.getHitPoints() != 0);
+		return (this.getHitPoints() > 0);
 	}
 
 	//TODO voorrang geven aan vallen
 	public void falling(){
 		if (this.isFallingPosition(this.getCubeCoordinate()[0], this.getCubeCoordinate()[1], this.getCubeCoordinate()[2])){
 			this.isFalling = true;
+			this.isWorking = false;
+			this.isAttacking = false;
+			this.isResting = false;
+			this.isMovingTo = false;
+			this.stopSprinting();
 			this.moveToAdjacent(0, 0, -1);
 		}
 		else if (this.getWorld().isValidStandingPosition(this.getCubeCoordinate()[0], this.getCubeCoordinate()[1], this.getCubeCoordinate()[2])){
@@ -1741,21 +1751,22 @@ public class Unit {
 	}
 	
 	private boolean isFalling;
-	Log log = new Log();
-	Boulder boulder = new Boulder();
+	Log log;
+	Boulder boulder;
 	
 	public void workAt(int x, int y, int z){
-		this.setOrientation(Math.atan2(y - this.getPosition()[1],
-				x - this.getPosition()[0]));
-		this.work();
-		this.workPosition = new int[] {x,y,z};
+		if (!this.isFalling){
+			this.setOrientation(Math.atan2(y - this.getPosition()[1], x - this.getPosition()[0]));
+			this.work();
+			this.workPosition = new int[] {x,y,z};
+		}
 	}
 	
 	private int[] workPosition;
 	
 	public void resultWorkAt(int x, int y, int z){
-		if (this.isCarryingLog() || this.isCarryingBoulder()){
-			//niet droppen op solid
+		//TODO test met log in eigen handen werken op eigen plek
+		if ((this.isCarryingLog() || this.isCarryingBoulder()) && this.getWorld().isPassable(x, y, z)){
 			if (this.isCarryingLog()){
 				this.isCarryingLog = false;
 				this.log.setPosition(x+LC/2,y+LC/2,z+LC/2);
@@ -1778,12 +1789,14 @@ public class Unit {
 		}
 		else if (!this.getWorld().getBoulders().isEmpty() && this.getWorld().cubeContainsBoulder(x, y, z)){
 			this.boulder = this.getWorld().getCubeBoulder(x, y, z);
+			this.boulder.setWorld(this.getWorld());
 			this.weight = (this.getWeight() + this.boulder.getBoulderWeight());
 			this.getWorld().removeBoulder(this.boulder);
 			this.isCarryingBoulder = true;
 		}
 		else if (!this.getWorld().getLogs().isEmpty() && this.getWorld().cubeContainsLog(x, y, z)){
 			this.log = this.getWorld().getCubeLog(x, y, z);
+			this.log.setWorld(this.getWorld());
 			this.weight = (this.getWeight() + this.log.getLogWeight());
 			this.getWorld().removeLog(this.log);
 			this.isCarryingLog = true;
@@ -1794,6 +1807,7 @@ public class Unit {
 				this.getWorld().addCubesChanged(changedCubes);
 			this.getWorld().setCubeType(x, y, z, 0);
 			Log newlog = new Log();
+			newlog.setWorld(this.getWorld());
 			newlog.setPosition(x+LC/2, y+LC/2, z+LC/2);
 			this.getWorld().addLog(newlog);
 			this.getWorld().modelListener.notifyTerrainChanged(x, y, z);
@@ -1804,6 +1818,7 @@ public class Unit {
 				this.getWorld().addCubesChanged(changedCubes);
 			this.getWorld().setCubeType(x, y, z, 0);
 			Boulder newboulder = new Boulder();
+			newboulder.setWorld(this.getWorld());
 			newboulder.setPosition(x+LC/2, y+LC/2, z+LC/2);
 			this.getWorld().addBoulder(newboulder);
 			this.getWorld().modelListener.notifyTerrainChanged(x, y, z);
@@ -1821,4 +1836,29 @@ public class Unit {
 	}
 	
 	private boolean isCarryingBoulder = false;
+	
+	public void death(){
+		if(!this.isAlive()){
+			this.isFalling = false;
+			this.isWorking = false;
+			this.isAttacking = false;
+			this.isResting = false;
+			this.isMovingTo = false;
+			this.stopSprinting();
+			this.setCurrentSpeed(0);
+			if (this.isCarryingBoulder){
+				this.isCarryingBoulder = false;
+				this.boulder.setPosition(this.getPosition()[0]+LC/2,this.getPosition()[1]+LC/2,this.getPosition()[2]+LC/2);
+				this.setWeight(this.getWeight()-this.boulder.getBoulderWeight());
+				this.getWorld().addBoulder(this.boulder);
+			}
+			else if (this.isCarryingLog){
+				this.isCarryingLog = false;
+				this.log.setPosition(this.getPosition()[0]+LC/2,this.getPosition()[1]+LC/2,this.getPosition()[2]+LC/2);
+				this.setWeight(this.getWeight()-this.log.getLogWeight());
+				this.getWorld().addLog(this.log);
+			}
+			this.getFaction().removeUnitFromFaction(this);
+		}
+	}
 }

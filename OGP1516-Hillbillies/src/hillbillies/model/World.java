@@ -94,12 +94,14 @@ public class World {
 						//rock
 						if (this.getCubeType(cube[0], cube[1], cube[2])==1){
 							Boulder boulder = new Boulder();
+							boulder.setWorld(this);
 							boulder.setPosition(cube[0], cube[1], cube[2]);
 							this.addBoulder(boulder);
 						}
 						//wood
 						else if (this.getCubeType(cube[0], cube[1], cube[2])==2){
 							Log log = new Log();
+							log.setWorld(this);
 							log.setPosition(cube[0], cube[1], cube[2]);
 							this.addLog(log);
 						}
