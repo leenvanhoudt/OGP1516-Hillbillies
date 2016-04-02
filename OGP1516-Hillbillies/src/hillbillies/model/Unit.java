@@ -107,7 +107,7 @@ public class Unit {
 	 * 
 	 */
 	public Unit(String name, int[] initialPosition, int weight, int agility, int strength, int toughness,
-			boolean enableDefaultBehavior) throws IllegalArgumentException {
+			boolean enabletBehavior) throws IllegalArgumentException {
 		if (!isValidName(name))
 			throw new IllegalArgumentException();
 		setName(name);
@@ -845,15 +845,31 @@ public class Unit {
 	}
 
 	public void experiencePointsAdvanceTime() {
-		// TODO als karakteristiek al vol is, bij een andere toevoegen.
-		Random random = new Random();
+		Random random = new Random();		
 		int randomNumber = random.nextInt(3);
-		if (randomNumber == 0)
-			this.setAgility(this.getAgility() + 1);
-		else if (randomNumber == 1)
-			this.setStrength(this.getStrength() + 1);
-		else if (randomNumber == 2)
-			this.setToughness(this.getToughness() + 1);
+		
+		if (randomNumber == 0){
+			if (this.getAgility()!=MAX_VALUE){
+				this.setAgility(this.getAgility() + 1);
+			}else{
+				randomNumber += 1;
+			}
+		}
+		if (randomNumber == 1){
+			if (this.getStrength()!=MAX_VALUE){
+				this.setStrength(this.getStrength() + 1);
+			}else{
+				randomNumber += 1;
+			}
+		}
+		if (randomNumber == 2){
+			if (this.getToughness()!=MAX_VALUE)
+				this.setToughness(this.getToughness() + 1);
+			else if (this.getAgility()!=MAX_VALUE)
+				this.setAgility(this.getAgility() + 1);
+			else if (this.getStrength()!= MAX_VALUE)
+				this.setStrength(this.getStrength() + 1);
+		}
 		this.experiencePoints -= 10;
 	}
 
@@ -907,6 +923,7 @@ public class Unit {
 			}
 		} else {
 			this.setPosition(this.getNextPosition());
+			this.setExperiencePoints(this.getExperiencePoints()+1);
 			if (!this.isMovingTo)
 				this.setCurrentSpeed(0);
 			if(this.isFalling){
@@ -1477,7 +1494,7 @@ public class Unit {
 	 *         itself. | this.attack(defender); | defender.defend(this);
 	 */
 	public void fight(Unit defender) {
-		if (!this.isFalling){
+		if (!this.isFalling && this.getFaction()!=defender.getFaction()){
 			this.attack(defender);
 			defender.defend(this);
 		}
@@ -1547,25 +1564,40 @@ public class Unit {
 		double Pd = 0.20 * this.getAgility() / attacker.getAgility();
 		Random random = new Random();
 		if (random.nextInt(100) <= (Pd * 100)) {
-			double randomx = (-1) + 2 * random.nextDouble();
-			double randomy = (-1) + 2 * random.nextDouble();
-			if (Util.fuzzyEquals(0, randomx) && Util.fuzzyEquals(0, randomy)) {
-				randomx = randomx + 1;
-			}
-			double[] dodgePosition = new double[] { this.getPosition()[0] + random.nextDouble(),
-					this.getPosition()[1] + random.nextDouble(), this.getPosition()[2] };
-			this.setPosition(dodgePosition);
+			double[] dodgePos = this.searchDodgePosition();
+			this.setPosition(dodgePos);
+			this.setExperiencePoints(this.getExperiencePoints()+20);
 		} else {
-			double Pb = 0.25
-					* ((this.getStrength() + this.getAgility()) / (attacker.getStrength() + attacker.getAgility()));
+			double Pb = 0.25*((this.getStrength() + this.getAgility()) / (attacker.getStrength() 
+					+ attacker.getAgility()));
 			if (random.nextInt(100) > (Pb * 100)) {
 				if (this.getCurrentHitPoints() >= attacker.getStrength() / 10) {
 					this.setHitPoints(this.getCurrentHitPoints() - attacker.getStrength() / 10);
+				}else{
+					this.setHitPoints(0);
 				}
+				attacker.setExperiencePoints(this.getExperiencePoints()+20);
+			}else{
+				this.setExperiencePoints(this.getExperiencePoints()+20);
 			}
 		}
 	}
 
+	public double[] searchDodgePosition(){
+		for (int i=-1;i<2;i++){
+			for (int j=-1;j<2;j++){
+				for (int k=-1;k<2;k++){
+					if(this.getWorld().isPassable(this.getCubeCoordinate()[0]+i, 
+							this.getCubeCoordinate()[1]+j, this.getCubeCoordinate()[2]+k)){
+						double[] dodgePos = new double[]{ this.getPosition()[0] + i,
+								this.getPosition()[1] + j, this.getPosition()[2]+k };
+						return dodgePos;
+					}
+				}
+			}
+		}
+		return new double[] {this.getPosition()[0], this.getPosition()[1], this.getPosition()[2]};
+	}
 	/**
 	 * Make the unit rest.
 	 * 
@@ -1665,17 +1697,20 @@ public class Unit {
 	 */
 	public void defaultBehavior() throws IllegalArgumentException {
 		Random random = new Random();
-		int i = random.nextInt(4);
-		int[] randomPosition = new int[] { random.nextInt(50), random.nextInt(50), random.nextInt(50) };
-		double[] randomPosition2 = new double[] { random.nextInt(50), random.nextInt(50), random.nextInt(50) };
+		int i =random.nextInt(4);
+		//TODO 15 vervangen door afmetingen wereld
+		int[] randomPosition = new int[] { random.nextInt(15), random.nextInt(15), random.nextInt(15) };
+		double[] randomPosition2 = new double[] {randomPosition[0], randomPosition[1], randomPosition[2]};
 		switch (i) {
 		case 0:
 			this.moveTo(randomPosition);
 			break;
 		case 1:
+			//werkpositie meegeven
 			this.work();
 			break;
 		case 2:
+			//check iets met validposition
 			this.rest();
 			break;
 		case 3:
@@ -1823,6 +1858,8 @@ public class Unit {
 			this.getWorld().addBoulder(newboulder);
 			this.getWorld().modelListener.notifyTerrainChanged(x, y, z);
 		}
+
+		this.setExperiencePoints(this.getExperiencePoints()+10);
 	}
 	
 	public boolean isCarryingLog(){
