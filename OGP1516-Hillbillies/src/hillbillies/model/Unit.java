@@ -769,22 +769,10 @@ public class Unit {
 	private int experiencePoints = 0;
 
 	/**
-	 * Check whether the given duration is a valid duration for any unit. It is
-	 * valid when it doesn't exceed the boundaries (0 and MAX_DURATION(=0.2)).
-	 * 
-	 * @param duration
-	 *            The duration to check.
-	 * @return ... | result == (dt >= 0 && dt < MAX_DURATION)
-	 */
-	public static boolean isValidDuration(double dt) {
-		return dt >= 0 && dt < MAX_DURATION;
-	}
-
-	/**
 	 * Constant value limiting the duration.
 	 */
-	private static final double MAX_DURATION = 0.2;
-
+	public static final double MAX_DURATION = 0.2;
+	
 	/**
 	 * Update the program every valid dt seconds. - When the unit is sprinting
 	 * and his staminaPoints are 0, the unit will stop sprinting. - When the
@@ -810,7 +798,7 @@ public class Unit {
 	 * 
 	 */
 	public void advanceTime(double dt) throws IllegalArgumentException {
-		if (isValidDuration(dt)) {
+		if (this.getWorld().isValidDuration(dt)) {
 			this.sprintingAdvanceTime(dt);
 			if (this.isMoving())
 				this.isMovingAdvanceTime(dt);
@@ -1005,6 +993,7 @@ public class Unit {
 			this.workingTime += dt;
 			if (this.workingTime >= (500 / this.getStrength())) {
 				this.isWorking = false;
+				this.resultWorkAt(this.workPosition[0], this.workPosition[1], this.workPosition[2]);
 				this.workingTime = 0;
 			}
 		}
@@ -1107,7 +1096,7 @@ public class Unit {
 			} else {
 				System.out.println("moving 1");
 				this.calculateNextPosition(dx, dy, dz);
-				this.calculateSpeed(this.getNextPosition());
+				this.calculateSpeed(this.getNextPosition()); 
 				if (this.getWorld().isPassable((int)Math.floor(this.getNextPosition()[0]), (int)Math.floor(this.getNextPosition()[1]), (int)Math.floor(this.getNextPosition()[2]))){
 					this.setCurrentSpeed(this.walkingSpeed);
 					System.out.println("cube is passable");
@@ -1298,12 +1287,19 @@ public class Unit {
 	 *         calculated dx, dy and dz, towards the destination. |
 	 *         this.moveToAdjacent(dx, dy, dz);
 	 */
-	public void moveTo(int[] cube) throws IllegalArgumentException {	
+	public void moveTo(int[] cube) throws IllegalArgumentException {
+		System.out.println("boolean move " + this.isMovingTo);
 		this.cubeEndPosition = cube;
 		if (!this.getWorld().isPassable(this.cubeEndPosition[0], this.cubeEndPosition[1], this.cubeEndPosition[2])){
 			throw new IllegalArgumentException();
 		}
 		else{
+			if (!this.isMovingTo){
+				System.out.println("ismovingtopath");
+				this.path = this.findPath();
+				this.isMovingTo = true;
+				System.out.println("boolean move na pathfinding " + this.isMovingTo);
+			}
 			if (this.getCubeCoordinate()[0] == this.cubeEndPosition[0] 
 					&& this.getCubeCoordinate()[1] == this.cubeEndPosition[1]
 					&& this.getCubeCoordinate()[2] == this.cubeEndPosition[2]){
@@ -1311,32 +1307,42 @@ public class Unit {
 				this.isMovingTo = false;
 				this.setCurrentSpeed(0);
 			}
-			else{
+			if (this.isMovingTo){
 				System.out.println("move to");
 				int dx = 0;
 				int dy = 0;
 				int dz = 0;
-				this.isMovingTo = true;
-				ArrayList<Cube> path = this.findPath();
 				System.out.println("size:"+path.size());
 				for (int i = 0; i < path.size()-1; i++){
-					dx = path.get(i+1).getX()-path.get(i).getX();
-					dy = path.get(i+1).getY()-path.get(i).getY();
-					dz = path.get(i+1).getZ()-path.get(i).getZ();
+					dx = this.path.get(i+1).getX()-this.path.get(i).getX();
+					dy = this.path.get(i+1).getY()-this.path.get(i).getY();
+					dz = this.path.get(i+1).getZ()-this.path.get(i).getZ();
+					//this.path.remove(0);
 					System.out.println(dx + " " + dy + " " + dz);
 					this.moveToAdjacent(dx, dy, dz);
 				}
-				System.out.println(this.getCubeCoordinate()[0] +" " + this.cubeEndPosition[0] );
+				//System.out.println(this.getCubeCoordinate()[0] +" " + this.cubeEndPosition[0] );
 			}
 		}
 	}
 	
+	private ArrayList<Cube> path = new ArrayList<Cube>();
+	
 	public ArrayList<Cube> findPath(){
+		Cube[][][] grid = new Cube[this.getWorld().getNbCubesX()][this.getWorld().getNbCubesY()][this.getWorld().getNbCubesZ()];
+		for (int i=0; i<this.getWorld().getNbCubesX(); i++){
+			for (int j=0; j<this.getWorld().getNbCubesY(); j++){
+				for (int k=0; k<this.getWorld().getNbCubesZ(); k++){
+					grid[i][j][k] = new Cube(i,j,k);
+					grid[i][j][k].setHCost(this.cubeEndPosition);
+				}
+			}
+		}
 		System.out.println("find path");
 		System.out.println("startcube coordinate: "+this.getCubeCoordinate()[0]);
 		ArrayList<Cube> open = new ArrayList<Cube>();
 		ArrayList<Cube> closed = new ArrayList<Cube>();
-		Cube startCube = new Cube (this.getCubeCoordinate()[0],this.getCubeCoordinate()[1],this.getCubeCoordinate()[2]);
+		Cube startCube = grid[this.getCubeCoordinate()[0]][this.getCubeCoordinate()[1]][this.getCubeCoordinate()[2]];
 		open.add(startCube);
 		Cube current = startCube;
 		Cube minimum = open.get(0);
@@ -1368,18 +1374,22 @@ public class Unit {
 						//System.out.println("neigbours");
 						if (current.getX()+i>=0 && current.getX()+i<15 
 								&& current.getY()+j>=0 && current.getY()+j<15
-								&& current.getZ()+k>=0 && current.getZ()+k<15 
-								&& this.getWorld().isPassable(current.getX()+i, current.getY()+j, current.getZ()+k)){
-							Cube adjacent = new Cube(current.getX()+i,current.getY()+j,current.getZ()+k);
-							adjacent.setHCost(this.cubeEndPosition);
-							if (((i==-1 || i==1) && j==0 && k==0) || ((j==-1 || j==1) && i==0 && k==0) || ((k==-1 || k==1) && j==0 && i==0)){
-								this.updateCost(current, adjacent, current.getGCost()+10, open, closed);
+								&& current.getZ()+k>=0 && current.getZ()+k<15){
+							Cube adjacent = grid[current.getX()+i][current.getY()+j][current.getZ()+k];
+							if (this.getWorld().isPassable(current.getX()+i, current.getY()+j, current.getZ()+k)){
+								//adjacent.setHCost(this.cubeEndPosition);
+								if (((i==-1 || i==1) && j==0 && k==0) || ((j==-1 || j==1) && i==0 && k==0) || ((k==-1 || k==1) && j==0 && i==0)){
+									this.updateCost(current, adjacent, current.getGCost()+10, open, closed);
+								}
+								else if (((i==-1||i==1)&&(j==-1||j==1)&&k==0)||((i==-1||i==1)&&(k==-1||k==1)&&j==0)||((k==-1||k==1)&&(j==-1||j==1)&&i==0)){
+									this.updateCost(current, adjacent, current.getGCost()+14, open, closed);
+								}
+								else if ((i==-1||i==1)&&(j==-1||j==1)&&(k==-1||k==1)){
+									this.updateCost(current, adjacent, current.getGCost()+17, open, closed);
+								}	
 							}
-							else if (((i==-1||i==1)&&(j==-1||j==1)&&k==0)||((i==-1||i==1)&&(k==-1||k==1)&&j==0)||((k==-1||k==1)&&(j==-1||j==1)&&i==0)){
-								this.updateCost(current, adjacent, current.getGCost()+14, open, closed);
-							}
-							else if ((i==-1||i==1)&&(j==-1||j==1)&&(k==-1||k==1)){
-								this.updateCost(current, adjacent, current.getGCost()+17, open, closed);
+							else if (!this.getWorld().isPassable(current.getX()+i, current.getY()+j, current.getZ()+k)){
+								closed.add(adjacent);
 							}
 						}
 					}
@@ -1396,15 +1406,15 @@ public class Unit {
 		Collections.reverse(path);
 		System.out.println(path.get(0).getX() + " " +path.get(0).getY() + " " +path.get(0).getZ() );
 		System.out.println(path.get(1).getX() + " " +path.get(1).getY() + " " +path.get(1).getZ() );
-		//System.out.println(path.get(2).getX() + " " +path.get(2).getY() + " " +path.get(2).getZ() );
+		System.out.println(path.get(2).getX() + " " +path.get(2).getY() + " " +path.get(2).getZ() );
 		return path;
 	}
 	
 	public void updateCost(Cube current, Cube adjacent, int cost,ArrayList<Cube> open, ArrayList<Cube> closed){
 		//System.out.println("update cost");
 		int finalCost = adjacent.getHCost()+cost;
-		if ((this.getWorld().isPassable(adjacent.getX(),adjacent.getY(),adjacent.getZ()) && !this.containsCube(closed, adjacent))
-				&& (finalCost < adjacent.getFCost() || !this.containsCube(open, adjacent))){
+		if ((this.getWorld().isPassable(adjacent.getX(),adjacent.getY(),adjacent.getZ()) && !closed.contains(adjacent))
+				&& (finalCost < adjacent.getFCost() || !open.contains(adjacent))){
 			adjacent.setFCost(finalCost);
 			adjacent.setGCost(cost);
 			//System.out.println("set parent");
@@ -1415,13 +1425,13 @@ public class Unit {
 		}
 	}
 	
-	public boolean containsCube(ArrayList<Cube> cubes,Cube cubeToCheck){
+	/*public boolean containsCube(ArrayList<Cube> cubes,Cube cubeToCheck){
 		for (Cube cube: cubes){
 			if (cube.getX()==cubeToCheck.getX() && cube.getY()==cubeToCheck.getY() && cube.getZ()==cubeToCheck.getZ())
 				return true;
 		}
 		return false;
-	}
+	}*/
 
 	/**
 	 * Variable referencing to the destination cube of the method moveTo(int[]
@@ -1435,6 +1445,7 @@ public class Unit {
 	 * @post ... Make the unit work. | new.isWorking = true
 	 */
 	public void work() {
+		System.out.println("work");
 		this.isWorking = true;
 	}
 
@@ -1730,4 +1741,84 @@ public class Unit {
 	}
 	
 	private boolean isFalling;
+	Log log = new Log();
+	Boulder boulder = new Boulder();
+	
+	public void workAt(int x, int y, int z){
+		this.setOrientation(Math.atan2(y - this.getPosition()[1],
+				x - this.getPosition()[0]));
+		this.work();
+		this.workPosition = new int[] {x,y,z};
+	}
+	
+	private int[] workPosition;
+	
+	public void resultWorkAt(int x, int y, int z){
+		if (this.isCarryingLog() || this.isCarryingBoulder()){
+			//niet droppen op solid
+			if (this.isCarryingLog()){
+				this.isCarryingLog = false;
+				this.log.setPosition(x+LC/2,y+LC/2,z+LC/2);
+				this.setWeight(this.getWeight()-this.log.getLogWeight());
+				this.getWorld().addLog(this.log);
+			} else{
+				this.isCarryingBoulder = false;
+				this.boulder.setPosition(x+LC/2,y+LC/2,z+LC/2);
+				this.setWeight(this.getWeight()-this.boulder.getBoulderWeight());
+				this.getWorld().addBoulder(this.boulder);
+			}
+		}
+		else if (this.getWorld().getCubeType(x, y, z)==3
+				&& !this.getWorld().getBoulders().isEmpty() && this.getWorld().cubeContainsBoulder(x, y, z)
+				&& !this.getWorld().getLogs().isEmpty() && this.getWorld().cubeContainsLog(x, y, z)){
+			this.setWeight(this.getWeight()+1);
+			this.setToughness(this.getToughness()+1);
+			this.getWorld().removeLog(this.getWorld().getCubeLog(x, y, z));
+			this.getWorld().removeBoulder(this.getWorld().getCubeBoulder(x, y, z));
+		}
+		else if (!this.getWorld().getBoulders().isEmpty() && this.getWorld().cubeContainsBoulder(x, y, z)){
+			this.boulder = this.getWorld().getCubeBoulder(x, y, z);
+			this.weight = (this.getWeight() + this.boulder.getBoulderWeight());
+			this.getWorld().removeBoulder(this.boulder);
+			this.isCarryingBoulder = true;
+		}
+		else if (!this.getWorld().getLogs().isEmpty() && this.getWorld().cubeContainsLog(x, y, z)){
+			this.log = this.getWorld().getCubeLog(x, y, z);
+			this.weight = (this.getWeight() + this.log.getLogWeight());
+			this.getWorld().removeLog(this.log);
+			this.isCarryingLog = true;
+		}
+		else if (this.getWorld().getCubeType(x, y, z)==2){
+			List<int[]> changedCubes = this.getWorld().connectedToBorder.changeSolidToPassable(x,y,z);
+			if (!changedCubes.isEmpty())
+				this.getWorld().addCubesChanged(changedCubes);
+			this.getWorld().setCubeType(x, y, z, 0);
+			Log newlog = new Log();
+			newlog.setPosition(x+LC/2, y+LC/2, z+LC/2);
+			this.getWorld().addLog(newlog);
+			this.getWorld().modelListener.notifyTerrainChanged(x, y, z);
+		}
+		else if (this.getWorld().getCubeType(x, y, z)==1){
+			List<int[]> changedCubes = this.getWorld().connectedToBorder.changeSolidToPassable(x,y,z);
+			if (!changedCubes.isEmpty())
+				this.getWorld().addCubesChanged(changedCubes);
+			this.getWorld().setCubeType(x, y, z, 0);
+			Boulder newboulder = new Boulder();
+			newboulder.setPosition(x+LC/2, y+LC/2, z+LC/2);
+			this.getWorld().addBoulder(newboulder);
+			this.getWorld().modelListener.notifyTerrainChanged(x, y, z);
+		}
+	}
+	
+	public boolean isCarryingLog(){
+		return this.isCarryingLog;
+	}
+	
+	private boolean isCarryingLog = false;
+	
+	public boolean isCarryingBoulder(){
+		return this.isCarryingBoulder;
+	}
+	
+	private boolean isCarryingBoulder = false;
 }

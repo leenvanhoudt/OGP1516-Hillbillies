@@ -11,6 +11,10 @@ public class Boulder {
 	public Boulder(){
 		this.setBoulderWeight();
 	}
+	
+	public void advanceTime(double dt){
+		// TODO schrijf deze methode
+	}
 
 	public int getBoulderWeight() {
 		return this.boulderWeight;
@@ -28,15 +32,13 @@ public class Boulder {
 		return this.boulderPosition;
 	}
 	
-	public void setPosition(int x, int y, int z){
+	public void setPosition(double x, double y, double z){
 		this.boulderPosition = new double[]{x,y,z};
 	}
 	
 	private double[] boulderPosition;
 	
-	public void advanceTime(double dt){
-		// TODO schrijf deze methode
-	}
+	
 	
 
 	

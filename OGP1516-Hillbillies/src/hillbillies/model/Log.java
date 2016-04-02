@@ -10,6 +10,10 @@ public class Log {
 	public Log(){
 		this.setLogWeight();
 	}
+	
+	public void advanceTime(double dt){
+		
+	}
 
 	public int getLogWeight() {
 		return this.logWeight;
@@ -27,7 +31,7 @@ public class Log {
 		return this.logPosition;
 	}
 	
-	public void setPosition(int x, int y, int z){
+	public void setPosition(double x, double y, double z){
 		this.logPosition = new double[]{x,y,z};
 	}
 	
