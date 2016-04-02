@@ -471,8 +471,6 @@ public class Unit {
 	 *         equal and larger than 0 and smaller than 50.
 	 */
 	public boolean isValidPosition(double[] position) {
-		// TODO check of blok is passable, dan moet je jammergenoeg wereld
-		// initialiseren :(
 		if (position.length == 3) {
 			for (double coordinate : position) {
 				if (coordinate >= 50 || coordinate < 0)
@@ -1332,14 +1330,15 @@ public class Unit {
 				int dy = 0;
 				int dz = 0;
 				System.out.println("size:"+path.size());
-				for (int i = 0; i < path.size()-1; i++){
-					dx = this.path.get(i+1).getX()-this.path.get(i).getX();
-					dy = this.path.get(i+1).getY()-this.path.get(i).getY();
-					dz = this.path.get(i+1).getZ()-this.path.get(i).getZ();
-					//this.path.remove(0);
-					System.out.println(dx + " " + dy + " " + dz);
-					this.moveToAdjacent(dx, dy, dz);
-				}
+				//for (int i = 0; i < path.size()-1; i++){
+				
+				dx = this.path.get(1).getX()-this.path.get(0).getX();
+				dy = this.path.get(1).getY()-this.path.get(0).getY();
+				dz = this.path.get(1).getZ()-this.path.get(0).getZ();
+				this.path.remove(0);
+				System.out.println(dx + " " + dy + " " + dz);
+				this.moveToAdjacent(dx, dy, dz);
+				//}
 				//System.out.println(this.getCubeCoordinate()[0] +" " + this.cubeEndPosition[0] );
 			}
 		}
@@ -1358,27 +1357,26 @@ public class Unit {
 			}
 		}
 		System.out.println("find path");
-		System.out.println("startcube coordinate: "+this.getCubeCoordinate()[0]);
 		ArrayList<Cube> open = new ArrayList<Cube>();
 		ArrayList<Cube> closed = new ArrayList<Cube>();
 		Cube startCube = grid[this.getCubeCoordinate()[0]][this.getCubeCoordinate()[1]][this.getCubeCoordinate()[2]];
 		open.add(startCube);
 		Cube current = startCube;
-		Cube minimum = open.get(0);
+		Cube minimum = startCube;
 		
-		while (!(Util.fuzzyEquals(current.getX(), this.cubeEndPosition[0]))
-				|| !(Util.fuzzyEquals(current.getY(), this.cubeEndPosition[1]))
-				|| !(Util.fuzzyEquals(current.getZ(), this.cubeEndPosition[2]))){
+		while (!(current.getX() == this.cubeEndPosition[0])
+				|| !(current.getY() == this.cubeEndPosition[1])
+				|| !(current.getZ() == this.cubeEndPosition[2])){
 			System.out.println("while lol");
 			System.out.println("open size: "+open.size());
-			for (int i = 0;i<open.size();i++){
+			for (Cube i: open){
 				minimum = open.get(0);
 				//System.out.println("check minimum");
 				if (open.size()==1){
 					current = open.get(0);
 				}
-				else if (open.get(i).getFCost()< minimum.getFCost()){
-					minimum = open.get(i);
+				else if (i.getFCost()< minimum.getFCost()){
+					minimum = i;
 					current = minimum;
 				}
 			}
@@ -1391,12 +1389,12 @@ public class Unit {
 				for (int j=-1; j<2; j++){
 					for (int k=-1; k<2; k++){
 						//System.out.println("neigbours");
-						if (current.getX()+i>=0 && current.getX()+i<15 
-								&& current.getY()+j>=0 && current.getY()+j<15
-								&& current.getZ()+k>=0 && current.getZ()+k<15){
+						if (current.getX()+i>=0 && current.getX()+i<this.getWorld().getNbCubesX() 
+								&& current.getY()+j>=0 && current.getY()+j<this.getWorld().getNbCubesY() 
+								&& current.getZ()+k>=0 && current.getZ()+k<this.getWorld().getNbCubesZ()){
 							Cube adjacent = grid[current.getX()+i][current.getY()+j][current.getZ()+k];
 							if (this.getWorld().isPassable(current.getX()+i, current.getY()+j, current.getZ()+k)){
-								//adjacent.setHCost(this.cubeEndPosition);
+								System.out.println("hcost:" + (current.getX()+i) +" "+(current.getY()+j) +" "+ (current.getZ()+k) +" " + adjacent.getHCost());
 								if (((i==-1 || i==1) && j==0 && k==0) || ((j==-1 || j==1) && i==0 && k==0) || ((k==-1 || k==1) && j==0 && i==0)){
 									this.updateCost(current, adjacent, current.getGCost()+10, open, closed);
 								}
@@ -1425,7 +1423,7 @@ public class Unit {
 		Collections.reverse(path);
 		System.out.println(path.get(0).getX() + " " +path.get(0).getY() + " " +path.get(0).getZ() );
 		System.out.println(path.get(1).getX() + " " +path.get(1).getY() + " " +path.get(1).getZ() );
-		System.out.println(path.get(2).getX() + " " +path.get(2).getY() + " " +path.get(2).getZ() );
+		//System.out.println(path.get(2).getX() + " " +path.get(2).getY() + " " +path.get(2).getZ() );
 		return path;
 	}
 	
@@ -1444,13 +1442,6 @@ public class Unit {
 		}
 	}
 	
-	/*public boolean containsCube(ArrayList<Cube> cubes,Cube cubeToCheck){
-		for (Cube cube: cubes){
-			if (cube.getX()==cubeToCheck.getX() && cube.getY()==cubeToCheck.getY() && cube.getZ()==cubeToCheck.getZ())
-				return true;
-		}
-		return false;
-	}*/
 
 	/**
 	 * Variable referencing to the destination cube of the method moveTo(int[]
@@ -1697,17 +1688,17 @@ public class Unit {
 	 */
 	public void defaultBehavior() throws IllegalArgumentException {
 		Random random = new Random();
-		int i =random.nextInt(4);
-		//TODO 15 vervangen door afmetingen wereld
-		int[] randomPosition = new int[] { random.nextInt(15), random.nextInt(15), random.nextInt(15) };
+		int i = random.nextInt(4);
+		int[] randomPosition = new int[] { random.nextInt(this.getWorld().getNbCubesX()), 
+				random.nextInt(this.getWorld().getNbCubesY()), random.nextInt(this.getWorld().getNbCubesZ()) };
 		double[] randomPosition2 = new double[] {randomPosition[0], randomPosition[1], randomPosition[2]};
 		switch (i) {
 		case 0:
 			this.moveTo(randomPosition);
 			break;
 		case 1:
-			//werkpositie meegeven
-			this.work();
+			if(this.getCubeCoordinate()[0] !=14)
+				this.workAt(this.getCubeCoordinate()[0]+1,this.getCubeCoordinate()[1],this.getCubeCoordinate()[2]);
 			break;
 		case 2:
 			//check iets met validposition
@@ -1800,7 +1791,6 @@ public class Unit {
 	private int[] workPosition;
 	
 	public void resultWorkAt(int x, int y, int z){
-		//TODO test met log in eigen handen werken op eigen plek
 		if ((this.isCarryingLog() || this.isCarryingBoulder()) && this.getWorld().isPassable(x, y, z)){
 			if (this.isCarryingLog()){
 				this.isCarryingLog = false;

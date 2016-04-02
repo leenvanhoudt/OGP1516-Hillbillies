@@ -35,9 +35,9 @@ public class Cube {
 	}
 	
 	public final void setHCost(int[] endPosition){
-		this.hCost = (int) (Math.sqrt((Math.pow((endPosition[0]-this.getX())*10, 2))+
+		this.hCost = (int) Math.floor((Math.sqrt((Math.pow((endPosition[0]-this.getX())*10, 2))+
 				(Math.pow((endPosition[1]-this.getY())*10, 2))+
-				(Math.pow((endPosition[2]-this.getZ())*10, 2))));
+				(Math.pow((endPosition[2]-this.getZ())*10, 2)))));
 	}
 	
 	public int getHCost(){
