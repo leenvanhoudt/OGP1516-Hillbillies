@@ -9,7 +9,9 @@ public class World {
 	//TODO run hun testen
 	
 	public World(int[][][] terrainTypes, TerrainChangeListener modelListener){
-		this.dimension = terrainTypes.length;
+		this.dimensionX = terrainTypes.length;
+		this.dimensionY = terrainTypes[0].length;
+		this.dimensionZ = terrainTypes[0][0].length;
 		this.terrainType = terrainTypes;
 		this.modelListener = modelListener;
 		this.connectedToBorder = new ConnectedToBorder(this.getNbCubesX(),this.getNbCubesY(),this.getNbCubesZ());
@@ -21,7 +23,6 @@ public class World {
 						this.temporary = this.connectedToBorder.changeSolidToPassable(x, y, z);
 						this.temporary.clear();
 					}
-					//TODO if geen terrainType meegegeven voor cube --> default air
 				}
 			}
 		}
@@ -31,19 +32,21 @@ public class World {
 	public ConnectedToBorder connectedToBorder;
 	public TerrainChangeListener modelListener;
 
-	private int dimension;
+	private int dimensionX;
+	private int dimensionY;
+	private int dimensionZ;
 	private int[][][] terrainType;
 	
 	public int getNbCubesX(){
-		return this.dimension;
+		return this.dimensionX;
 	}
 	
 	public int getNbCubesY(){
-		return this.dimension;
+		return this.dimensionY;
 	}
 	
 	public int getNbCubesZ(){
-		return this.dimension;
+		return this.dimensionZ;
 	}
 	
 	/**
@@ -151,7 +154,7 @@ public class World {
 			newUnit.setWorld(this);
 			return newUnit;
 		}
-		//TODO vreemde unit zonder faction en niet tot world behorend maken of null returnen of exception?
+		//TODO vreemde unit zonder faction en niet tot world behorend maken of null returnen of exception? ook bij addfunction
 		System.out.println("null");
 		return null;
 	}
@@ -199,11 +202,19 @@ public class World {
 	    });
 	}
 
+	//TODO wat als FactionList nog leeg is, dan unit niet tot faction geadd worden
 	public void addUnit(Unit unit){
-		this.sort();
-		this.activeFactionList.get(0).addUnitToFaction(unit);
-		unit.setFaction(this.activeFactionList.get(0));
-		unit.setWorld(this);
+		if (this.getUnits().size() < 100){
+			if (this.getActiveFactions().size()<5){
+				Faction newFaction = new Faction();
+				this.activeFactionSet.add(newFaction);
+				this.activeFactionList.add(newFaction);
+			}
+			this.sort();
+			this.activeFactionList.get(0).addUnitToFaction(unit);
+			unit.setFaction(this.activeFactionList.get(0));
+			unit.setWorld(this);
+		}
 	}
 	
 	public boolean isValidStandingPosition(int x,int y,int z){
