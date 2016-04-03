@@ -6,13 +6,13 @@ import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Raw;
 import ogp.framework.util.Util;
 
-// feedback part 1:
-// formele commentaar bij gesplitste advance time
-// advance time testen + attack + defend + .... testen op unit en niet facade
+// TODO alle commentaar formeel + informeel
+// TODO formele commentaar bij gesplitste advance time
+// TODO testen schrijven! ook oude methodes beter: 
+		//advance time testen + attack + defend + .... testen op unit en niet facade
 
 //vragen:
 // documentation postconditions en niet perse if's
-// createUnit of Unit als constructor?
 // facade try catch
 
 /**
@@ -471,6 +471,7 @@ public class Unit {
 	 *         equal and larger than 0 and smaller than 50.
 	 */
 	public boolean isValidPosition(double[] position) {
+		//TODO checken overal waar valid position gecheckt wordt of position geset wordt, of het passable is
 		if (position.length == 3) {
 			for (double coordinate : position) {
 				if (coordinate >= 50 || coordinate < 0)
@@ -771,6 +772,7 @@ public class Unit {
 	 */
 	public static final double MAX_DURATION = 0.2;
 	
+	//TODO commentaar experiencepoints
 	/**
 	 * Update the program every valid dt seconds. - When the unit is sprinting
 	 * and his staminaPoints are 0, the unit will stop sprinting. - When the
@@ -1330,7 +1332,6 @@ public class Unit {
 				int dy = 0;
 				int dz = 0;
 				System.out.println("size:"+path.size());
-				//for (int i = 0; i < path.size()-1; i++){
 				
 				dx = this.path.get(1).getX()-this.path.get(0).getX();
 				dy = this.path.get(1).getY()-this.path.get(0).getY();
@@ -1338,8 +1339,6 @@ public class Unit {
 				this.path.remove(0);
 				System.out.println(dx + " " + dy + " " + dz);
 				this.moveToAdjacent(dx, dy, dz);
-				//}
-				//System.out.println(this.getCubeCoordinate()[0] +" " + this.cubeEndPosition[0] );
 			}
 		}
 	}
@@ -1375,7 +1374,8 @@ public class Unit {
 				if (open.size()==1){
 					current = open.get(0);
 				}
-				else if (i.getFCost()< minimum.getFCost()){
+				else if (i.getFCost()< minimum.getFCost() 
+						|| (i.getFCost()==minimum.getFCost() && i.getHCost()<minimum.getHCost())){
 					minimum = i;
 					current = minimum;
 				}
@@ -1383,8 +1383,7 @@ public class Unit {
 			open.remove(current);
 			closed.add(current);
 			
-			//checken of current gelijk is aan eind positie als het fout loopt 
-			
+			//aangepast dat geen falling position mag zijn en hierboven dat bij gelijke fcost, hcost gecheckt
 			for (int i=-1; i<2; i++){
 				for (int j=-1; j<2; j++){
 					for (int k=-1; k<2; k++){
@@ -1393,7 +1392,8 @@ public class Unit {
 								&& current.getY()+j>=0 && current.getY()+j<this.getWorld().getNbCubesY() 
 								&& current.getZ()+k>=0 && current.getZ()+k<this.getWorld().getNbCubesZ()){
 							Cube adjacent = grid[current.getX()+i][current.getY()+j][current.getZ()+k];
-							if (this.getWorld().isPassable(current.getX()+i, current.getY()+j, current.getZ()+k)){
+							if (this.getWorld().isPassable(current.getX()+i, current.getY()+j, current.getZ()+k)
+									&& !this.isFallingPosition(current.getX()+i, current.getY()+j, current.getZ()+k)){
 								System.out.println("hcost:" + (current.getX()+i) +" "+(current.getY()+j) +" "+ (current.getZ()+k) +" " + adjacent.getHCost());
 								if (((i==-1 || i==1) && j==0 && k==0) || ((j==-1 || j==1) && i==0 && k==0) || ((k==-1 || k==1) && j==0 && i==0)){
 									this.updateCost(current, adjacent, current.getGCost()+10, open, closed);
@@ -1405,7 +1405,8 @@ public class Unit {
 									this.updateCost(current, adjacent, current.getGCost()+17, open, closed);
 								}	
 							}
-							else if (!this.getWorld().isPassable(current.getX()+i, current.getY()+j, current.getZ()+k)){
+							else if (!this.getWorld().isPassable(current.getX()+i, current.getY()+j, current.getZ()+k)
+									|| this.isFallingPosition(current.getX()+i, current.getY()+j, current.getZ()+k)){
 								closed.add(adjacent);
 							}
 						}
@@ -1701,7 +1702,7 @@ public class Unit {
 				this.workAt(this.getCubeCoordinate()[0]+1,this.getCubeCoordinate()[1],this.getCubeCoordinate()[2]);
 			break;
 		case 2:
-			//check iets met validposition
+			//TODO check iets met validposition
 			this.rest();
 			break;
 		case 3:
@@ -1777,6 +1778,7 @@ public class Unit {
 	}
 	
 	private boolean isFalling;
+	//TODO log en boulder private maken?
 	Log log;
 	Boulder boulder;
 	

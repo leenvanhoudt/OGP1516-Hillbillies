@@ -8,15 +8,11 @@ import be.kuleuven.cs.som.annotate.Raw;
 
 public class Boulder {
 	
-	//NOG DOEN: soms wordt Boulder op vaste plaats gelegd (bij instorten Rock)
-	//		maar anders random plaats dus geen coordinaten nodig
-	//		--> hoe lossen we dit op?
 	public Boulder(){
 		this.setBoulderWeight();
 	}
 	
 	public void advanceTime(double dt){
-		// TODO schrijf deze methode
 		if (!this.getWorld().isValidStandingPosition((int)Math.floor(this.startFallingPosition[0]), 
 				(int)Math.floor(this.startFallingPosition[1]), (int)Math.floor(this.startFallingPosition[2]))){
 			this.falling(dt);
@@ -27,7 +23,6 @@ public class Boulder {
 		return this.boulderWeight;
 	}
 	
-	// als error dan ligt het aan final
 	private final void setBoulderWeight(){
 		Random random = new Random();
 		this.boulderWeight = random.nextInt(41)+10;

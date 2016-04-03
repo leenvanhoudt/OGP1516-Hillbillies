@@ -6,7 +6,7 @@ import hillbillies.part2.listener.TerrainChangeListener;
 import hillbillies.util.ConnectedToBorder;
 
 public class World {
-	
+	//TODO run hun testen
 	
 	public World(int[][][] terrainTypes, TerrainChangeListener modelListener){
 		this.dimension = terrainTypes.length;
@@ -21,14 +21,10 @@ public class World {
 						this.temporary = this.connectedToBorder.changeSolidToPassable(x, y, z);
 						this.temporary.clear();
 					}
-					//if geen terrainType meegegeven voor cube --> default air
+					//TODO if geen terrainType meegegeven voor cube --> default air
 				}
 			}
 		}
-		// 3 for lussen
-		// eigen methodes om kubussen te getten en setten naar passable in aparte klasse cube
-		
-		//zet solids van connectedtoborder naar lucht zie terraintype
 	}
 	
 	private List<int[]> temporary = new ArrayList<int[]>();
@@ -84,8 +80,6 @@ public class World {
 					//		modelListener.notifyTerrainChanged(x, y, z)
 					//		--> hoe laat het spel ons weten of een cube veranderd is??
 					//			--> heb ik denk ik opgelost (zie lijst cubesChanged)
-			
-			//GEEN FOR LUS, NOG AANPASSEN
 			if (!this.getCubesChanged().isEmpty()){
 				for (int[] cube : this.getCubesChanged()){
 					double P = 0.25;
@@ -134,12 +128,13 @@ public class World {
 				|| this.terrainType[x][y][z]==3);
 	}
 	
+	//TODO deze gebruiken wij nog nergens
 	public boolean isSolidConnectedToBorder(int x, int y, int z) {
 		return this.connectedToBorder.isSolidConnectedToBorder(x,y,z);
 	}
 	
+	//TODO checken of bij spawn many de units verdeeld over de 5 factions
 	public Unit spawnUnit(boolean enableDefaultBehavior){
-		// lijst maken van actieve factions om daar bewerkingen op uit te voeren
 		if (this.getUnits().size() < 100){
 			if (this.getActiveFactions().size()<5){
 				Faction newFaction = new Faction();
@@ -156,18 +151,17 @@ public class World {
 			newUnit.setWorld(this);
 			return newUnit;
 		}
-		// vreemde unit zonder faction en niet tot world behorend maken of null returnen?
+		//TODO vreemde unit zonder faction en niet tot world behorend maken of null returnen of exception?
 		System.out.println("null");
 		return null;
 	}
 	
 	public int[] searchValidPosition() {
 		Random random = new Random();
-		//zoek valid positie
 		int x = random.nextInt(this.getNbCubesX());
 		int y = random.nextInt(this.getNbCubesY());
 		int z = random.nextInt(this.getNbCubesZ());
-		//zoek betere oplossing
+		//TODO zoek betere oplossing
 		while (!this.isValidStandingPosition(x,y,z)){
 			if (x < this.getNbCubesX()-1)
 				x++;
@@ -225,9 +219,6 @@ public class World {
 			}
 		}
 		return worldUnits;
-		// for alle factions in activeFactionSet: getUnitsOfFaction(-> set) 
-		// en die verschillende sets samenvoegen?
-		// -> GEDAAN
 	}
 	
 	public Set<Faction> getActiveFactions(){
@@ -239,16 +230,6 @@ public class World {
 	
 	
 	
-	
-	//NOG DOEN: (in Unit) als je werkt op een cube en solid cube verdwijnt:
-	//	connectedToBorder.changeSolidToPassable(coordinaten cube)
-	//	dit geeft een lijst terug van de cubes die niet langer aan de border hangen
-	//	deze lijst opslaan: world.addCubesChanged(lijst)
-	//		+ tijdens werken cubes bijhouden die air worden en deze ook in de lijst
-	//			opslaan
-	//  dan in advanceTime (al gedaan):
-	//		itereren over deze lijst en aanpassing doen (cubes afbreken +
-	//		GUI op de hoogte brengen adhv modelListener)
 	public void addCubesChanged(List<int[]> cubes){
 		this.cubesChanged.addAll(cubes);
 	}
@@ -308,18 +289,17 @@ public class World {
 	}
 	
 	public Boulder getCubeBoulder(int x, int y, int z){
-		//problemen met null?
 		for (Boulder boulder:this.getBoulders()){
 			if ((int)Math.floor(boulder.getPosition()[0])==x && (int)Math.floor(boulder.getPosition()[1])==y
 					&& (int)Math.floor(boulder.getPosition()[2])==z){
 				return boulder;
 			}
 		}
+		//TODO null of exception
 		return null;
 	}
 	
 	public Log getCubeLog(int x, int y, int z){
-		//problemen met null?
 		for (Log log:this.getLogs()){
 			if ((int)Math.floor(log.getPosition()[0])==x && (int)Math.floor(log.getPosition()[1])==y
 					&& (int)Math.floor(log.getPosition()[2])==z){

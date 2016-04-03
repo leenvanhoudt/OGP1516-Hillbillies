@@ -7,9 +7,6 @@ import be.kuleuven.cs.som.annotate.Raw;
 
 public class Log {
 	
-	//NOG DOEN: soms wordt Log op vaste plaats gelegt (bij instorten Wood)
-		//		maar anders random plaats dus geen coordinaten nodig
-		//		--> hoe lossen we dit op?
 	public Log(){
 		this.setLogWeight();
 	}
@@ -25,7 +22,6 @@ public class Log {
 		return this.logWeight;
 	}
 	
-	// als error dan ligt het aan final
 	private final void setLogWeight(){
 		Random random = new Random();
 		this.logWeight = random.nextInt(41)+10;
