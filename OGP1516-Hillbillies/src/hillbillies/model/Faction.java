@@ -10,8 +10,9 @@ public class Faction {
 
 	private Set<Unit> unitsInFaction = new HashSet<Unit>();
 	
-	public void addUnitToFaction(Unit unit){
-		//TODO als er al 50 zitten in set (lengte set), exception gooien? wordt wel in unit bij setfaction gecheckt
+	public void addUnitToFaction(Unit unit) throws IllegalArgumentException{
+		if (this.getUnitsOfFaction().size()>=50)
+			throw new IllegalArgumentException();
 		this.unitsInFaction.add(unit);
 	}
 	

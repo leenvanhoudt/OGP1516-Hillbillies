@@ -6,7 +6,6 @@ import hillbillies.part2.listener.TerrainChangeListener;
 import hillbillies.util.ConnectedToBorder;
 
 public class World {
-	//TODO run hun testen
 	
 	public World(int[][][] terrainTypes, TerrainChangeListener modelListener){
 		this.dimensionX = terrainTypes.length;
@@ -66,7 +65,7 @@ public class World {
 	 */
 	public static final double MAX_DURATION = 0.2;
 	
-	public void advanceTime(double dt) throws IllegalArgumentException{
+	public void advanceTime(double dt) throws IllegalArgumentException, IndexOutOfBoundsException{
 		if (isValidDuration(dt)) {
 			for (Unit unit: this.getUnits()){
 				unit.advanceTime(dt);
@@ -136,8 +135,7 @@ public class World {
 		return this.connectedToBorder.isSolidConnectedToBorder(x,y,z);
 	}
 	
-	//TODO checken of bij spawn many de units verdeeld over de 5 factions
-	public Unit spawnUnit(boolean enableDefaultBehavior){
+	public Unit spawnUnit(boolean enableDefaultBehavior) throws IllegalArgumentException{
 		if (this.getUnits().size() < 100){
 			if (this.getActiveFactions().size()<5){
 				Faction newFaction = new Faction();
@@ -148,15 +146,14 @@ public class World {
 			int[] validPosition = this.searchValidPosition();
 			Random random = new Random();
 			int characteristics = 25 + random.nextInt(76);
+			//TODO random naam
 			Unit newUnit = new Unit("Jan",validPosition, characteristics, characteristics,characteristics,characteristics, enableDefaultBehavior);
 			this.activeFactionList.get(0).addUnitToFaction(newUnit);
 			newUnit.setFaction(this.activeFactionList.get(0));
 			newUnit.setWorld(this);
 			return newUnit;
 		}
-		//TODO vreemde unit zonder faction en niet tot world behorend maken of null returnen of exception? ook bij addfunction
-		System.out.println("null");
-		return null;
+		throw new IllegalArgumentException();
 	}
 	
 	public int[] searchValidPosition() {
@@ -164,7 +161,6 @@ public class World {
 		int x = random.nextInt(this.getNbCubesX());
 		int y = random.nextInt(this.getNbCubesY());
 		int z = random.nextInt(this.getNbCubesZ());
-		//TODO zoek betere oplossing
 		while (!this.isValidStandingPosition(x,y,z)){
 			if (x < this.getNbCubesX()-1)
 				x++;
@@ -201,9 +197,8 @@ public class World {
 	        }
 	    });
 	}
-
-	//TODO wat als FactionList nog leeg is, dan unit niet tot faction geadd worden
-	public void addUnit(Unit unit){
+	
+	public void addUnit(Unit unit) throws IllegalArgumentException{
 		if (this.getUnits().size() < 100){
 			if (this.getActiveFactions().size()<5){
 				Faction newFaction = new Faction();
@@ -299,24 +294,23 @@ public class World {
 		return false;
 	}
 	
-	public Boulder getCubeBoulder(int x, int y, int z){
+	public Boulder getCubeBoulder(int x, int y, int z)throws IllegalArgumentException{
 		for (Boulder boulder:this.getBoulders()){
 			if ((int)Math.floor(boulder.getPosition()[0])==x && (int)Math.floor(boulder.getPosition()[1])==y
 					&& (int)Math.floor(boulder.getPosition()[2])==z){
 				return boulder;
 			}
 		}
-		//TODO null of exception
-		return null;
+		throw new IllegalArgumentException();
 	}
 	
-	public Log getCubeLog(int x, int y, int z){
+	public Log getCubeLog(int x, int y, int z) throws IllegalArgumentException{
 		for (Log log:this.getLogs()){
 			if ((int)Math.floor(log.getPosition()[0])==x && (int)Math.floor(log.getPosition()[1])==y
 					&& (int)Math.floor(log.getPosition()[2])==z){
 				return log;
 			}
 		}
-		return null;
+		throw new IllegalArgumentException();
 	}
 }

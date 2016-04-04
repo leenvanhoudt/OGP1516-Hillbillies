@@ -134,10 +134,7 @@ public class Unit {
 		if (initialPosition.length == 3) {
 			double[] positionCenterCube = new double[] { initialPosition[0] + LC / 2, initialPosition[1] + LC / 2,
 					initialPosition[2] + LC / 2 };
-			if (!isValidPosition(positionCenterCube)) {
-				throw new IllegalArgumentException();
-			}
-			setPosition(positionCenterCube);
+			this.position = positionCenterCube;
 		} else {
 			throw new IllegalArgumentException();
 		}
@@ -461,7 +458,7 @@ public class Unit {
 	public double[] getPosition() {
 		return this.position;
 	}
-
+		
 	/**
 	 * Check whether the given position is a valid position for any unit.
 	 * 
@@ -471,11 +468,13 @@ public class Unit {
 	 *         equal and larger than 0 and smaller than 50.
 	 */
 	public boolean isValidPosition(double[] position) {
-		//TODO checken overal waar valid position gecheckt wordt of position geset wordt, of het passable is
-		if (position.length == 3) {
-			for (double coordinate : position) {
-				if (coordinate >= 50 || coordinate < 0)
-					return false;
+		if (position.length == 3 && 
+				this.getWorld().isPassable((int) Math.floor(position[0]), (int) Math.floor(position[1]),
+						(int) Math.floor(position[2]))) {
+			if ((position[0] >= this.getWorld().getNbCubesX() || position[0] < 0)
+					|| (position[1] >= this.getWorld().getNbCubesY() || position[1] < 0)
+					|| (position[2] >= this.getWorld().getNbCubesZ() || position[2] < 0)){
+				return false;
 			}
 			return true;
 		}
@@ -797,12 +796,15 @@ public class Unit {
 	 *             !isValidDuration(dt)
 	 * 
 	 */
-	public void advanceTime(double dt) throws IllegalArgumentException {
+	public void advanceTime(double dt) throws IllegalArgumentException, IndexOutOfBoundsException {
 		if (this.getWorld().isValidDuration(dt)) {
 			this.death(); //TODO moet je dan van unit changen?
+			this.falling();
 			this.sprintingAdvanceTime(dt);
-			if (this.isMoving())
+			if (this.isMoving()){
+				System.out.println(this.getCurrentSpeed());
 				this.isMovingAdvanceTime(dt);
+			}
 			if (this.isMovingTo && this.getPosition() == this.getNextPosition())
 				this.isMovingToAdvanceTime(dt);
 			if (this.isResting())
@@ -813,7 +815,6 @@ public class Unit {
 				this.isAttackingAdvanceTime(dt);
 			if (this.isDefaultBehaviorEnabled())
 				this.defaultBehaviorEnabledAdvanceTime(dt);
-			this.falling();
 			this.resting3MinutesTime += dt;
 			if (this.resting3MinutesTime >= 3 * 60) {
 				this.resting3MinutesTime = 0;
@@ -830,11 +831,10 @@ public class Unit {
 		for (int i=-1; i<2; i++){
 			for (int j=-1; j<2; j++){
 				for (int k=-1; k<2; k++){
-					if (x+i>=0 && x+i<15 
-							&& y+j>=0 && y+j<15
-							&& z+k>=0 && z+k<15){
-						if (this.getWorld().getCubeType(x+i, y+j, z+k)==1 
-								|| this.getWorld().getCubeType(x+i, y+j, z+k)==2){
+					if (x+i>=0 && x+i<this.getWorld().getNbCubesX() 
+							&& y+j>=0 && y+j<this.getWorld().getNbCubesY()
+							&& z+k>=0 && z+k<this.getWorld().getNbCubesZ()){
+						if (!this.getWorld().isPassable(x+i, y+j, z+k)){
 							return false;
 						}
 					}						
@@ -901,7 +901,9 @@ public class Unit {
 	 *            The time between each update of the unit.
 	 */
 	public void isMovingAdvanceTime(double dt) throws IllegalArgumentException {
+		System.out.println("moving adv time");
 		double[] v = this.getMovingSpeed(dt);
+		System.out.println("after moving adv time");
 		double[] fuzzyPositionUnder = new double[] { 0, 0, 0 };
 		double[] fuzzyPositionUpper = new double[] { 0, 0, 0 };
 		double[] distance = new double[] { 0, 0, 0 };
@@ -941,13 +943,12 @@ public class Unit {
 	 * @param dt
 	 *            The time between each update of the unit.
 	 */
-	public void isMovingToAdvanceTime(double dt) throws IllegalArgumentException {
+	public void isMovingToAdvanceTime(double dt) throws IllegalArgumentException, IndexOutOfBoundsException {
 		if (this.isResting() || this.isAttacking() || this.isWorking()) {
 			this.setCurrentSpeed(0);
 		} else {
 			if (!this.isSprinting())
 				this.setCurrentSpeed(this.walkingSpeed);
-			System.out.println("sub methode advance time");
 			this.moveTo(this.cubeEndPosition);
 		}
 	}
@@ -975,7 +976,8 @@ public class Unit {
 			this.restAfterWork = false;
 		} else if ((this.getCurrentHitPoints() == this.getMaxHitPoints())
 				&& (this.getCurrentStaminaPoints() == this.getMaxStaminaPoints())) {
-			this.setPosition(this.getNextPosition());
+			if (this.isMovingTo)
+				this.setPosition(this.getNextPosition());
 			this.isResting = false;
 		} else if ((this.getCurrentHitPoints() != this.getMaxHitPoints())) {
 			this.fractionOfHitPoint += (this.getToughness() / 200.0) * (dt / 0.2);
@@ -1040,8 +1042,9 @@ public class Unit {
 	 * @param dt
 	 *            The time between each update of the unit.
 	 */
-	public void defaultBehaviorEnabledAdvanceTime(double dt) throws IllegalArgumentException {
+	public void defaultBehaviorEnabledAdvanceTime(double dt) throws IllegalArgumentException, IndexOutOfBoundsException {
 		if (!this.isAttacking() && !this.isMoving() && !this.isWorking() && !this.isResting()) {
+			System.out.println("adv def");
 			this.defaultBehavior();
 		}
 	}
@@ -1070,9 +1073,12 @@ public class Unit {
 	 * @return the actual moving speed v | result == v
 	 */
 	public double[] getMovingSpeed(double dt) {
+		System.out.println("get moving speed");
+		System.out.println(this.getNextPosition()[0]);
 		double d = Math.sqrt(Math.pow(this.getNextPosition()[0] - this.getPosition()[0], 2)
 				+ Math.pow(this.getNextPosition()[1] - this.getPosition()[1], 2)
 				+ Math.pow(this.getNextPosition()[2] - this.getPosition()[2], 2));
+		System.out.println("d bepaald");
 		if (this.isSprinting()) {
 			double[] v = new double[] { this.sprintingSpeed * (this.getNextPosition()[0] - this.getPosition()[0]) / d,
 					this.sprintingSpeed * (this.getNextPosition()[1] - this.getPosition()[1]) / d,
@@ -1102,6 +1108,8 @@ public class Unit {
 	 */
 	public void moveToAdjacent(int dx, int dy, int dz) throws IllegalArgumentException {
 		if ((!this.isMoving() || this.isMovingTo) && !this.isWorking()) {
+			if (this.defaultBehaviorCase3)
+				this.startSprinting();
 			if (this.isFalling){
 				this.setCurrentSpeed(this.fallingSpeed);
 				this.calculateNextPosition(dx, dy, dz);
@@ -1113,12 +1121,10 @@ public class Unit {
 					this.setCurrentSpeed(this.sprintingSpeed);
 				}				
 			} else {
-				System.out.println("moving 1");
 				this.calculateNextPosition(dx, dy, dz);
 				this.calculateSpeed(this.getNextPosition()); 
 				if (this.getWorld().isPassable((int)Math.floor(this.getNextPosition()[0]), (int)Math.floor(this.getNextPosition()[1]), (int)Math.floor(this.getNextPosition()[2]))){
 					this.setCurrentSpeed(this.walkingSpeed);
-					System.out.println("cube is passable");
 				}
 				else{
 					System.out.println("cube is inpassable");
@@ -1192,9 +1198,9 @@ public class Unit {
 	 */
 	public void calculateSpeed(double[] nextPosition) {
 		this.baseSpeed = 1.5 * (this.getStrength() + this.getAgility()) / (200 * this.getWeight() / 100);
-		if (this.getPosition()[2] - nextPosition[2] == -1)
+		if (this.getPosition()[2] - nextPosition[2] < 0)
 			this.walkingSpeed = 0.5 * this.baseSpeed;
-		else if (this.getPosition()[2] - nextPosition[2] == 1)
+		else if (this.getPosition()[2] - nextPosition[2] > 0)
 			this.walkingSpeed = 1.2 * this.baseSpeed;
 		else {
 			this.walkingSpeed = this.baseSpeed;
@@ -1306,15 +1312,15 @@ public class Unit {
 	 *         calculated dx, dy and dz, towards the destination. |
 	 *         this.moveToAdjacent(dx, dy, dz);
 	 */
-	public void moveTo(int[] cube) throws IllegalArgumentException {
+	public void moveTo(int[] cube) throws IllegalArgumentException, IndexOutOfBoundsException {
 		System.out.println("boolean move " + this.isMovingTo);
 		this.cubeEndPosition = cube;
-		if (!this.getWorld().isPassable(this.cubeEndPosition[0], this.cubeEndPosition[1], this.cubeEndPosition[2])){
+		if (!this.getWorld().isPassable(this.cubeEndPosition[0], this.cubeEndPosition[1], this.cubeEndPosition[2])
+				|| this.isFallingPosition(this.cubeEndPosition[0], this.cubeEndPosition[1], this.cubeEndPosition[2])){
 			throw new IllegalArgumentException();
 		}
 		else{
 			if (!this.isMovingTo){
-				System.out.println("ismovingtopath");
 				this.path = this.findPath();
 				this.isMovingTo = true;
 				System.out.println("boolean move na pathfinding " + this.isMovingTo);
@@ -1324,20 +1330,18 @@ public class Unit {
 					&& this.getCubeCoordinate()[2] == this.cubeEndPosition[2]){
 				System.out.println("arrived");
 				this.isMovingTo = false;
+				this.defaultBehaviorCase3 = false;
 				this.setCurrentSpeed(0);
 			}
 			if (this.isMovingTo){
-				System.out.println("move to");
 				int dx = 0;
 				int dy = 0;
 				int dz = 0;
-				System.out.println("size:"+path.size());
 				
 				dx = this.path.get(1).getX()-this.path.get(0).getX();
 				dy = this.path.get(1).getY()-this.path.get(0).getY();
 				dz = this.path.get(1).getZ()-this.path.get(0).getZ();
 				this.path.remove(0);
-				System.out.println(dx + " " + dy + " " + dz);
 				this.moveToAdjacent(dx, dy, dz);
 			}
 		}
@@ -1345,7 +1349,7 @@ public class Unit {
 	
 	private ArrayList<Cube> path = new ArrayList<Cube>();
 	
-	public ArrayList<Cube> findPath(){
+	public ArrayList<Cube> findPath() throws IndexOutOfBoundsException{
 		Cube[][][] grid = new Cube[this.getWorld().getNbCubesX()][this.getWorld().getNbCubesY()][this.getWorld().getNbCubesZ()];
 		for (int i=0; i<this.getWorld().getNbCubesX(); i++){
 			for (int j=0; j<this.getWorld().getNbCubesY(); j++){
@@ -1355,7 +1359,6 @@ public class Unit {
 				}
 			}
 		}
-		System.out.println("find path");
 		ArrayList<Cube> open = new ArrayList<Cube>();
 		ArrayList<Cube> closed = new ArrayList<Cube>();
 		Cube startCube = grid[this.getCubeCoordinate()[0]][this.getCubeCoordinate()[1]][this.getCubeCoordinate()[2]];
@@ -1366,35 +1369,31 @@ public class Unit {
 		while (!(current.getX() == this.cubeEndPosition[0])
 				|| !(current.getY() == this.cubeEndPosition[1])
 				|| !(current.getZ() == this.cubeEndPosition[2])){
-			System.out.println("while lol");
-			System.out.println("open size: "+open.size());
+			if (open.isEmpty())
+				throw new IndexOutOfBoundsException();
+			minimum = open.get(0);
 			for (Cube i: open){
-				minimum = open.get(0);
-				//System.out.println("check minimum");
 				if (open.size()==1){
 					current = open.get(0);
 				}
 				else if (i.getFCost()< minimum.getFCost() 
 						|| (i.getFCost()==minimum.getFCost() && i.getHCost()<minimum.getHCost())){
 					minimum = i;
-					current = minimum;
 				}
 			}
+			current = minimum;
 			open.remove(current);
 			closed.add(current);
 			
-			//aangepast dat geen falling position mag zijn en hierboven dat bij gelijke fcost, hcost gecheckt
 			for (int i=-1; i<2; i++){
 				for (int j=-1; j<2; j++){
 					for (int k=-1; k<2; k++){
-						//System.out.println("neigbours");
 						if (current.getX()+i>=0 && current.getX()+i<this.getWorld().getNbCubesX() 
 								&& current.getY()+j>=0 && current.getY()+j<this.getWorld().getNbCubesY() 
 								&& current.getZ()+k>=0 && current.getZ()+k<this.getWorld().getNbCubesZ()){
 							Cube adjacent = grid[current.getX()+i][current.getY()+j][current.getZ()+k];
-							if (this.getWorld().isPassable(current.getX()+i, current.getY()+j, current.getZ()+k)
-									&& !this.isFallingPosition(current.getX()+i, current.getY()+j, current.getZ()+k)){
-								System.out.println("hcost:" + (current.getX()+i) +" "+(current.getY()+j) +" "+ (current.getZ()+k) +" " + adjacent.getHCost());
+							if (this.getWorld().isPassable(adjacent.getX(), adjacent.getY(), adjacent.getZ())
+									&& !this.isFallingPosition(adjacent.getX(), adjacent.getY(), adjacent.getZ())){
 								if (((i==-1 || i==1) && j==0 && k==0) || ((j==-1 || j==1) && i==0 && k==0) || ((k==-1 || k==1) && j==0 && i==0)){
 									this.updateCost(current, adjacent, current.getGCost()+10, open, closed);
 								}
@@ -1405,8 +1404,7 @@ public class Unit {
 									this.updateCost(current, adjacent, current.getGCost()+17, open, closed);
 								}	
 							}
-							else if (!this.getWorld().isPassable(current.getX()+i, current.getY()+j, current.getZ()+k)
-									|| this.isFallingPosition(current.getX()+i, current.getY()+j, current.getZ()+k)){
+							else{
 								closed.add(adjacent);
 							}
 						}
@@ -1422,20 +1420,15 @@ public class Unit {
 		path.add(current);
 		path.add(startCube);
 		Collections.reverse(path);
-		System.out.println(path.get(0).getX() + " " +path.get(0).getY() + " " +path.get(0).getZ() );
-		System.out.println(path.get(1).getX() + " " +path.get(1).getY() + " " +path.get(1).getZ() );
-		//System.out.println(path.get(2).getX() + " " +path.get(2).getY() + " " +path.get(2).getZ() );
 		return path;
 	}
 	
 	public void updateCost(Cube current, Cube adjacent, int cost,ArrayList<Cube> open, ArrayList<Cube> closed){
-		//System.out.println("update cost");
 		int finalCost = adjacent.getHCost()+cost;
 		if ((this.getWorld().isPassable(adjacent.getX(),adjacent.getY(),adjacent.getZ()) && !closed.contains(adjacent))
 				&& (finalCost < adjacent.getFCost() || !open.contains(adjacent))){
 			adjacent.setFCost(finalCost);
 			adjacent.setGCost(cost);
-			//System.out.println("set parent");
 			adjacent.setParent(current);
 			if (!open.contains(adjacent)){
 				open.add(adjacent);
@@ -1486,7 +1479,8 @@ public class Unit {
 	 *         itself. | this.attack(defender); | defender.defend(this);
 	 */
 	public void fight(Unit defender) {
-		if (!this.isFalling && this.getFaction()!=defender.getFaction()){
+		if (!this.isFalling && this.getFaction()!=defender.getFaction() 
+				&& defender != this){
 			this.attack(defender);
 			defender.defend(this);
 		}
@@ -1510,7 +1504,7 @@ public class Unit {
 		double d = Math.sqrt(Math.pow(defender.getPosition()[0] - this.getPosition()[0], 2)
 				+ Math.pow(defender.getPosition()[1] - this.getPosition()[1], 2)
 				+ Math.pow(defender.getPosition()[2] - this.getPosition()[2], 2));
-		if (d <= Math.sqrt(2)) {
+		if (d <= Math.sqrt(3)) {
 			this.setOrientation(Math.atan2(defender.getPosition()[1] - this.getPosition()[1],
 					defender.getPosition()[0] - this.getPosition()[0]));
 			defender.setOrientation(Math.atan2(this.getPosition()[1] - defender.getPosition()[1],
@@ -1687,12 +1681,12 @@ public class Unit {
 	 *         this.setCurrentSpeed(this.sprintingSpeed) |
 	 *         this.moveTo(randomPosition)
 	 */
-	public void defaultBehavior() throws IllegalArgumentException {
+	public void defaultBehavior() throws IllegalArgumentException, IndexOutOfBoundsException {
 		Random random = new Random();
-		int i = random.nextInt(4);
+		int i = random.nextInt(5);
 		int[] randomPosition = new int[] { random.nextInt(this.getWorld().getNbCubesX()), 
 				random.nextInt(this.getWorld().getNbCubesY()), random.nextInt(this.getWorld().getNbCubesZ()) };
-		double[] randomPosition2 = new double[] {randomPosition[0], randomPosition[1], randomPosition[2]};
+		double[] randomPosition2 = new double[] {randomPosition[0]+0.5, randomPosition[1]+0.5, randomPosition[2]+0.5};
 		switch (i) {
 		case 0:
 			this.moveTo(randomPosition);
@@ -1702,16 +1696,29 @@ public class Unit {
 				this.workAt(this.getCubeCoordinate()[0]+1,this.getCubeCoordinate()[1],this.getCubeCoordinate()[2]);
 			break;
 		case 2:
-			//TODO check iets met validposition
 			this.rest();
 			break;
 		case 3:
+			this.defaultBehaviorCase3 = true;
+			System.out.println("default 3");
 			this.calculateSpeed(randomPosition2);
-			this.setCurrentSpeed(this.sprintingSpeed);
 			this.moveTo(randomPosition);
+			break;
+		case 4:
+			for (Unit unit:this.getWorld().getUnits()){
+				double d = Math.sqrt(Math.pow(unit.getPosition()[0] - this.getPosition()[0],2) + 
+						Math.pow(unit.getPosition()[1] - this.getPosition()[1],2) +
+						Math.pow(unit.getPosition()[2] - this.getPosition()[2],2));
+				if (d <= Math.sqrt(3)){
+					this.fight(unit);
+					break;
+				}
+			}
 			break;
 		}
 	}
+	
+	private boolean defaultBehaviorCase3 = false;
 
 	/**
 	 * Boolean saving if the default behavior is enabled.
@@ -1758,15 +1765,14 @@ public class Unit {
 		return (this.getHitPoints() > 0);
 	}
 
-	//TODO voorrang geven aan vallen
 	public void falling(){
 		if (this.isFallingPosition(this.getCubeCoordinate()[0], this.getCubeCoordinate()[1], this.getCubeCoordinate()[2])){
+			this.setCurrentSpeed(0);
 			this.isFalling = true;
 			this.isWorking = false;
 			this.isAttacking = false;
 			this.isResting = false;
 			this.isMovingTo = false;
-			this.stopSprinting();
 			this.moveToAdjacent(0, 0, -1);
 		}
 		else if (this.getWorld().isValidStandingPosition(this.getCubeCoordinate()[0], this.getCubeCoordinate()[1], this.getCubeCoordinate()[2])){
@@ -1778,13 +1784,13 @@ public class Unit {
 	}
 	
 	private boolean isFalling;
-	//TODO log en boulder private maken?
-	Log log;
-	Boulder boulder;
+	private Log log;
+	private Boulder boulder;
 	
 	public void workAt(int x, int y, int z){
 		if (!this.isFalling){
-			this.setOrientation(Math.atan2(y - this.getPosition()[1], x - this.getPosition()[0]));
+			this.workingTime = 0;
+			this.setOrientation(Math.atan2(y+0.5 - this.getPosition()[1], x+0.5 - this.getPosition()[0]));
 			this.work();
 			this.workPosition = new int[] {x,y,z};
 		}
@@ -1792,7 +1798,7 @@ public class Unit {
 	
 	private int[] workPosition;
 	
-	public void resultWorkAt(int x, int y, int z){
+	public void resultWorkAt(int x, int y, int z) throws IllegalArgumentException{
 		if ((this.isCarryingLog() || this.isCarryingBoulder()) && this.getWorld().isPassable(x, y, z)){
 			if (this.isCarryingLog()){
 				this.isCarryingLog = false;

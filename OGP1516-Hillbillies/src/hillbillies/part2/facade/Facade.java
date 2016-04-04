@@ -116,6 +116,8 @@ public class Facade implements IFacade{
 			unit.advanceTime(dt);		
 		}catch(IllegalArgumentException e){
 			throw new ModelException();
+		}catch(IndexOutOfBoundsException i){
+			throw new ModelException();
 		}
 	}
 
@@ -171,6 +173,8 @@ public class Facade implements IFacade{
 		try{
 			unit.moveTo(cube);		
 		}catch(IllegalArgumentException e){
+			throw new ModelException();
+		}catch(IndexOutOfBoundsException i){
 			throw new ModelException();
 		}
 	}
@@ -247,6 +251,8 @@ public class Facade implements IFacade{
 			world.advanceTime(dt);
 		} catch (IllegalArgumentException e){
 			throw new ModelException();
+		}catch(IndexOutOfBoundsException i){
+			throw new ModelException();
 		}
 		
 	}
@@ -273,12 +279,20 @@ public class Facade implements IFacade{
 
 	@Override
 	public Unit spawnUnit(World world, boolean enableDefaultBehavior) throws ModelException {
-		return world.spawnUnit(enableDefaultBehavior);
+		try{
+			return world.spawnUnit(enableDefaultBehavior);
+		}catch(IllegalArgumentException e){
+			throw new ModelException();
+		}
 	}
 
 	@Override
 	public void addUnit(Unit unit, World world) throws ModelException {
-		world.addUnit(unit);		
+		try{
+			world.addUnit(unit);
+		}catch(IllegalArgumentException e){
+			throw new ModelException();
+		}		
 	}
 
 	@Override
