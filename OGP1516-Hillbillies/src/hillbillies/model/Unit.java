@@ -468,17 +468,15 @@ public class Unit {
 	 *         equal and larger than 0 and smaller than 50.
 	 */
 	public boolean isValidPosition(double[] position) {
-		if (position.length == 3 && 
-				this.getWorld().isPassable((int) Math.floor(position[0]), (int) Math.floor(position[1]),
-						(int) Math.floor(position[2]))) {
-			if ((position[0] >= this.getWorld().getNbCubesX() || position[0] < 0)
-					|| (position[1] >= this.getWorld().getNbCubesY() || position[1] < 0)
-					|| (position[2] >= this.getWorld().getNbCubesZ() || position[2] < 0)){
-				return false;
+		if (position.length != 3 
+				|| (position[0] >= this.getWorld().getNbCubesX() || position[0] < 0)
+				|| (position[1] >= this.getWorld().getNbCubesY() || position[1] < 0)
+				|| (position[2] >= this.getWorld().getNbCubesZ() || position[2] < 0)
+				|| (!this.getWorld().isPassable((int) Math.floor(position[0]), 
+						(int) Math.floor(position[1]),(int) Math.floor(position[2])))) {
+			return false;
 			}
-			return true;
-		}
-		return false;
+		return true;
 	}
 
 	/**
@@ -880,6 +878,8 @@ public class Unit {
 		if (this.isSprinting() && this.getCurrentStaminaPoints() == 0) {
 			this.stopSprinting();
 		} else if (this.isSprinting()) {
+			System.out.println("is sprinting");
+			System.out.println(this.sprintingSpeed);
 			this.fractionOfSprintStaminaPoint += 1 * (dt / 0.1);
 			if (this.fractionOfSprintStaminaPoint >= 1) {
 				this.setStaminaPoints((this.getStaminaPoints() - 1));
@@ -1267,7 +1267,7 @@ public class Unit {
 	 *       new.currentSpeed=this.sprintingSpeed
 	 */
 	public void startSprinting() throws IllegalArgumentException {
-		if (this.isMoving() && this.getCurrentStaminaPoints() > 0)
+		if (!this.isFalling && this.isMoving() && this.getCurrentStaminaPoints() > 0)
 			this.setCurrentSpeed(this.sprintingSpeed);
 	}
 
@@ -1289,7 +1289,8 @@ public class Unit {
 	 *         this.sprintingSpeed) && this.sprintingSpeed != 0
 	 */
 	public boolean isSprinting() {
-		return Util.fuzzyEquals(this.getCurrentSpeed(), this.sprintingSpeed) && this.sprintingSpeed != 0;
+		return Util.fuzzyEquals(this.getCurrentSpeed(), this.sprintingSpeed) && this.sprintingSpeed != 0
+				&& !this.isFalling;
 	}
 
 	PathFinding pathFinding = new PathFinding();
@@ -1477,8 +1478,8 @@ public class Unit {
 		for (int i=-1;i<2;i++){
 			for (int j=-1;j<2;j++){
 				for (int k=-1;k<2;k++){
-					if(this.getWorld().isPassable(this.getCubeCoordinate()[0]+i, 
-							this.getCubeCoordinate()[1]+j, this.getCubeCoordinate()[2]+k)){
+					if(this.isValidPosition(new double[] {this.getCubeCoordinate()[0]+i,		
+					this.getCubeCoordinate()[1]+j, this.getCubeCoordinate()[2]+k})){
 						double[] dodgePos = new double[]{ this.getPosition()[0] + i,
 								this.getPosition()[1] + j, this.getPosition()[2]+k };
 						return dodgePos;
@@ -1678,7 +1679,8 @@ public class Unit {
 			this.isMovingTo = false;
 			this.moveToAdjacent(0, 0, -1);
 		}
-		else if (this.getWorld().isValidStandingPosition(this.getCubeCoordinate()[0], this.getCubeCoordinate()[1], this.getCubeCoordinate()[2])){
+		else if (this.getWorld().isValidStandingPosition(this.getCubeCoordinate()[0], this.getCubeCoordinate()[1], this.getCubeCoordinate()[2])
+				&& (this.isFalling && Util.fuzzyEquals(this.getPosition()[2],this.getNextPosition()[2]))){
 			this.isFalling = false;
 		}
 		else if (this.isFalling){

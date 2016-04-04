@@ -7,6 +7,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import hillbillies.model.Unit;
+import hillbillies.model.World;
+import hillbillies.part2.listener.DefaultTerrainChangeListener;
 import ogp.framework.util.ModelException;
 import ogp.framework.util.Util;
 
@@ -130,13 +132,36 @@ public class UnitTests {
 	}
 	
 	@Test (expected=IllegalArgumentException.class)
-	public void testSetPositionMoreThan50() throws ModelException {
-		new Unit("TestUnit", new int[] { 1, 70, 3 }, 50, 50, 50, 50, false);
+	public void testSetPositionMoreThanDimension() throws ModelException {
+		int[][][] types = new int[4][4][4];
+		types[1][2][2] = 1;
+		types[2][2][3] = 1;
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit unit = new Unit("TestUnit", new int[] { 1, 2, 3 }, 50, 50, 50, 50, false);
+		world.addUnit(unit);
+		unit.setPosition(new double[]{4.5,4.5,4.5});
+	}
+	
+	@Test (expected=IllegalArgumentException.class)
+	public void testSetPositionInpassable() throws ModelException {
+		int[][][] types = new int[4][4][4];
+		types[1][2][2] = 1;
+		types[2][2][3] = 1;
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit unit = new Unit("TestUnit", new int[] { 1, 2, 3 }, 50, 50, 50, 50, false);
+		world.addUnit(unit);
+		unit.setPosition(new double[]{1,2,2});
 	}
 	
 	@Test (expected=IllegalArgumentException.class)
 	public void testSetPositionLessThanZero() throws ModelException {
-		new Unit("TestUnit", new int[] { 0, 2, -20 }, 50, 50, 50, 50, false);
+		int[][][] types = new int[4][4][4];
+		types[1][2][2] = 1;
+		types[2][2][3] = 1;
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit unit = new Unit("TestUnit", new int[] { 0, 2, 2 }, 50, 50, 50, 50, false);
+		world.addUnit(unit);
+		unit.setPosition(new double[]{0,0,-2});
 	}
 	
 	@Test (expected=IllegalArgumentException.class)
@@ -187,22 +212,38 @@ public class UnitTests {
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testValidDurationAdvanceTime() throws ModelException{
+		int[][][] types = new int[4][4][4];
+		types[1][2][2] = 1;
+		types[2][2][3] = 1;
+		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit unit = new Unit("TestUnit", new int[] { 1, 2, 3 }, 50, 50, 50, 50, false);
+		world.addUnit(unit);
 		unit.advanceTime(0.5);
 	}
 	
-	/*@Test
+	@Test
 	public void testSprintingOutOfStaminaPoints() throws ModelException{
-		Unit unit = new Unit("TestUnit", new int[] { 1, 2, 3 }, 50, 50, 50, 50, false);
+		Unit unit = new Unit("TestUnit", new int[] { 1, 2, 3 }, 25, 25, 25, 25, false);
+		int[][][] types = new int[4][4][4];
+		types[1][2][2] = 1;
+		types[1][1][0] = 1;
+		World world = new World(types, new DefaultTerrainChangeListener());
+		world.addUnit(unit);
+		unit.setCurrentSpeed(1);
 		unit.startSprinting();
-		unit.setStaminaPoints(0);
+		advanceTimeFor(unit, 100, 0.15);
 		assertFalse("out of staminapoints, can not sprint anymore", unit.isSprinting());
-	}*/
+	}
 	
 	@Test
 	public void testRestAfterMove() throws ModelException{
 		Unit unit = new Unit("TestUnit", new int[] { 1, 2, 3 }, 50, 50, 50, 50, false);
-		unit.moveTo(new int[] {25,25,25});
+		int[][][] types = new int[4][4][4];
+		types[1][2][2] = 1;
+		types[1][1][0] = 1;
+		World world = new World(types, new DefaultTerrainChangeListener());
+		world.addUnit(unit);
+		unit.moveTo(new int[] {1,1,1});
 		unit.rest();
 		assertFalse("movement interrupterd", unit.isMoving());
 	}
@@ -211,47 +252,72 @@ public class UnitTests {
 	@Test
 	public void testWorkAfterMove() throws ModelException{
 		Unit unit = new Unit("TestUnit", new int[] { 1, 2, 3 }, 50, 50, 50, 50, false);
+		int[][][] types = new int[4][4][4];
+		types[1][2][2] = 1;
+		types[2][2][3] = 1;
+		World world = new World(types, new DefaultTerrainChangeListener());
+		world.addUnit(unit);
 		unit.moveTo(new int[] {3,2,3});
 		unit.work();
 		unit.advanceTime(0.1);
 		assertFalse("movement interrupterd", unit.isMoving());
 	}
 	
-	/*@Test
+	@Test
 	public void testRestLessThan1HitPointInterruptedAttack() throws ModelException{
+		int[][][] types = new int[4][4][4];
+		types[1][1][1] = 1;
+		types[0][1][1] = 1;
+		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit unit = new Unit("TestUnit", new int[] { 1, 2, 3 }, 50, 50, 50, 50, false);
-		Unit defender = facade.createUnit("TestUnit", new int[] { 2, 2, 3 }, 50, 50, 50, 50, false);
+		Unit defender = new Unit("TestUnit", new int[] { 0, 1, 2 }, 50, 50, 50, 50, false);
+		world.addUnit(unit);
+		world.addUnit(defender);
+		unit.setPosition(new double[]{1,1,2});
+		unit.advanceTime(0.1);
 		unit.rest();
-		unit.setHitPoints(unit.getCurrentHitPoints()-5);
 		unit.fight(defender);
 		unit.advanceTime(0.1);
 		assertFalse("stopped resting during attack", unit.isResting());
-	}*/
+	}
 	
-	/*@Test
+	@Test
 	public void testRestNotInterruptedByWork() throws ModelException{
-		Unit unit = new Unit("TestUnit", new int[] { 1, 2, 3 }, 50, 50, 50, 50, false);
+		int[][][] types = new int[4][4][4];
+		types[1][2][1] = 1;
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit unit = new Unit("TestUnit", new int[] { 1, 2, 2 }, 25, 25, 25, 25, false);
+		world.addUnit(unit);
+		unit.moveToAdjacent(0, 0, 1);
+		advanceTimeFor(unit, 100, 0.1);
 		unit.rest();
-		unit.setHitPoints(unit.getCurrentHitPoints()-5);
-		unit.work();
+		unit.workAt(1,1,1);
 		unit.advanceTime(0.1);
 		assertTrue("rest not interrupted by work", unit.isResting());
-	}*/
+	}
 	
-	/*@Test
+	@Test
 	public void testRestStopRestingWhenFullyLoaded() throws ModelException{
+		int[][][] types = new int[4][4][4];
+		types[1][2][2] = 1;
+		types[2][2][3] = 1;
+		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit unit = new Unit("TestUnit", new int[] { 1, 2, 3 }, 50, 50, 50, 50, false);
+		world.addUnit(unit);
 		unit.rest();
-		unit.setHitPoints(unit.getMaxHitPoints());
-		unit.setStaminaPoints(unit.getMaxStaminaPoints());
 		unit.advanceTime(0.1);
 		assertFalse("stop resting when fully loaded points", unit.isResting());
-	}*/
+	}
 	
 	@Test
 	public void testWorkInterruptedByRest() throws ModelException{
+		int[][][] types = new int[4][4][4];
+		types[1][2][2] = 1;
+		types[2][2][3] = 1;
+		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit unit = new Unit("TestUnit", new int[] { 1, 2, 3 }, 50, 50, 50, 50, false);
-		unit.work();
+		world.addUnit(unit);
+		unit.workAt(2,2,3);
 		unit.rest();
 		unit.advanceTime(0.1);
 		assertFalse("stop working and start resting", unit.isWorking());
@@ -259,9 +325,15 @@ public class UnitTests {
 	
 	@Test
 	public void testWorkInterruptedByAttack() throws ModelException{
+		int[][][] types = new int[4][4][4];
+		types[1][2][2] = 1;
+		types[2][2][3] = 1;
+		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit unit = new Unit("TestUnit", new int[] { 1, 2, 3 }, 50, 50, 50, 50, false);
 		Unit defender = new Unit("TestUnit", new int[] { 2, 2, 3 }, 50, 50, 50, 50, false);
-		unit.work();
+		world.addUnit(unit);
+		world.addUnit(defender);
+		unit.workAt(2,2,3);
 		unit.fight(defender);
 		unit.advanceTime(0.1);
 		assertFalse("stop working and start attacking", unit.isWorking());
@@ -270,8 +342,15 @@ public class UnitTests {
 	@Test
 	public void testWorkNotInterruptedByMoving() throws ModelException{
 		Unit unit = new Unit("TestUnit", new int[] { 1, 2, 3 }, 50, 50, 50, 50, false);
-		unit.work();
-		unit.moveTo(new int[] {5,5,5});
+		int[][][] types = new int[4][4][4];
+		types[1][2][2] = 1;
+		types[1][1][2] = 1;
+		types[1][0][2] = 1;
+		types[1][3][3] = 1;
+		World world = new World(types, new DefaultTerrainChangeListener());
+		world.addUnit(unit);
+		unit.workAt(1,3,3);
+		unit.moveTo(new int[] {1,0,3});
 		unit.advanceTime(0.1);
 		assertTrue("keep working and don't move", unit.isWorking());
 	}
@@ -285,13 +364,18 @@ public class UnitTests {
 	
 	@Test
 	public void testMoveToAdjacent() throws ModelException{
-		Unit unit = new Unit("TestUnit", new int[] { 5, 5, 3 }, 50, 50, 50, 50, false);
+		int[][][] types = new int[4][4][4];
+		types[1][1][0] = 1;
+		types[1][2][0] = 1;
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit unit = new Unit("TestUnit", new int[] { 1, 1, 1 }, 50, 50, 50, 50, false);
+		world.addUnit(unit);
 		unit.moveToAdjacent(0, 1, 0);
 		double speed = unit.getCurrentSpeed();
 		double distance = Math.sqrt(2);
 		double time = distance / speed;
 		advanceTimeFor(unit, time, 0.1);
-		assertArrayEquals("Moved to adjacent cube", new double[]{5.5,6.5,3.5}, 
+		assertArrayEquals("Moved to adjacent cube", new double[]{1.5,2.5,1.5}, 
 				unit.getPosition(), Util.DEFAULT_EPSILON);
 	}
 	
@@ -321,8 +405,13 @@ public class UnitTests {
 	
 	@Test
 	public void testIsSprinting() throws ModelException{
+		int[][][] types = new int[4][4][4];
+		types[1][2][2] = 1;
+		types[2][2][2] = 1;
+		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit unit = new Unit("TestUnit", new int[] { 1, 2, 3 }, 50, 50, 50, 50, false);
-		unit.moveToAdjacent(0, 1, 0);
+		world.addUnit(unit);
+		unit.moveToAdjacent(1, 0, 0);
 		unit.advanceTime(0.1);
 		unit.startSprinting();
 		assert unit.isSprinting();
@@ -338,29 +427,90 @@ public class UnitTests {
 	
 	@Test
 	public void testMoveTo() throws ModelException{
-		Unit unit = new Unit("TestUnit", new int[] { 1, 2, 3 }, 50, 50, 50, 50, false);
-		unit.moveTo(new int[] {3,4,3});
+		int[][][] types = new int[4][4][4];
+		types[1][1][2] = 1;
+		types[2][2][2] = 1;
+		types[3][3][2] = 1;
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit unit = new Unit("TestUnit", new int[] { 1, 1, 3 }, 50, 50, 50, 50, false);
+		world.addUnit(unit);
+		unit.moveTo(new int[] {3,3,3});
 		double speed = unit.getCurrentSpeed();
 		double distance = 2*Math.sqrt(2);
 		double time = distance / speed;
 		advanceTimeFor(unit, time, 0.1);
-		assertArrayEquals("arrived at chosen position", new double[]{3.5,4.5,3.5}, 
+		assertArrayEquals("arrived at chosen position", new double[]{3.5,3.5,3.5}, 
 				unit.getPosition(), Util.DEFAULT_EPSILON);	}
 	
-		
+	@Test (expected=IllegalArgumentException.class)
+	public void testMoveToFallingPosition() throws ModelException{
+		int[][][] types = new int[4][4][4];
+		types[1][1][2] = 1;
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit unit = new Unit("TestUnit", new int[] { 1, 1, 3 }, 50, 50, 50, 50, false);
+		world.addUnit(unit);
+		unit.moveTo(new int[] {3,3,3});
+	}
+	
+	@Test (expected=IllegalArgumentException.class)
+	public void testMoveToInpassableCube() throws ModelException{
+		int[][][] types = new int[4][4][4];
+		types[1][1][2] = 1;
+		types[2][2][2] = 1;
+		types[3][3][3] = 1;
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit unit = new Unit("TestUnit", new int[] { 1, 1, 3 }, 50, 50, 50, 50, false);
+		world.addUnit(unit);
+		unit.moveTo(new int[] {3,3,3});
+	}
+	
 	@Test
-	public void testWork() throws ModelException{
+	public void testWorkAt() throws ModelException{
+		int[][][] types = new int[4][4][4];
+		types[1][2][2] = 1;
+		types[2][2][3] = 1;
+		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit unit = new Unit("TestUnit", new int[] { 1, 2, 3 }, 50, 50, 50, 50, false);
-		unit.work();
+		world.addUnit(unit);
+		unit.workAt(2,2,3);
 		assertTrue("if unit is working: true", unit.isWorking());
 	}
 	
 	@Test
 	public void testFight() throws ModelException{
-		Unit unit = new Unit("TestUnit", new int[] { 1, 2, 3 }, 50, 50, 50, 50, false);
+		int[][][] types = new int[4][4][4];
+		types[1][1][2] = 1;
+		types[2][2][2] = 1;
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit unit = new Unit("TestUnit", new int[] { 1, 1, 3 }, 50, 50, 50, 50, false);
 		Unit defender = new Unit("TestUnit", new int[] { 2, 2, 3 }, 50, 50, 50, 50, false);
+		world.addUnit(unit);
+		world.addUnit(defender);
 		unit.fight(defender);
 		assertTrue("unit is attacking defender", unit.isAttacking());
+	}
+	
+	@Test
+	public void testFightSameFaction() throws ModelException{
+		int[][][] types = new int[4][4][4];
+		types[1][2][2] = 1;
+		types[2][2][3] = 1;
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit unit = new Unit("TestUnit", new int[] { 1, 2, 3 }, 50, 50, 50, 50, false);
+		Unit unit2 = new Unit("TestUnit", new int[] { 1, 2, 3 }, 50, 50, 50, 50, false);
+		Unit unit3 = new Unit("TestUnit", new int[] { 1, 2, 3 }, 50, 50, 50, 50, false);
+		Unit unit4 = new Unit("TestUnit", new int[] { 1, 2, 3 }, 50, 50, 50, 50, false);		
+		Unit unit5 = new Unit("TestUnit", new int[] { 1, 2, 3 }, 50, 50, 50, 50, false);
+		Unit defender = new Unit("TestUnit", new int[] { 2, 2, 3 }, 50, 50, 50, 50, false);
+		world.addUnit(unit);
+		world.addUnit(unit2);
+		world.addUnit(unit3);
+		world.addUnit(unit4);
+		world.addUnit(unit5);		
+		world.addUnit(defender);
+		unit5.fight(defender);
+		unit5.advanceTime(0.1);
+		assertFalse("units aren't fighting", unit.isAttacking());
 	}
 	
 	@Test
@@ -391,5 +541,96 @@ public class UnitTests {
 		unit.setDefaultBehaviorEnabled(false);
 		assertFalse("default behavior dissbled", unit.isDefaultBehaviorEnabled());
 	}
+		
+	@Test
+	public void testIsFallingPosition() throws ModelException{
+		int[][][] types = new int[4][4][4];
+		types[1][2][2] = 1;
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit unit = new Unit("TestUnit", new int[] { 1, 2, 3 }, 50, 50, 50, 50, false);
+		world.addUnit(unit);
+		assertTrue("is falling position", unit.isFallingPosition(0, 0, 2));
+	}
 	
+	@Test
+	public void testExperiencePointsMoveToAdjacent() throws ModelException{
+		int[][][] types = new int[4][4][4];
+		types[1][1][2] = 1;
+		types[2][2][2] = 1;
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit unit = new Unit("TestUnit", new int[] { 1, 1, 3 }, 50, 50, 50, 50, false);
+		world.addUnit(unit);
+		unit.moveToAdjacent(1, 1, 0);
+		advanceTimeFor(unit,100,0.15);
+		assertTrue("1 experience point", unit.getExperiencePoints()==1);
+	}
+	
+	@Test
+	public void testExperiencePointsMoreThan10() throws ModelException{
+		int[][][] types = new int[4][4][4];
+		types[1][1][2] = 1;
+		types[2][2][2] = 1;
+		types[1][2][3] = 1;
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit unit = new Unit("TestUnit", new int[] { 1, 1, 3 }, 50, 50, 50, 50, false);
+		world.addUnit(unit);
+		int agility = unit.getAgility();
+		int strength = unit.getStrength();
+		int toughness = unit.getToughness();
+		unit.workAt(1, 2, 3);
+		advanceTimeFor(unit,100,0.15);
+		boolean characteristicPlus1 = unit.getAgility()-agility==1 || unit.getStrength()-strength == 1
+				|| unit.getToughness()-toughness == 1;
+		assertTrue("no experience points", unit.getExperiencePoints()==0);
+		assertTrue("characteristic plus 1",characteristicPlus1);
+	}
+	
+	@Test
+	public void testIsAlive()throws ModelException{
+		Unit unit = new Unit("TestUnit", new int[] { 1, 1, 3 }, 50, 50, 50, 50, false);
+		assertTrue("unit is alive", unit.isAlive());
+	}
+	
+	@Test
+	public void testLoseHitPointsByFalling() throws ModelException{
+		int[][][] types = new int[4][4][4];
+		types[1][1][1] = 1;
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit unit = new Unit("TestUnit", new int[] { 1, 1, 2 }, 50, 50, 50, 50, false);
+		world.addUnit(unit);
+		int hitPoints = unit.getCurrentHitPoints();
+		unit.moveToAdjacent(0, 0, 1);
+		advanceTimeFor(unit,100,0.1);		
+		assertTrue("lost hitpoints", hitPoints-unit.getCurrentHitPoints() == 10);
+	}
+	
+	@Test
+	public void testIsCarryingBoulder() throws ModelException{
+		int[][][] types = new int[4][4][4];
+		types[1][1][2] = 1;
+		types[1][2][3] = 1;
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit unit = new Unit("TestUnit", new int[] { 1, 1, 3 }, 50, 50, 50, 50, false);
+		world.addUnit(unit);
+		unit.workAt(1, 2, 3);
+		advanceTimeFor(unit,100,0.1);
+		unit.workAt(1, 2, 3);
+		advanceTimeFor(unit,100,0.1);
+		assertTrue("unit is carrying boulder", unit.isCarryingBoulder);
+	}
+	
+	@Test
+	public void testIsCarryingLog() throws ModelException{
+		int[][][] types = new int[4][4][4];
+		types[1][1][2] = 1;
+		types[1][2][3] = 2;
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit unit = new Unit("TestUnit", new int[] { 1, 1, 3 }, 50, 50, 50, 50, false);
+		world.addUnit(unit);
+		unit.workAt(1, 2, 3);
+		advanceTimeFor(unit,100,0.1);
+		unit.workAt(1, 2, 3);
+		advanceTimeFor(unit,100,0.1);
+		assertTrue("unit is carrying log", unit.isCarryingLog);
+	}
 }
