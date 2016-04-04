@@ -794,13 +794,13 @@ public class Unit {
 	 */
 	public void advanceTime(double dt) throws IllegalArgumentException, IndexOutOfBoundsException {
 		if (this.getWorld().isValidDuration(dt)) {
-			this.death(); //TODO moet je dan van unit changen?
+			this.death();
 			this.falling();
+			if (this.getExperiencePoints() >= 10)
+				this.experiencePointsAdvanceTime();
 			this.sprintingAdvanceTime(dt);
-			if (this.isMoving()){
-				System.out.println(this.getCurrentSpeed());
+			if (this.isMoving())
 				this.isMovingAdvanceTime(dt);
-			}
 			if (this.isMovingTo && this.getPosition() == this.getNextPosition())
 				this.isMovingToAdvanceTime(dt);
 			if (this.isResting())
@@ -816,12 +816,11 @@ public class Unit {
 				this.resting3MinutesTime = 0;
 				this.rest();
 			}
-			if (this.getExperiencePoints() >= 10)
-				this.experiencePointsAdvanceTime();
 		} else if (dt >= World.MAX_DURATION) {
 			throw new IllegalArgumentException();
 		}
 	}
+	
 	
 	public boolean isFallingPosition(int x,int y,int z){
 		for (int i=-1; i<2; i++){
@@ -897,9 +896,7 @@ public class Unit {
 	 *            The time between each update of the unit.
 	 */
 	private void isMovingAdvanceTime(double dt) throws IllegalArgumentException {
-		System.out.println("moving adv time");
 		double[] v = this.getMovingSpeed(dt);
-		System.out.println("after moving adv time");
 		double[] fuzzyPositionUnder = new double[] { 0, 0, 0 };
 		double[] fuzzyPositionUpper = new double[] { 0, 0, 0 };
 		double[] distance = new double[] { 0, 0, 0 };
@@ -1043,7 +1040,6 @@ public class Unit {
 	 */
 	private void defaultBehaviorEnabledAdvanceTime(double dt) throws IllegalArgumentException, IndexOutOfBoundsException {
 		if (!this.isAttacking() && !this.isMoving() && !this.isWorking() && !this.isResting()) {
-			System.out.println("adv def");
 			this.defaultBehavior();
 		}
 	}
@@ -1072,12 +1068,9 @@ public class Unit {
 	 * @return the actual moving speed v | result == v
 	 */
 	private double[] getMovingSpeed(double dt) {
-		System.out.println("get moving speed");
-		System.out.println(this.getNextPosition()[0]);
 		double d = Math.sqrt(Math.pow(this.getNextPosition()[0] - this.getPosition()[0], 2)
 				+ Math.pow(this.getNextPosition()[1] - this.getPosition()[1], 2)
 				+ Math.pow(this.getNextPosition()[2] - this.getPosition()[2], 2));
-		System.out.println("d bepaald");
 		if (this.isSprinting()) {
 			double[] v = new double[] { this.sprintingSpeed * (this.getNextPosition()[0] - this.getPosition()[0]) / d,
 					this.sprintingSpeed * (this.getNextPosition()[1] - this.getPosition()[1]) / d,
@@ -1125,9 +1118,6 @@ public class Unit {
 				if (this.getWorld().isPassable((int)Math.floor(this.getNextPosition()[0]), (int)Math.floor(this.getNextPosition()[1]), (int)Math.floor(this.getNextPosition()[2]))){
 					this.setCurrentSpeed(this.walkingSpeed);
 				}
-				else{
-					System.out.println("cube is inpassable");
-				}
 			}
 		}
 	}
@@ -1135,7 +1125,7 @@ public class Unit {
 	/**
 	 * Boolean registering whether the unit is moving to a cube far away.
 	 */
-	private boolean isMovingTo = false;
+	public boolean isMovingTo = false;
 
 	/**
 	 * Calculate the position of the adjacent cube where the hillbilly moves to
@@ -1313,7 +1303,6 @@ public class Unit {
 	 *         this.moveToAdjacent(dx, dy, dz);
 	 */
 	public void moveTo(int[] cube) throws IllegalArgumentException, IndexOutOfBoundsException {
-		System.out.println("boolean move " + this.isMovingTo);
 		this.cubeEndPosition = cube;
 		if (!this.getWorld().isPassable(this.cubeEndPosition[0], this.cubeEndPosition[1], this.cubeEndPosition[2])
 				|| this.isFallingPosition(this.cubeEndPosition[0], this.cubeEndPosition[1], this.cubeEndPosition[2])){
@@ -1615,7 +1604,6 @@ public class Unit {
 			break;
 		case 3:
 			this.defaultBehaviorCase3 = true;
-			System.out.println("default 3");
 			this.calculateSpeed(randomPosition2);
 			this.moveTo(randomPosition);
 			break;

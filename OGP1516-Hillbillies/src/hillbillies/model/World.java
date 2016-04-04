@@ -76,7 +76,6 @@ public class World {
 			for(Log log: this.getLogs()){
 				log.advanceTime(dt);
 			}
-			//TODO check solid cube niet aan border verbonden -> afbreken binnen max 5sec
 			if (!this.getCubesChanged().isEmpty()){
 				this.updateCubes();
 			}

@@ -20,8 +20,11 @@ public class PathFinding {
 		while (!(current.getX() == cubeEndPosition[0])
 				|| !(current.getY() == cubeEndPosition[1])
 				|| !(current.getZ() == cubeEndPosition[2])){
-			if (open.isEmpty())
+			if (open.isEmpty()){
+				unit.setCurrentSpeed(0);
+				unit.isMovingTo = false;
 				throw new IndexOutOfBoundsException();
+			}
 
 			current = this.searchMinimumCostCube(minimum, open);
 			open.remove(current);
