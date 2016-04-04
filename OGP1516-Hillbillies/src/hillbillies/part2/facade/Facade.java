@@ -246,7 +246,6 @@ public class Facade implements IFacade{
 
 	@Override
 	public void advanceTime(World world, double dt) throws ModelException {
-		// TODO Auto-generated method stub
 		try{
 			world.advanceTime(dt);
 		} catch (IllegalArgumentException e){
@@ -269,7 +268,6 @@ public class Facade implements IFacade{
 
 	@Override
 	public boolean isSolidConnectedToBorder(World world, int x, int y, int z) throws ModelException {
-		// TODO Auto-generated method stub
 		try{
 			return world.isSolidConnectedToBorder(x, y, z);
 		} catch (IllegalArgumentException e){

@@ -1,8 +1,6 @@
 package hillbillies.model;
 
 import java.util.Random;
-import java.util.Set;
-
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Raw;
 
@@ -60,9 +58,8 @@ public class Boulder {
 	
 	private World world;
 	
-	public void falling(double dt){
+	private void falling(double dt){
 		this.isFalling = true;
-		System.out.println("falling boulder");
 		double[] v = new double[]{0,0,-3};
 		double[] fuzzyPositionUnder = new double[] { 0, 0, 0 };
 		double[] fuzzyPositionUpper = new double[] { 0, 0, 0 };
@@ -78,13 +75,11 @@ public class Boulder {
 			double[] newPosition = new double[] { this.getPosition()[0] + v[0] * dt, this.getPosition()[1] + v[1] * dt,
 					this.getPosition()[2] + v[2] * dt };
 			if (isValidPosition(newPosition)&&this.getWorld().isPassable((int)Math.floor(newPosition[0]), (int)Math.floor(newPosition[1]), (int)Math.floor(newPosition[2])))
-				System.out.println("new z;" + newPosition[2]);
 				this.setPosition(newPosition[0],newPosition[1],newPosition[2]);
 		} else {
 			this.setPosition(this.nextPosition[0],this.nextPosition[1],this.nextPosition[2]);
 			this.startFallingPosition = this.nextPosition;
 			this.isFalling = false;
-			System.out.println("blok gevallen");
 		}
 	}
 	
@@ -100,10 +95,13 @@ public class Boulder {
 	 *         equal and larger than 0 and smaller than 50.
 	 */
 	public boolean isValidPosition(double[] position) {
-		if (position.length == 3) {
-			for (double coordinate : position) {
-				if (coordinate >= this.getWorld().getNbCubesX() || coordinate < 0)
-					return false;
+		if (position.length == 3 && 
+				this.getWorld().isPassable((int) Math.floor(position[0]), (int) Math.floor(position[1]),
+						(int) Math.floor(position[2]))) {
+			if ((position[0] >= this.getWorld().getNbCubesX() || position[0] < 0)
+					|| (position[1] >= this.getWorld().getNbCubesY() || position[1] < 0)
+					|| (position[2] >= this.getWorld().getNbCubesZ() || position[2] < 0)){
+				return false;
 			}
 			return true;
 		}

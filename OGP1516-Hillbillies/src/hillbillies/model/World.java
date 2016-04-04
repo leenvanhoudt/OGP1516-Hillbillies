@@ -76,38 +76,37 @@ public class World {
 			for(Log log: this.getLogs()){
 				log.advanceTime(dt);
 			}
-				
-			//check solid cube niet aan border verbonden -> afbreken binnen max 5sec
-			//cubes die van terrainType zijn veranderd: 
-					//		modelListener.notifyTerrainChanged(x, y, z)
-					//		--> hoe laat het spel ons weten of een cube veranderd is??
-					//			--> heb ik denk ik opgelost (zie lijst cubesChanged)
+			//TODO check solid cube niet aan border verbonden -> afbreken binnen max 5sec
 			if (!this.getCubesChanged().isEmpty()){
-				for (int[] cube : this.getCubesChanged()){
-					double P = 0.25;
-					Random random = new Random();
-					if (random.nextInt(100) <= (P*100)){
-						//rock
-						if (this.getCubeType(cube[0], cube[1], cube[2])==1){
-							Boulder boulder = new Boulder();
-							boulder.setWorld(this);
-							boulder.setPosition(cube[0], cube[1], cube[2]);
-							this.addBoulder(boulder);
-						}
-						//wood
-						else if (this.getCubeType(cube[0], cube[1], cube[2])==2){
-							Log log = new Log();
-							log.setWorld(this);
-							log.setPosition(cube[0], cube[1], cube[2]);
-							this.addLog(log);
-						}
-					}
-					this.setCubeType(cube[0], cube[1], cube[2], 0);
-					this.modelListener.notifyTerrainChanged(cube[0], cube[1], cube[2]);
-				}
+				this.updateCubes();
 			}
 		}else if (dt >= MAX_DURATION) {
 			throw new IllegalArgumentException();
+		}
+	}
+	
+	private void updateCubes(){
+		for (int[] cube : this.getCubesChanged()){
+			double P = 0.25;
+			Random random = new Random();
+			if (random.nextInt(100) <= (P*100)){
+				//rock
+				if (this.getCubeType(cube[0], cube[1], cube[2])==1){
+					Boulder boulder = new Boulder();
+					boulder.setWorld(this);
+					boulder.setPosition(cube[0], cube[1], cube[2]);
+					this.addBoulder(boulder);
+				}
+				//wood
+				else if (this.getCubeType(cube[0], cube[1], cube[2])==2){
+					Log log = new Log();
+					log.setWorld(this);
+					log.setPosition(cube[0], cube[1], cube[2]);
+					this.addLog(log);
+				}
+			}
+			this.setCubeType(cube[0], cube[1], cube[2], 0);
+			this.modelListener.notifyTerrainChanged(cube[0], cube[1], cube[2]);
 		}
 	}
 	
@@ -150,8 +149,7 @@ public class World {
 			Random random = new Random();
 			int characteristics = Unit.MIN_INITIAL_VALUE + 
 					random.nextInt(Unit.MAX_INITIAL_VALUE - Unit.MIN_INITIAL_VALUE+1);
-			//TODO random naam
-			Unit newUnit = new Unit("Jan",validPosition, characteristics, characteristics,
+			Unit newUnit = new Unit(this.generateName(),validPosition, characteristics, characteristics,
 					characteristics,characteristics, enableDefaultBehavior);
 			this.activeFactionList.get(0).addUnitToFaction(newUnit);
 			newUnit.setFaction(this.activeFactionList.get(0));
@@ -201,6 +199,17 @@ public class World {
 	            }
 	        }
 	    });
+	}
+	
+	public String generateName(){
+		Random random = new Random();
+		String alphabet = "abcdefghijklmnopqrstuvwxyz";
+		String name = new String();
+		name = name.concat(Character.toString(alphabet.charAt(random.nextInt(26))).toUpperCase());
+		for (int i=0; i<2+random.nextInt(6);i++){
+			name = name.concat(Character.toString(alphabet.charAt(random.nextInt(26))));
+		}
+		return name;
 	}
 	
 	public void addUnit(Unit unit) throws IllegalArgumentException{
