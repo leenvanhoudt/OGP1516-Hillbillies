@@ -6,7 +6,7 @@ public class Cube {
 	private int gCost = 0;
 	private int fCost = Integer.MAX_VALUE;
 	private int x, y, z;
-	Cube parent;
+	private Cube parent;
 	
 	public Cube (int x, int y, int z){
 		this.x = x;

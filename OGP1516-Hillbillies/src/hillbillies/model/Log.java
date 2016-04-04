@@ -79,9 +79,8 @@ public class Log {
 			if (isValidPosition(newPosition)&&this.getWorld().isPassable((int)Math.floor(newPosition[0]), (int)Math.floor(newPosition[1]), (int)Math.floor(newPosition[2])))
 				this.setPosition(newPosition[0],newPosition[1],newPosition[2]);
 		} else {
-			this.setPosition(this.nextPosition[0],this.nextPosition[1],this.nextPosition[2]);
-			this.startFallingPosition = this.nextPosition;
 			this.isFalling = false;
+			this.setPosition(this.nextPosition[0],this.nextPosition[1],this.nextPosition[2]);
 		}
 	}
 	

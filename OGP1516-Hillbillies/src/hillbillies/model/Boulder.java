@@ -77,9 +77,8 @@ public class Boulder {
 			if (isValidPosition(newPosition)&&this.getWorld().isPassable((int)Math.floor(newPosition[0]), (int)Math.floor(newPosition[1]), (int)Math.floor(newPosition[2])))
 				this.setPosition(newPosition[0],newPosition[1],newPosition[2]);
 		} else {
-			this.setPosition(this.nextPosition[0],this.nextPosition[1],this.nextPosition[2]);
-			this.startFallingPosition = this.nextPosition;
 			this.isFalling = false;
+			this.setPosition(this.nextPosition[0],this.nextPosition[1],this.nextPosition[2]);
 		}
 	}
 	
@@ -94,7 +93,7 @@ public class Boulder {
 	 * @return ... | result is true if the position has 3 coordinates, which are
 	 *         equal and larger than 0 and smaller than 50.
 	 */
-	public boolean isValidPosition(double[] position) {
+	private boolean isValidPosition(double[] position) {
 		if (position.length == 3 && 
 				this.getWorld().isPassable((int) Math.floor(position[0]), (int) Math.floor(position[1]),
 						(int) Math.floor(position[2]))) {
