@@ -86,9 +86,6 @@ public class World {
 	
 	private void updateCubes(){
 		for (int[] cube : this.getCubesChanged()){
-			List<int[]> changedCubesConnectedToCube = this.connectedToBorder.changeSolidToPassable(cube[0],cube[1],cube[2]);
-			if (!changedCubesConnectedToCube.isEmpty())
-				this.addCubesChanged(changedCubesConnectedToCube);
 			double P = 0.25;
 			Random random = new Random();
 			if (random.nextInt(100) <= (P*100)){
@@ -109,7 +106,6 @@ public class World {
 			}
 			this.setCubeType(cube[0], cube[1], cube[2], 0);
 			this.modelListener.notifyTerrainChanged(cube[0], cube[1], cube[2]);
-			this.cubesChanged.remove(cube);
 		}
 	}
 	
@@ -162,7 +158,7 @@ public class World {
 		throw new IllegalArgumentException();
 	}
 	
-	public int[] searchValidPosition() {
+	private int[] searchValidPosition() {
 		Random random = new Random();
 		int x = random.nextInt(this.getNbCubesX());
 		int y = random.nextInt(this.getNbCubesY());
@@ -188,7 +184,7 @@ public class World {
 		return new int[] {x,y,z};
 	}
 	
-	public void sort(){
+	private void sort(){
 		Collections.sort(this.activeFactionList, new Comparator<Faction>() {
 	        @Override
 	        public int compare(Faction faction1, Faction faction2)
@@ -204,7 +200,7 @@ public class World {
 	    });
 	}
 	
-	public String generateName(){
+	private String generateName(){
 		Random random = new Random();
 		String alphabet = "abcdefghijklmnopqrstuvwxyz";
 		String name = new String();
