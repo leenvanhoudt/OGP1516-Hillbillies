@@ -135,9 +135,12 @@ public class World {
 		return this.connectedToBorder.isSolidConnectedToBorder(x,y,z);
 	}
 	
+	private static final int MAX_NB_UNITS_WORLD = 100;
+	private static final int MAX_NB_FACTIONS = 5;
+	
 	public Unit spawnUnit(boolean enableDefaultBehavior) throws IllegalArgumentException{
-		if (this.getUnits().size() < 100){
-			if (this.getActiveFactions().size()<5){
+		if (this.getUnits().size() < MAX_NB_UNITS_WORLD){
+			if (this.getActiveFactions().size()<MAX_NB_FACTIONS){
 				Faction newFaction = new Faction();
 				this.activeFactionSet.add(newFaction);
 				this.activeFactionList.add(newFaction);
@@ -145,9 +148,11 @@ public class World {
 			this.sort();
 			int[] validPosition = this.searchValidPosition();
 			Random random = new Random();
-			int characteristics = 25 + random.nextInt(76);
+			int characteristics = Unit.MIN_INITIAL_VALUE + 
+					random.nextInt(Unit.MAX_INITIAL_VALUE - Unit.MIN_INITIAL_VALUE+1);
 			//TODO random naam
-			Unit newUnit = new Unit("Jan",validPosition, characteristics, characteristics,characteristics,characteristics, enableDefaultBehavior);
+			Unit newUnit = new Unit("Jan",validPosition, characteristics, characteristics,
+					characteristics,characteristics, enableDefaultBehavior);
 			this.activeFactionList.get(0).addUnitToFaction(newUnit);
 			newUnit.setFaction(this.activeFactionList.get(0));
 			newUnit.setWorld(this);
@@ -199,8 +204,8 @@ public class World {
 	}
 	
 	public void addUnit(Unit unit) throws IllegalArgumentException{
-		if (this.getUnits().size() < 100){
-			if (this.getActiveFactions().size()<5){
+		if (this.getUnits().size() < MAX_NB_UNITS_WORLD){
+			if (this.getActiveFactions().size()<MAX_NB_FACTIONS){
 				Faction newFaction = new Faction();
 				this.activeFactionSet.add(newFaction);
 				this.activeFactionList.add(newFaction);
