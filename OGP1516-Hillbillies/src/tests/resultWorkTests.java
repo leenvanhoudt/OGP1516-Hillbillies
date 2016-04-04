@@ -14,7 +14,7 @@ import ogp.framework.util.ModelException;
 public class resultWorkTests {
 	
 	/**
-	 * Helper method to advance time for the given unit by some time.
+	 * Helper method to advance time for the given world by some time.
 	 * 
 	 * @param time
 	 *            The time, in seconds, to advance.
