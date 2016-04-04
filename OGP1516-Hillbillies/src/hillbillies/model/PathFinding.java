@@ -22,6 +22,7 @@ public class PathFinding {
 				|| !(current.getZ() == cubeEndPosition[2])){
 			if (open.isEmpty()){
 				unit.setCurrentSpeed(0);
+				unit.defaultBehaviorCase3 = false;
 				unit.isMovingTo = false;
 				throw new IndexOutOfBoundsException();
 			}

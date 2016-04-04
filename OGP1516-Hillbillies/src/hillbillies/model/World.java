@@ -86,6 +86,9 @@ public class World {
 	
 	private void updateCubes(){
 		for (int[] cube : this.getCubesChanged()){
+			List<int[]> changedCubesConnectedToCube = this.connectedToBorder.changeSolidToPassable(cube[0],cube[1],cube[2]);
+			if (!changedCubesConnectedToCube.isEmpty())
+				this.addCubesChanged(changedCubesConnectedToCube);
 			double P = 0.25;
 			Random random = new Random();
 			if (random.nextInt(100) <= (P*100)){
@@ -93,19 +96,20 @@ public class World {
 				if (this.getCubeType(cube[0], cube[1], cube[2])==1){
 					Boulder boulder = new Boulder();
 					boulder.setWorld(this);
-					boulder.setPosition(cube[0], cube[1], cube[2]);
+					boulder.setPosition(cube[0]+Unit.LC/2, cube[1]+Unit.LC/2, cube[2]+Unit.LC/2);
 					this.addBoulder(boulder);
 				}
 				//wood
 				else if (this.getCubeType(cube[0], cube[1], cube[2])==2){
 					Log log = new Log();
 					log.setWorld(this);
-					log.setPosition(cube[0], cube[1], cube[2]);
+					log.setPosition(cube[0]+Unit.LC/2, cube[1]+Unit.LC/2, cube[2]+Unit.LC/2);
 					this.addLog(log);
 				}
 			}
 			this.setCubeType(cube[0], cube[1], cube[2], 0);
 			this.modelListener.notifyTerrainChanged(cube[0], cube[1], cube[2]);
+			this.cubesChanged.remove(cube);
 		}
 	}
 	

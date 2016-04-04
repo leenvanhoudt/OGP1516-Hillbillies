@@ -1621,7 +1621,7 @@ public class Unit {
 		}
 	}
 	
-	private boolean defaultBehaviorCase3 = false;
+	public boolean defaultBehaviorCase3 = false;
 
 	/**
 	 * Boolean saving if the default behavior is enabled.
@@ -1690,7 +1690,9 @@ public class Unit {
 	
 	
 	public void workAt(int x, int y, int z){
-		if (!this.isFalling){
+		double d = Math.sqrt(Math.pow(x-this.getCubeCoordinate()[0],2)+
+				Math.pow(y-this.getCubeCoordinate()[1],2)+Math.pow(z-this.getCubeCoordinate()[2],2));
+		if (!this.isFalling && d<=MAX_DISTANCE_ADJACENT_CUBE ){
 			this.workingTime = 0;
 			this.setOrientation(Math.atan2(y+LC/2 - this.getPosition()[1], x+LC/2 - this.getPosition()[0]));
 			this.work();
