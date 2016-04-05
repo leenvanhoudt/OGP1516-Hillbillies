@@ -465,7 +465,7 @@ public class Unit {
 	 * @param position
 	 *            The position to check.
 	 * @return ... | result is true if the position has 3 coordinates, which are
-	 *         equal and larger than 0 and smaller than 50.
+	 *         equal and larger than 0 and smaller than the maximum dimensions of the world.
 	 */
 	public boolean isValidPosition(double[] position) {
 		if (position.length != 3 
@@ -734,7 +734,7 @@ public class Unit {
 	 * 
 	 * @param experiencePoints
 	 *            The experiencePoints to check.
-	 * @return | result ==
+	 * @return | result == experiencePoints >= 0
 	 */
 	public static boolean isValidExperiencePoints(int experiencePoints) {
 		return experiencePoints >= 0;
@@ -747,10 +747,9 @@ public class Unit {
 	 *            The new experiencePoints for this unit.
 	 * @post The experiencePoints of this new unit is equal to the given
 	 *       experiencePoints. | new.getExperiencePoints() == experiencePoints
-	 * @throws ExceptionName_Java
-	 *             The given experiencePoints is not a valid experiencePoints
-	 *             for any unit. | !
-	 *             isValidExperiencePoints(getExperiencePoints())
+	 * @throws IllegalArgumentException
+	 *             The given experiencePoints are not valid experiencePoints
+	 *             for any unit. | !isValidExperiencePoints(this.getExperiencePoints())
 	 */
 	@Raw
 	public void setExperiencePoints(int experiencePoints) throws IllegalArgumentException {
@@ -764,11 +763,14 @@ public class Unit {
 	 */
 	private int experiencePoints = 0;
 
-	
-	//TODO commentaar experiencepoints
+
 	/**
-	 * Update the program every valid dt seconds. - When the unit is sprinting
-	 * and his staminaPoints are 0, the unit will stop sprinting. - When the
+	 * Update the program every valid dt seconds. 
+	 * - When the unit is death, the unit will stop doing other activities and disappear from the world.
+	 * - When the unit is falling, he loses 10 hitPoints for every z-level, he falls and falling can't be interrupted.
+	 * - When the unit has received 10 experiencePoints, he will gain 1 extra point for agility, toughness or strength.
+	 * - When the unit is sprinting and his staminaPoints are 0, the unit will stop sprinting. 
+	 * - When the
 	 * unit is sprinting, the staminaPoints will reduce with 1 every 0.1
 	 * seconds. - When the unit is moving, the speed, orientation and position
 	 * will be updated. - When the unit is moving a long distance, he can be
@@ -781,7 +783,7 @@ public class Unit {
 	 * 500/strength seconds. - When the unit is attacking, he will attack for 1
 	 * second. - When the default behavior is enabled and the unit isn't doing
 	 * anything, he will execute a random behavior. - The unit will rest
-	 * automatically every 3 minutes. - EXPERIENCEPOINTS
+	 * automatically every 3 minutes.
 	 * 
 	 * @param dt
 	 *            The time between each update of the unit.
@@ -819,10 +821,32 @@ public class Unit {
 		}
 	}
 	
+	/**
+	 * Check if the unit is alive, he possesses more than 0 hitPoints.
+	 * @return ...
+	 * 		| Return true if the unit is alive
+	 * 		| result == (this.getHitPoints() > 0)
+	 */
 	public boolean isAlive() {
 		return (this.getHitPoints() > 0);
 	}
 	
+	/**
+	 * If the unit died, he will stop performing any task and will be removed from the faction and the world.
+	 * If he was carrying a boulder or a log, he will drop it.
+	 * The boulder and/or log will than be added to the world again.
+	 * @post ...
+	 * 		| he terminated every activity.
+	 * 		| new.isFalling = false && new.isWorking = false && new.isAttacking = false
+	 *		| && new.isResting = false && new.isMovingTo = false && new.stopSprinting()
+	 *		| && new.setCurrentSpeed(0) && new.isCarryingBoulder = false && new.isCarryingLog = false
+	 * @effect ...
+	 * 		| the unit is removed from the world and faction.
+	 * 		| this.getFaction().removeUnitFromFaction(this);
+	 * @effect ...
+	 * 		| if he was carrying a boulder and/or log, it is added to the world at the position of the died unit.
+	 * 		| this.getWorld().addBoulder(this.boulder) && this.getWorld().addLog(this.log);
+	 */
 	private void death(){
 		if(!this.isAlive()){
 			this.isFalling = false;
@@ -848,21 +872,57 @@ public class Unit {
 		}
 	}
 	
+	/**
+	 * Check if the unit is carrying a log.
+	 * @return ...
+	 * 		| return true if the unit is carrying a log.
+	 * 		| result == this.isCarryingLog
+	 */
 	public boolean isCarryingLog(){
 		return this.isCarryingLog;
 	}
 	
+	/**
+	 * Variable referencing if a unit is carrying a log.
+	 */
 	public boolean isCarryingLog = false;
 	
+	/**
+	 * Check if the unit is carrying a boulder.
+	 * @return ...
+	 * 		| return true if the unit is carrying a boulder.
+	 * 		| result == this.isCarryingBoulder
+	 */
 	public boolean isCarryingBoulder(){
 		return this.isCarryingBoulder;
 	}
 	
+	/**
+	 * Variable referencing if a unit is carrying a boulder.
+	 */
 	public boolean isCarryingBoulder = false;
 	
+	/**
+	 * Variables creating a boulder and a log, which the unit can carry.
+	 */
 	public Log log;
 	public Boulder boulder;
 	
+	/**
+	 * If the unit is moving to or standing on a falling position, he will fall down to the next standing position.
+	 * When he is falling, he will stop performing any other activities.
+	 * @effect ...
+	 * 		| If the units position is a falling position, he start falling and stop doing other tasks.
+	 * 		| this.setCurrentSpeed(0) && this.isFalling = true && this.isWorking = false
+	 *		| && this.isAttacking = false && this.isResting = false && this.isMovingTo = false
+	 *		| && this.moveToAdjacent(0, 0, -1)
+	 * @post ...
+	 * 		| If the unit has reached a standing position, he will stop falling.
+	 * 		| new.isFalling = false
+	 * @effect ...
+	 * 		| If the unit is already falling, but hasn't reached yet a standing position, he will keep falling.
+	 * 		| this.moveToAdjacent(0,0,-1)
+	 */
 	private void falling(){
 		if (this.isFallingPosition(this.getCubeCoordinate()[0], this.getCubeCoordinate()[1], this.getCubeCoordinate()[2])){
 			this.setCurrentSpeed(0);
@@ -882,8 +942,24 @@ public class Unit {
 		}
 	}
 	
+	/**
+	 * Variable referencing if the unit is falling.
+	 */
 	private boolean isFalling;
 	
+	/**
+	 * Check if a unit can stand in this cube, if not it is a falling position.
+	 * @param x
+	 * 		the x coordinate of the cube.
+	 * @param y
+	 * 		the y coordinate of the cube.
+	 * @param z
+	 * 		the z coordinate of the cube.
+	 * @return ...
+	 * 		| Return false if the unit can stand in the cube.
+	 * 		| if (!this.getWorld().isPassable(x+i, y+j, z+k))
+			| 	then return false
+	 */
 	public boolean isFallingPosition(int x,int y,int z){
 		for (int i=-1; i<2; i++){
 			for (int j=-1; j<2; j++){
@@ -901,6 +977,18 @@ public class Unit {
 		return true;
 	}
 
+	/**
+	 * Add an extra point to agility, toughness or strength, the choice of which is random but can't be with the one
+	 * of which the maximum limit is already reached.
+	 * 10 experiencePoints will be lost after adding the extra point.
+	 * @post ...
+	 * 		| The agility, strength or toughness is increased by one.
+	 * 		| new.getAgility() = this.getAgility() + 1 || new.getStrength() = this.getStrength() + 1 ||
+	 * 		| new.getToughness() = this.getToughness() + 1
+	 * @effect ...
+	 * 		| he will lose 10 experiencePoints
+	 * 		| this.setExperiencePoints(this.getExperiencePoints()-10)
+	 */
 	private void experiencePointsAdvanceTime() {
 		Random random = new Random();		
 		int randomNumber = random.nextInt(3);
@@ -937,6 +1025,13 @@ public class Unit {
 	 * 
 	 * @param dt
 	 *            The time between each update of the unit.
+	 * @effect ...
+	 * 		| if he is out of staminaPoints, he will stop sprinting
+	 * 		| if (this.getCurrentStaminaPoints() == 0)
+	 *		| 	then this.stopSprinting();
+	 * @effect ...
+	 * 		| if he is sprinting, he will lose 1 staminaPoint every 0.1 seconds.
+	 * 		| this.setStaminaPoints((this.getStaminaPoints() - 1))
 	 */
 	private void sprintingAdvanceTime(double dt) throws IllegalArgumentException {
 		if (this.isSprinting() && this.getCurrentStaminaPoints() == 0) {
@@ -952,10 +1047,21 @@ public class Unit {
 
 	/**
 	 * Called when the unit is moving to an adjacent cube. When the unit is
-	 * moving, the speed, orientation and position will be updated.
+	 * moving, the speed, orientation and position will be updated. When the unit has reached
+	 * his end position, he will get 1 experiencePoint.
 	 * 
 	 * @param dt
 	 *            The time between each update of the unit.
+	 * @effect ...
+	 * 		| The unit has reached his new position.
+	 * 		| this.setPosition(this.getNextPosition()) 
+	 * 		| this.setExperiencePoints(this.getExperiencePoints()+1)
+	 * @effect ...
+	 * 		| If the unit hasn't reached his end position yet, 
+	 * 		| he will keep moving to a position between start and end position.
+	 * 		| His orientation will be updated.
+	 * 		| this.setOrientation(Math.atan2(v[1], v[0]))
+	 * 		| this.setPosition(newPosition)
 	 */
 	private void isMovingAdvanceTime(double dt) throws IllegalArgumentException {
 		double[] v = this.getMovingSpeed(dt);
@@ -997,6 +1103,13 @@ public class Unit {
 	 * 
 	 * @param dt
 	 *            The time between each update of the unit.
+	 * @effect ...
+	 * 		| If the unit is interrupted, he will stop moving.
+	 * 		| if (this.isResting() || this.isAttacking() || this.isWorking())
+	 *		| 	then this.setCurrentSpeed(0)
+	 * @effect ...
+	 * 		| If he is not interrupted, he will continue his path.
+	 * 		| this.moveTo(this.cubeEndPosition)
 	 */
 	private void isMovingToAdvanceTime(double dt) throws IllegalArgumentException, IndexOutOfBoundsException {
 		if (this.isResting() || this.isAttacking() || this.isWorking()) {
@@ -1017,6 +1130,27 @@ public class Unit {
 	 * 
 	 * @param dt
 	 *            The time between each update of the unit.
+	 * @effect ...
+	 * 		| if the unit has gained less than 1 hitPoint and is attacked, he will stop resting and recover
+	 * 		| no points.
+	 * 		| this.isResting = false
+	 *		| this.setHitPoints(this.hitPointsBeforeRest)
+	 *		| this.setStaminaPoints(this.staminaPointsBeforeRest)
+	 * @post ...
+	 * 		| if the unit has recovered more than 1 hitPoint or he has max hitPoints and he is interrupted,
+	 * 		| he will stop resting.
+	 * 		| new.isResting = false
+	 * @post ...
+	 * 		| if the unit has recovered all points, he will stop resting.
+	 * 		| new.isResting = false
+	 * @effect ...
+	 * 		| The unit gains toughness/200 hitPoints every 0.2 seconds. if the amount is bigger than 1, he
+	 * 		| gains a whole hitPoint at once.
+	 * 		| this.setHitPoints(this.getHitPoints() + 1)
+	 * @effect ...
+	 * 		| The unit gains toughness/100 staminaPoints every 0.2 seconds. if the amount is bigger than 1, he
+	 * 		| gains a whole staminaPoint at once.
+	 * 		| this.setStaminaPoints(this.getStaminaPoints() + 1)
 	 */
 	private void isRestingAdvanceTime(double dt) throws IllegalArgumentException {
 		if (this.getCurrentHitPoints() - this.hitPointsBeforeRest <= 1 && this.isAttacking()) {
@@ -1049,7 +1183,9 @@ public class Unit {
 			}
 		}
 	}
-	
+	/**
+	 * Initialise an object of the class ResultWork.
+	 */
 	private ResultWork resultWork = new ResultWork();
 
 	/**
@@ -1059,6 +1195,18 @@ public class Unit {
 	 * 
 	 * @param dt
 	 *            The time between each update of the unit.
+	 * @post ...
+	 * 		| if the unit is interrupted by attacking or resting, he will stop working.
+	 * 		| new.isWorking = false
+	 * @effect ...
+	 * 		| if the unit is moving, it will be interrupted by work.
+	 * 		| this.setCurrentSpeed(0)
+	 * @effect ...
+	 * 		| the unit will complete his work after 500/strength seconds. Then results will be executed.
+	 * 		| if (this.workingTime >= (500 / this.getStrength())) 
+	 *		|	then this.isWorking = false
+	 *		|		 resultWork.resultWorkAt(this.workPosition[0], this.workPosition[1], this.workPosition[2])
+	 * 
 	 */
 	private void isWorkingAdvanceTime(double dt) throws IllegalArgumentException {
 		if (this.isAttacking() || this.isResting())
@@ -1083,6 +1231,10 @@ public class Unit {
 	 * 
 	 * @param dt
 	 *            The time between each update of the unit.
+	 * @post ...
+	 * 		| if the unit has attacked for 1 second, he will stop attacking.
+	 * 		| if (this.attackingTime >= 1)
+	 *		|	then this.isAttacking = false
 	 */
 	private void isAttackingAdvanceTime(double dt) {
 		this.attackingTime += dt;
@@ -1099,6 +1251,10 @@ public class Unit {
 	 * 
 	 * @param dt
 	 *            The time between each update of the unit.
+	 * @effect ...
+	 * 		| if the unit isn't doing anything, he will execute defaultBehavior.
+	 * 		| if (!this.isAttacking() && !this.isMoving() && !this.isWorking() && !this.isResting())
+	 *		|	then this.defaultBehavior()
 	 */
 	private void defaultBehaviorEnabledAdvanceTime(double dt) throws IllegalArgumentException, IndexOutOfBoundsException {
 		if (!this.isAttacking() && !this.isMoving() && !this.isWorking() && !this.isResting()) {
@@ -1273,7 +1429,9 @@ public class Unit {
 	 * 
 	 * @param currentspeed
 	 *            The currentSpeed to check.
-	 * @return ... | result == (currentSpeed >= 0)
+	 * @return ... 
+	 * 		| Return true if the currentspeed is bigger than or equal to 0.
+	 * 		| result == (currentSpeed >= 0)
 	 */
 	public static boolean isValidCurrentSpeed(double currentSpeed) {
 		return (currentSpeed >= 0);
@@ -1314,7 +1472,9 @@ public class Unit {
 	/**
 	 * Check if a unit is moving by comparing the current speed and 0.
 	 * 
-	 * @return ... | result == !Util.fuzzyEquals(this.getCurrentSpeed(), 0);
+	 * @return ... 
+	 * 		| Return true if the currentSpeed isn't 0.
+	 * 		| result == !Util.fuzzyEquals(this.getCurrentSpeed(), 0);
 	 */
 	public boolean isMoving() {
 		return !Util.fuzzyEquals(this.getCurrentSpeed(), 0);
@@ -1354,22 +1514,29 @@ public class Unit {
 		return Util.fuzzyEquals(this.getCurrentSpeed(), this.sprintingSpeed) && this.sprintingSpeed != 0
 				&& !this.isFalling;
 	}
-
-	private PathFinding pathFinding = new PathFinding();
+	
 	/**
-	 * Path finding algorithm to calculate the path to the destination.
+	 * Initialise an object of the class PathFinding.
+	 */
+	private PathFinding pathFinding = new PathFinding();
+	
+	/**
+	 * Make the unit move to the end position, following the path calculate by pathFinding.findPath.
 	 * 
 	 * @param cube
 	 *            The destination cube.
 	 * @effect ... The unit will move to the adjacent cube, determined by the
 	 *         calculated dx, dy and dz, towards the destination. |
 	 *         this.moveToAdjacent(dx, dy, dz);
+	 * @throws IllegalArgumentException
+	 * 		| if the endposition is an inpassable position or a falling position.
+	 * @throws IndexOutOfBoundsException
+	 * 		| if the pathfinding algorithm couldn't find a path to the destination cube.
 	 */
 	public void moveTo(int[] cube) throws IllegalArgumentException, IndexOutOfBoundsException {
 		this.cubeEndPosition = cube;
 		if (!this.getWorld().isPassable(this.cubeEndPosition[0], this.cubeEndPosition[1], this.cubeEndPosition[2])
 				|| this.isFallingPosition(this.cubeEndPosition[0], this.cubeEndPosition[1], this.cubeEndPosition[2])){
-			//TODO hier zit facade error
 			throw new IllegalArgumentException();
 		}
 		else{
@@ -1398,11 +1565,11 @@ public class Unit {
 		}
 	}
 	
+	/**
+	 * List referencing to the calculated path.
+	 */
 	private ArrayList<Cube> path = new ArrayList<Cube>();
 	
-	
-	
-
 	/**
 	 * Variable referencing to the destination cube of the method moveTo(int[]
 	 * cube)
@@ -1421,7 +1588,9 @@ public class Unit {
 	/**
 	 * Check if the unit is working.
 	 * 
-	 * @return ... | result == return this.isWorking
+	 * @return ... 
+	 * 		| return true if the unit is working.
+	 * 		| result == this.isWorking
 	 */
 	public boolean isWorking() {
 		return this.isWorking;
@@ -1436,6 +1605,19 @@ public class Unit {
 	 */
 	private double workingTime = 0;
 	
+	/**
+	 * Unit can work at an adjacent cube, when he is not falling. His orientation will be set also.
+	 * @param x
+	 * 		the x coordinate of the cube.
+	 * @param y
+	 * 		the y coordinate of the cube.
+	 * @param z
+	 * 		the z coordinate of the cube.
+	 * @effect ...
+	 * 		| the unit will work and his orientation will be updated.
+	 * 		| this.setOrientation(Math.atan2(y+LC/2 - this.getPosition()[1], x+LC/2 - this.getPosition()[0]))
+	 *		| this.work()
+	 */
 	public void workAt(int x, int y, int z){
 		double d = Math.sqrt(Math.pow(x-this.getCubeCoordinate()[0],2)+
 				Math.pow(y-this.getCubeCoordinate()[1],2)+Math.pow(z-this.getCubeCoordinate()[2],2));
@@ -1447,15 +1629,22 @@ public class Unit {
 		}
 	}
 	
+	/**
+	 * List referencing to the position the unit will work at.
+	 */
 	private int[] workPosition;
 
 	/**
-	 * The unit is part of a fight.
+	 * The unit is part of a fight with a unit of an other faction and who is standing on an adjacent cube.
+	 * The unit can not fall at the same time.
 	 * 
 	 * @param defender
 	 *            The opponent of the unit that is attacking.
 	 * @effect ... The unit attacks the defender and the defender defends
-	 *         itself. | this.attack(defender); | defender.defend(this);
+	 *         itself. 
+	 *         | if(!this.isFalling && this.getFaction()!=defender.getFaction() && defender != this){
+	 *         | 	then this.attack(defender) 
+	 *         | 		defender.defend(this)
 	 */
 	public void fight(Unit defender) {
 		if (!this.isFalling && this.getFaction()!=defender.getFaction() 
@@ -1492,12 +1681,17 @@ public class Unit {
 		}
 	}
 	
+	/**
+	 * Constant value referencing the maximum distance to an adjacent cube.
+	 */
 	private static final double MAX_DISTANCE_ADJACENT_CUBE = Math.sqrt(Math.pow(LC, 2)*3);
 
 	/**
 	 * Check if the unit is attacking.
 	 * 
-	 * @return ... | result == this.isAttacking
+	 * @return ... 
+	 * 		| return true if the unit is attacking.
+	 * 		| result == this.isAttacking
 	 */
 	public boolean isAttacking() {
 		return this.isAttacking;
@@ -1517,15 +1711,21 @@ public class Unit {
 	 * The unit can defend itself by dodging (with a chance of Pd) to another
 	 * position or to block the attack (with a chance of Pb) or it can also fail
 	 * and lose hitPoints.
+	 * If the unit dodges or blocks, he will gain 20 experiencePoints. If the attacker succeeds and the
+	 * defender loses hitPoints, the attacker will gain 20 experiencePoints.
 	 * 
 	 * @param attacker
 	 *            The opponent of the defending unit.
 	 * @effect ... If the unit has dodged, he will move to a random adjacent
-	 *         cube. Else if the unit has lost, it loses hitPoints. | if
-	 *         (random.nextInt(100) <= (Pd * 100)) | then
-	 *         this.setPosition(dodgePosition) | else if (random.nextInt(100) >
-	 *         (Pb * 100)) | then this.setHitPoints(this.getCurrentHitPoints() -
-	 *         attacker.getStrength() / 10)
+	 *         cube. Else if the unit has lost, it loses hitPoints. 
+	 *         | if(random.nextInt(100) <= (Pd * 100)) 
+	 *         | 	then this.setPosition(dodgePosition)
+	 *         |		this.setExperiencePoints(this.getExperiencePoints()+20)
+	 *         | else if (random.nextInt(100) > (Pb * 100)) 
+	 *         | 	then this.setHitPoints(this.getCurrentHitPoints() - attacker.getStrength() / 10)
+	 *         |		attacker.setExperiencePoints(attacker.getExperiencePoints()+20)
+	 *         | else if(random.nextInt(100) > (Pb * 100)
+	 *         |	then this.setExperiencePoints(this.getExperiencePoints()+20)
 	 */
 	private void defend(Unit attacker) throws IllegalArgumentException {
 		double Pd = 0.20 * this.getAgility() / attacker.getAgility();
@@ -1543,13 +1743,19 @@ public class Unit {
 				}else{
 					this.setHitPoints(0);
 				}
-				attacker.setExperiencePoints(this.getExperiencePoints()+20);
+				attacker.setExperiencePoints(attacker.getExperiencePoints()+20);
 			}else{
 				this.setExperiencePoints(this.getExperiencePoints()+20);
 			}
 		}
 	}
-
+	
+	/**
+	 * Search a valid dodge position.
+	 * @return
+	 * 		| return dodgePosition if valid, else return currentPosition.
+	 * 		| result == dodgePos
+	 */
 	private double[] searchDodgePosition(){
 		for (int i=-1;i<2;i++){
 			for (int j=-1;j<2;j++){
@@ -1565,11 +1771,14 @@ public class Unit {
 		}
 		return new double[] {this.getPosition()[0], this.getPosition()[1], this.getPosition()[2]};
 	}
+	
 	/**
 	 * Make the unit rest.
 	 * 
-	 * @post ... The unit starts resting and stops moving. | new.isResting =
-	 *       true | new.currentSpeed = 0
+	 * @post ... 
+	 * 		| The unit starts resting and stops moving. 
+	 * 		| new.isResting = true 
+	 * 		| new.getCurrentSpeed() = 0
 	 */
 	public void rest() {
 		if (!this.isFalling){
@@ -1593,7 +1802,9 @@ public class Unit {
 	/**
 	 * Check if the unit is resting.
 	 * 
-	 * @return ... | result == this.isResting
+	 * @return ... 
+	 * 		| return true if the unit is resting.
+	 * 		| result == this.isResting
 	 */
 	public boolean isResting() {
 		return this.isResting;
@@ -1644,7 +1855,9 @@ public class Unit {
 	/**
 	 * Check if default behavior is enabled.
 	 * 
-	 * @return ... | result == this.defaultBehaviorEnabled
+	 * @return ... 
+	 * 		| return true if defaultBehavior is enabled.
+	 * 		| result == this.defaultBehaviorEnabled
 	 */
 	public boolean isDefaultBehaviorEnabled() {
 		return this.defaultBehaviorEnabled;
@@ -1652,7 +1865,7 @@ public class Unit {
 
 	/**
 	 * Choose random task: move to a position, work, rest or sprint to a
-	 * position.
+	 * position, or attack possible enemy.
 	 * 
 	 * @effect ... The unit will walk to a random position. |
 	 *         this.moveTo(randomPosition)
@@ -1661,6 +1874,9 @@ public class Unit {
 	 * @effect ... The unit will sprint to a random position. |
 	 *         this.setCurrentSpeed(this.sprintingSpeed) |
 	 *         this.moveTo(randomPosition)
+	 * @effect ...
+	 * 		| the unit will attack an adjacent unit.
+	 * 		| this.fight(unit)
 	 */
 	private void defaultBehavior() throws IllegalArgumentException, IndexOutOfBoundsException {
 		Random random = new Random();
@@ -1698,6 +1914,9 @@ public class Unit {
 		}
 	}
 	
+	/**
+	 * Variable referencing to when the unit must start sprinting if he is executing defaultBehavior case 3.
+	 */
 	public boolean defaultBehaviorCase3 = false;
 
 	/**
@@ -1715,16 +1934,37 @@ public class Unit {
 		return this.faction;
 	}
 
+	/**
+	 * Check if the faction doesn't contains too much units.
+	 * @param faction
+	 * 		the faction to check
+	 * @return
+	 * 		| return true if it is a valid faction.
+	 * 		| result == faction.getNbUnitsOfFaction() < Faction.MAX_NUMBER_UNITS_IN_FACTION
+	 * @throws IllegalArgumentException
+	 * 		| throw exception when the faction isn't valid.
+	 */
 	public boolean isValidFaction(Faction faction) throws IllegalArgumentException {
 		return faction.getNbUnitsOfFaction() < Faction.MAX_NUMBER_UNITS_IN_FACTION;
 	}
 
+	/**
+	 * Set the faction of a unit to the given faction.
+	 * @param faction
+	 * 		the new faction to which the unit has to be set.
+	 * @post ...
+	 * 		| set the new faction.
+	 * 		| new.faction = faction
+	 */
 	public void setFaction(Faction faction) {
 		if (!isValidFaction(faction))
 			throw new IllegalArgumentException();
 		this.faction = faction;
 	}
 
+	/**
+	 * Initialising an object of the class Faction.
+	 */
 	private Faction faction;
 
 	/**
@@ -1736,10 +1976,21 @@ public class Unit {
 		return this.world;
 	}
 	
+	/**
+	 * Set the world of a unit to the given world.
+	 * @param world
+	 * 		the new world to which the unit has to be set.
+	 * @post ...
+	 * 		| set the new world.
+	 * 		| new.world = world
+	 */
 	public void setWorld(World world){
 		this.world = world;
 	}
 	
+	/**
+	 * Initialising an object of the class World.
+	 */
 	private World world;
 
 }

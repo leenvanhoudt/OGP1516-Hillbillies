@@ -21,6 +21,12 @@ public class World {
 					if (value == 0 || value == 3){
 						this.temporary = this.connectedToBorder.changeSolidToPassable(x, y, z);
 						this.temporary.clear();
+					}else{
+						if( !this.isSolidConnectedToBorder(x, y, z)){
+							List<int[]> cube = new ArrayList<int[]>();
+							cube.add(new int[]{x,y,z});
+							this.addCubesChanged(cube);
+						}
 					}
 				}
 			}
@@ -147,7 +153,19 @@ public class World {
 	 */
 	public static final double MAX_DURATION = 0.2;
 	
-	
+	/**
+	 * Execute the advanceTime of unit for each unit in the world, 
+	 * execute the advanceTime of boulder for each boulder in the world,
+	 * execute the advanceTime of log for each log in the world.
+	 * If there are cubes in the list of the cubes which have to be changed, they will cave in.
+	 * @param dt
+	 * 		The time between each update of the world.
+	 * @throws IllegalArgumentException
+	 * 		The given duration is not a valid duration for any unit.
+	 * @throws IndexOutOfBoundsException
+	 * 		Thrown when unit finds no path in PathFinding, the error goes via moveTo to advanceTime of Unit to
+	 * 		this advanceTime.
+	 */
 	public void advanceTime(double dt) throws IllegalArgumentException, IndexOutOfBoundsException{
 		if (isValidDuration(dt)) {
 			for (Unit unit: this.getUnits()){
