@@ -10,13 +10,6 @@ public class Log {
 	public Log(){
 		this.setLogWeight();
 	}
-	
-	public void advanceTime(double dt){
-		if (!this.getWorld().isValidStandingPosition((int)Math.floor(this.startFallingPosition[0]), 
-				(int)Math.floor(this.startFallingPosition[1]), (int)Math.floor(this.startFallingPosition[2]))){
-			this.falling(dt);
-		}
-	}
 
 	public int getLogWeight() {
 		return this.logWeight;
@@ -45,20 +38,12 @@ public class Log {
 	private double[] nextPosition;
 	private double[] logPosition;
 	
-	/**
-	 * Return the world of this log.
-	 */
-	@Basic
-	@Raw
-	public World getWorld() {
-		return this.world;
+	public void advanceTime(double dt){
+		if (!this.getWorld().isValidStandingPosition((int)Math.floor(this.startFallingPosition[0]), 
+				(int)Math.floor(this.startFallingPosition[1]), (int)Math.floor(this.startFallingPosition[2]))){
+			this.falling(dt);
+		}
 	}
-	
-	public void setWorld(World world){
-		this.world = world;
-	}
-	
-	private World world;
 	
 	private void falling(double dt){
 		this.isFalling = true;
@@ -95,18 +80,30 @@ public class Log {
 	 * @return ... | result is true if the position has 3 coordinates, which are
 	 *         equal and larger than 0 and smaller than 50.
 	 */
-	public boolean isValidPosition(double[] position) {
-		if (position.length == 3 && 
-				this.getWorld().isPassable((int) Math.floor(position[0]), (int) Math.floor(position[1]),
-						(int) Math.floor(position[2]))) {
-			if ((position[0] >= this.getWorld().getNbCubesX() || position[0] < 0)
-					|| (position[1] >= this.getWorld().getNbCubesY() || position[1] < 0)
-					|| (position[2] >= this.getWorld().getNbCubesZ() || position[2] < 0)){
-				return false;
+	private boolean isValidPosition(double[] position) {
+		if (position.length != 3 
+				|| (position[0] >= this.getWorld().getNbCubesX() || position[0] < 0)
+				|| (position[1] >= this.getWorld().getNbCubesY() || position[1] < 0)
+				|| (position[2] >= this.getWorld().getNbCubesZ() || position[2] < 0)
+				|| (!this.getWorld().isPassable((int) Math.floor(position[0]), 
+						(int) Math.floor(position[1]),(int) Math.floor(position[2])))) {
+			return false;
 			}
-			return true;
-		}
-		return false;
+		return true;
 	}
-
+	
+	/**
+	 * Return the world of this log.
+	 */
+	@Basic
+	@Raw
+	public World getWorld() {
+		return this.world;
+	}
+	
+	public void setWorld(World world){
+		this.world = world;
+	}
+	
+	private World world;
 }

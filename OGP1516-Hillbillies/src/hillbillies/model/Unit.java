@@ -819,6 +819,70 @@ public class Unit {
 		}
 	}
 	
+	public boolean isAlive() {
+		return (this.getHitPoints() > 0);
+	}
+	
+	private void death(){
+		if(!this.isAlive()){
+			this.isFalling = false;
+			this.isWorking = false;
+			this.isAttacking = false;
+			this.isResting = false;
+			this.isMovingTo = false;
+			this.stopSprinting();
+			this.setCurrentSpeed(0);
+			if (this.isCarryingBoulder){
+				this.isCarryingBoulder = false;
+				this.boulder.setPosition(this.getPosition()[0]+LC/2,this.getPosition()[1]+LC/2,this.getPosition()[2]+LC/2);
+				this.setWeight(this.getWeight()-this.boulder.getBoulderWeight());
+				this.getWorld().addBoulder(this.boulder);
+			}
+			else if (this.isCarryingLog){
+				this.isCarryingLog = false;
+				this.log.setPosition(this.getPosition()[0]+LC/2,this.getPosition()[1]+LC/2,this.getPosition()[2]+LC/2);
+				this.setWeight(this.getWeight()-this.log.getLogWeight());
+				this.getWorld().addLog(this.log);
+			}
+			this.getFaction().removeUnitFromFaction(this);
+		}
+	}
+	
+	public boolean isCarryingLog(){
+		return this.isCarryingLog;
+	}
+	
+	public boolean isCarryingLog = false;
+	
+	public boolean isCarryingBoulder(){
+		return this.isCarryingBoulder;
+	}
+	
+	public boolean isCarryingBoulder = false;
+	
+	public Log log;
+	public Boulder boulder;
+	
+	private void falling(){
+		if (this.isFallingPosition(this.getCubeCoordinate()[0], this.getCubeCoordinate()[1], this.getCubeCoordinate()[2])){
+			this.setCurrentSpeed(0);
+			this.isFalling = true;
+			this.isWorking = false;
+			this.isAttacking = false;
+			this.isResting = false;
+			this.isMovingTo = false;
+			this.moveToAdjacent(0, 0, -1);
+		}
+		else if (this.getWorld().isValidStandingPosition(this.getCubeCoordinate()[0], this.getCubeCoordinate()[1], this.getCubeCoordinate()[2])
+				&& (this.isFalling && Util.fuzzyEquals(this.getPosition()[2],this.getNextPosition()[2]))){
+			this.isFalling = false;
+		}
+		else if (this.isFalling){
+			this.moveToAdjacent(0, 0, -1);
+		}
+	}
+	
+	private boolean isFalling;
 	
 	public boolean isFallingPosition(int x,int y,int z){
 		for (int i=-1; i<2; i++){
@@ -878,8 +942,6 @@ public class Unit {
 		if (this.isSprinting() && this.getCurrentStaminaPoints() == 0) {
 			this.stopSprinting();
 		} else if (this.isSprinting()) {
-			System.out.println("is sprinting");
-			System.out.println(this.sprintingSpeed);
 			this.fractionOfSprintStaminaPoint += 1 * (dt / 0.1);
 			if (this.fractionOfSprintStaminaPoint >= 1) {
 				this.setStaminaPoints((this.getStaminaPoints() - 1));
@@ -988,7 +1050,7 @@ public class Unit {
 		}
 	}
 	
-	ResultWork resultWork = new ResultWork();
+	private ResultWork resultWork = new ResultWork();
 
 	/**
 	 * Called when the unit is working. When the unit is working, he can be
@@ -1293,7 +1355,7 @@ public class Unit {
 				&& !this.isFalling;
 	}
 
-	PathFinding pathFinding = new PathFinding();
+	private PathFinding pathFinding = new PathFinding();
 	/**
 	 * Path finding algorithm to calculate the path to the destination.
 	 * 
@@ -1307,6 +1369,7 @@ public class Unit {
 		this.cubeEndPosition = cube;
 		if (!this.getWorld().isPassable(this.cubeEndPosition[0], this.cubeEndPosition[1], this.cubeEndPosition[2])
 				|| this.isFallingPosition(this.cubeEndPosition[0], this.cubeEndPosition[1], this.cubeEndPosition[2])){
+			//TODO hier zit facade error
 			throw new IllegalArgumentException();
 		}
 		else{
@@ -1372,6 +1435,19 @@ public class Unit {
 	 * Variable keeping track of the time, spent working.
 	 */
 	private double workingTime = 0;
+	
+	public void workAt(int x, int y, int z){
+		double d = Math.sqrt(Math.pow(x-this.getCubeCoordinate()[0],2)+
+				Math.pow(y-this.getCubeCoordinate()[1],2)+Math.pow(z-this.getCubeCoordinate()[2],2));
+		if (!this.isFalling && d<=MAX_DISTANCE_ADJACENT_CUBE ){
+			this.workingTime = 0;
+			this.setOrientation(Math.atan2(y+LC/2 - this.getPosition()[1], x+LC/2 - this.getPosition()[0]));
+			this.work();
+			this.workPosition = new int[] {x,y,z};
+		}
+	}
+	
+	private int[] workPosition;
 
 	/**
 	 * The unit is part of a fight.
@@ -1628,6 +1704,7 @@ public class Unit {
 	 * Boolean saving if the default behavior is enabled.
 	 */
 	private boolean defaultBehaviorEnabled = false;
+	
 
 	/**
 	 * Return the faction of this unit.
@@ -1665,85 +1742,4 @@ public class Unit {
 	
 	private World world;
 
-	public boolean isAlive() {
-		return (this.getHitPoints() > 0);
-	}
-
-	private void falling(){
-		if (this.isFallingPosition(this.getCubeCoordinate()[0], this.getCubeCoordinate()[1], this.getCubeCoordinate()[2])){
-			this.setCurrentSpeed(0);
-			this.isFalling = true;
-			this.isWorking = false;
-			this.isAttacking = false;
-			this.isResting = false;
-			this.isMovingTo = false;
-			this.moveToAdjacent(0, 0, -1);
-		}
-		else if (this.getWorld().isValidStandingPosition(this.getCubeCoordinate()[0], this.getCubeCoordinate()[1], this.getCubeCoordinate()[2])
-				&& (this.isFalling && Util.fuzzyEquals(this.getPosition()[2],this.getNextPosition()[2]))){
-			this.isFalling = false;
-		}
-		else if (this.isFalling){
-			this.moveToAdjacent(0, 0, -1);
-		}
-	}
-	
-	private boolean isFalling;
-	
-	
-	public void workAt(int x, int y, int z){
-		double d = Math.sqrt(Math.pow(x-this.getCubeCoordinate()[0],2)+
-				Math.pow(y-this.getCubeCoordinate()[1],2)+Math.pow(z-this.getCubeCoordinate()[2],2));
-		if (!this.isFalling && d<=MAX_DISTANCE_ADJACENT_CUBE ){
-			this.workingTime = 0;
-			this.setOrientation(Math.atan2(y+LC/2 - this.getPosition()[1], x+LC/2 - this.getPosition()[0]));
-			this.work();
-			this.workPosition = new int[] {x,y,z};
-		}
-	}
-	
-	private int[] workPosition;
-	
-	
-	
-	public boolean isCarryingLog(){
-		return this.isCarryingLog;
-	}
-	
-	public boolean isCarryingLog = false;
-	
-	public boolean isCarryingBoulder(){
-		return this.isCarryingBoulder;
-	}
-	
-	public boolean isCarryingBoulder = false;
-	
-	
-	private void death(){
-		if(!this.isAlive()){
-			this.isFalling = false;
-			this.isWorking = false;
-			this.isAttacking = false;
-			this.isResting = false;
-			this.isMovingTo = false;
-			this.stopSprinting();
-			this.setCurrentSpeed(0);
-			if (this.isCarryingBoulder){
-				this.isCarryingBoulder = false;
-				this.boulder.setPosition(this.getPosition()[0]+LC/2,this.getPosition()[1]+LC/2,this.getPosition()[2]+LC/2);
-				this.setWeight(this.getWeight()-this.boulder.getBoulderWeight());
-				this.getWorld().addBoulder(this.boulder);
-			}
-			else if (this.isCarryingLog){
-				this.isCarryingLog = false;
-				this.log.setPosition(this.getPosition()[0]+LC/2,this.getPosition()[1]+LC/2,this.getPosition()[2]+LC/2);
-				this.setWeight(this.getWeight()-this.log.getLogWeight());
-				this.getWorld().addLog(this.log);
-			}
-			this.getFaction().removeUnitFromFaction(this);
-		}
-	}
-	
-	public Log log;
-	public Boulder boulder;
 }

@@ -24,6 +24,7 @@ public class PathFinding {
 				unit.setCurrentSpeed(0);
 				unit.defaultBehaviorCase3 = false;
 				unit.isMovingTo = false;
+				//TODO facade error
 				throw new IndexOutOfBoundsException();
 			}
 

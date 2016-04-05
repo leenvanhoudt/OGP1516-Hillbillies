@@ -248,11 +248,14 @@ public class Facade implements IFacade{
 	public void advanceTime(World world, double dt) throws ModelException {
 		try{
 			world.advanceTime(dt);
-		} catch (IllegalArgumentException e){
+		}catch(Throwable e){
+			throw new ModelException();
+		}
+		/*catch (IllegalArgumentException e){
 			throw new ModelException();
 		}catch(IndexOutOfBoundsException i){
 			throw new ModelException();
-		}
+		}*/
 		
 	}
 

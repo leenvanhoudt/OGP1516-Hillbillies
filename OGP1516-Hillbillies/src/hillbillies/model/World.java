@@ -48,66 +48,6 @@ public class World {
 		return this.dimensionZ;
 	}
 	
-	/**
-	 * Check whether the given duration is a valid duration for any unit. It is
-	 * valid when it doesn't exceed the boundaries (0 and MAX_DURATION(=0.2)).
-	 * 
-	 * @param duration
-	 *            The duration to check.
-	 * @return ... | result == (dt >= 0 && dt < MAX_DURATION)
-	 */
-	public boolean isValidDuration(double dt) {
-		return dt >= 0 && dt < MAX_DURATION;
-	}
-
-	/**
-	 * Constant value limiting the duration.
-	 */
-	public static final double MAX_DURATION = 0.2;
-	
-	public void advanceTime(double dt) throws IllegalArgumentException, IndexOutOfBoundsException{
-		if (isValidDuration(dt)) {
-			for (Unit unit: this.getUnits()){
-				unit.advanceTime(dt);
-			}
-			for (Boulder boulder: this.getBoulders()){
-				boulder.advanceTime(dt);
-			}
-			for(Log log: this.getLogs()){
-				log.advanceTime(dt);
-			}
-			if (!this.getCubesChanged().isEmpty()){
-				this.updateCubes();
-			}
-		}else if (dt >= MAX_DURATION) {
-			throw new IllegalArgumentException();
-		}
-	}
-	
-	private void updateCubes(){
-		for (int[] cube : this.getCubesChanged()){
-			double P = 0.25;
-			Random random = new Random();
-			if (random.nextInt(100) <= (P*100)){
-				//rock
-				if (this.getCubeType(cube[0], cube[1], cube[2])==1){
-					Boulder boulder = new Boulder();
-					boulder.setWorld(this);
-					boulder.setPosition(cube[0]+Unit.LC/2, cube[1]+Unit.LC/2, cube[2]+Unit.LC/2);
-					this.addBoulder(boulder);
-				}
-				//wood
-				else if (this.getCubeType(cube[0], cube[1], cube[2])==2){
-					Log log = new Log();
-					log.setWorld(this);
-					log.setPosition(cube[0]+Unit.LC/2, cube[1]+Unit.LC/2, cube[2]+Unit.LC/2);
-					this.addLog(log);
-				}
-			}
-			this.setCubeType(cube[0], cube[1], cube[2], 0);
-			this.modelListener.notifyTerrainChanged(cube[0], cube[1], cube[2]);
-		}
-	}
 	
 	public int getCubeType(int x, int y, int z){
 		return this.terrainType[x][y][z];
@@ -126,6 +66,42 @@ public class World {
 	public boolean isPassable(int x, int y, int z){
 		return (this.terrainType[x][y][z]==0 
 				|| this.terrainType[x][y][z]==3);
+	}
+	
+	/**
+	 * Check whether the given duration is a valid duration for any unit. It is
+	 * valid when it doesn't exceed the boundaries (0 and MAX_DURATION(=0.2)).
+	 * 
+	 * @param duration
+	 *            The duration to check.
+	 * @return ... | result == (dt >= 0 && dt < MAX_DURATION)
+	 */
+	public boolean isValidDuration(double dt) {
+		return dt >= 0 && dt <= MAX_DURATION;
+	}
+
+	/**
+	 * Constant value limiting the duration.
+	 */
+	public static final double MAX_DURATION = 0.2;
+	
+	public void advanceTime(double dt) throws IllegalArgumentException, IndexOutOfBoundsException{
+		if (isValidDuration(dt)) {
+			for (Unit unit: this.getUnits()){
+				unit.advanceTime(dt);				
+			}
+			for (Boulder boulder: this.getBoulders()){
+				boulder.advanceTime(dt);
+			}
+			for(Log log: this.getLogs()){
+				log.advanceTime(dt);
+			}
+			if (!this.getCubesChanged().isEmpty()){
+				this.updateCubes();
+			}
+		}else if (dt > MAX_DURATION) {
+			throw new IllegalArgumentException();
+		}
 	}
 	
 	//TODO deze gebruiken wij nog nergens
@@ -230,6 +206,13 @@ public class World {
 				&& (this.terrainType[x][y][z] == 0 || this.terrainType[x][y][z] == 3));
 	}
 	
+	public Set<Faction> getActiveFactions(){
+		return this.activeFactionSet;
+	}
+	
+	private Set<Faction> activeFactionSet = new HashSet<Faction>();
+	private ArrayList<Faction> activeFactionList = new ArrayList<Faction>();
+	
 	public Set<Unit> getUnits() {
 		Set<Unit> worldUnits = new HashSet<>();
 		if (!this.getActiveFactions().isEmpty()){
@@ -239,15 +222,6 @@ public class World {
 		}
 		return worldUnits;
 	}
-	
-	public Set<Faction> getActiveFactions(){
-		return this.activeFactionSet;
-	}
-	
-	private Set<Faction> activeFactionSet = new HashSet<Faction>();
-	private ArrayList<Faction> activeFactionList = new ArrayList<Faction>();
-	
-	
 	
 	public void addCubesChanged(List<int[]> cubes){
 		this.cubesChanged.addAll(cubes);
@@ -259,6 +233,30 @@ public class World {
 	
 	private List<int[]> cubesChanged = new ArrayList<int[]>();
 	
+	private void updateCubes(){
+		for (int[] cube : this.getCubesChanged()){
+			double P = 0.25;
+			Random random = new Random();
+			if (random.nextInt(100) <= (P*100)){
+				//rock
+				if (this.getCubeType(cube[0], cube[1], cube[2])==1){
+					Boulder boulder = new Boulder();
+					boulder.setWorld(this);
+					boulder.setPosition(cube[0]+Unit.LC/2, cube[1]+Unit.LC/2, cube[2]+Unit.LC/2);
+					this.addBoulder(boulder);
+				}
+				//wood
+				else if (this.getCubeType(cube[0], cube[1], cube[2])==2){
+					Log log = new Log();
+					log.setWorld(this);
+					log.setPosition(cube[0]+Unit.LC/2, cube[1]+Unit.LC/2, cube[2]+Unit.LC/2);
+					this.addLog(log);
+				}
+			}
+			this.setCubeType(cube[0], cube[1], cube[2], 0);
+			this.modelListener.notifyTerrainChanged(cube[0], cube[1], cube[2]);
+		}
+	}
 	
 	public Set<Log> getLogs(){
 		return this.logsSet;

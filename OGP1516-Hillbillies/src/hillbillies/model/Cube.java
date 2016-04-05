@@ -1,18 +1,14 @@
 package hillbillies.model;
 
 public class Cube {
-	
-	private int hCost = 0;
-	private int gCost = 0;
-	private int fCost = Integer.MAX_VALUE;
-	private int x, y, z;
-	private Cube parent;
-	
+		
 	public Cube (int x, int y, int z){
 		this.x = x;
 		this.y = y;
 		this.z = z;
 	}
+	
+	private int x, y, z;
 	
 	public int getX(){
 		return this.x;
@@ -34,6 +30,8 @@ public class Cube {
 		return this.fCost;
 	}
 	
+	private int fCost = Integer.MAX_VALUE;
+	
 	public final void setHCost(int[] endPosition){
 		this.hCost = (int) Math.floor((Math.sqrt((Math.pow((endPosition[0]-this.getX())*10, 2))+
 				(Math.pow((endPosition[1]-this.getY())*10, 2))+
@@ -44,6 +42,8 @@ public class Cube {
 		return this.hCost;
 	}
 	
+	private int hCost = 0;
+	
 	public void setGCost(int cost){
 		this.gCost = cost;
 	}
@@ -52,6 +52,9 @@ public class Cube {
 		return this.gCost;
 	}
 	
+	private int gCost = 0;
+
+	
 	public void setParent(Cube parent){
 		this.parent = parent;
 	}
@@ -59,4 +62,7 @@ public class Cube {
 	public Cube getParent(){
 		return this.parent;
 	}
+	
+	private Cube parent;
+
 }
