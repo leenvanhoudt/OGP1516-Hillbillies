@@ -87,7 +87,7 @@ public class World {
 	 * by the values 0,1,2 and 3.
 	 * @param value
 	 * 			The cubeType to check.
-	 * @return
+	 * @return ...
 	 * 		| return true if the value is between 0 and 3.
 	 */
 	public static boolean isValidCubeType(int value) {
@@ -121,7 +121,7 @@ public class World {
 	 * 		the y coordinate of the cube
 	 * @param z
 	 * 		the z coordinate of the cube
-	 * @return
+	 * @return ...
 	 * 		| return true if a cube is passable.
 	 */
 	public boolean isPassable(int x, int y, int z){
@@ -135,7 +135,7 @@ public class World {
 	 * 
 	 * @param duration
 	 *            The duration to check.
-	 * @return 
+	 * @return ...
 	 * 		| return true if the duration is valid.
 	 */
 	public boolean isValidDuration(double dt) {
@@ -146,6 +146,7 @@ public class World {
 	 * Constant value limiting the duration.
 	 */
 	public static final double MAX_DURATION = 0.2;
+	
 	
 	public void advanceTime(double dt) throws IllegalArgumentException, IndexOutOfBoundsException{
 		if (isValidDuration(dt)) {

@@ -211,6 +211,7 @@ public class worldTests {
 				}
 			}
 		}
+		System.out.println("lol");
 		assertTrue("no solid cubes left",noSolidCubes);
 	}
 }
