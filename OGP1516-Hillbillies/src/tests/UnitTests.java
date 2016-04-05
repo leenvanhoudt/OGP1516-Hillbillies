@@ -631,4 +631,51 @@ public class UnitTests {
 		advanceTimeFor(unit,100,0.1);
 		assertTrue("unit is carrying log", unit.isCarryingLog);
 	}
+	
+	@Test
+	public void testFallingNotInterruptedByResting() throws ModelException{
+		int[][][] types = new int[4][4][4];
+		types[1][1][1] = 1;
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit unit = new Unit("TestUnit", new int[] { 1, 1, 2 }, 50, 50, 50, 50, false);
+		world.addUnit(unit);
+		unit.moveToAdjacent(0, 0, 1);
+		advanceTimeFor(unit,100,0.1);
+		unit.moveToAdjacent(0, 0, 1);
+		advanceTimeFor(unit,0.7,0.1);
+		unit.rest();
+		unit.advanceTime(0.1);
+		assertFalse("unit isn't resting", unit.isResting());
+	}
+	
+	@Test
+	public void testFallingNotInterruptedByWorking() throws ModelException{
+		int[][][] types = new int[4][4][4];
+		types[1][1][1] = 1;
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit unit = new Unit("TestUnit", new int[] { 1, 1, 2 }, 50, 50, 50, 50, false);
+		world.addUnit(unit);
+		unit.moveToAdjacent(0, 0, 1);
+		advanceTimeFor(unit,0.7,0.1);
+		unit.workAt(1,1,3);
+		unit.advanceTime(0.1);
+		assertFalse("unit isn't working", unit.isWorking());
+	}
+	
+	@Test
+	public void testFallingNotInterruptedByAttacking() throws ModelException{
+		int[][][] types = new int[4][4][4];
+		types[1][1][1] = 1;
+		types[1][2][1] = 1;
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit unit = new Unit("TestUnit", new int[] { 1, 1, 2 }, 50, 50, 50, 50, false);
+		Unit defender = new Unit("TestUnit", new int[] { 1, 2, 2 }, 50, 50, 50, 50, false);
+		world.addUnit(unit);
+		world.addUnit(defender);
+		unit.moveToAdjacent(0, 0, 1);
+		advanceTimeFor(unit,0.7,0.1);
+		unit.fight(defender);
+		unit.advanceTime(0.1);
+		assertFalse("unit isn't working", unit.isAttacking());
+	}
 }

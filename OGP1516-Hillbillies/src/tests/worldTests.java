@@ -185,4 +185,32 @@ public class worldTests {
 		assertTrue("connected to border cube is solid", world.getCubeType(0, 1, 1)==1);
 	}
 
+	@Test
+	public void testCaveInWithin5Minutes() throws ModelException{
+		int[][][] types = new int[80][80][3];
+		types[0][0][1] = 1;
+		for (int i = 0; i<77; i++){
+			for (int j = 0; j<77; j++){
+				types[i+1][j+1][1] = 1;
+			}
+		}
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit unit = new Unit("TestUnit", new int[] { 0, 0, 2 }, 50, 50, 50, 50, false);
+		world.addUnit(unit);
+		unit.workAt(0, 0, 1);
+		advanceTimeFor(world,100,0.1);
+		boolean noSolidCubes = true;
+		for (int i = 0; i<79; i++){
+			for (int j = 0; j<79; j++){
+				for (int k = 0; k<2; k++){
+					System.out.println(world.isPassable(i, j, k));
+					if (!world.isPassable(i, j, k)){
+						noSolidCubes = false;
+						break;
+					}
+				}
+			}
+		}
+		assertTrue("no solid cubes left",noSolidCubes);
+	}
 }

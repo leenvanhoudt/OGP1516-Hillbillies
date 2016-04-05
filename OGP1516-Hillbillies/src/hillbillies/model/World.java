@@ -27,42 +27,103 @@ public class World {
 		}
 	}
 	
+	/**
+	 * List for saving temporarily the returned list of this.connectedToBorder.changeSolidToPassable(x,y,z).
+	 */
 	private List<int[]> temporary = new ArrayList<int[]>();
+	
+	/**
+	 * Make a connection to the Class ConnectedToBorder.
+	 */
 	public ConnectedToBorder connectedToBorder;
+	
+	/**
+	 * Initialising the TerrainChangeListener.
+	 */
 	public TerrainChangeListener modelListener;
 
+	/**
+	 * Variables referencing to the dimensions of the world.
+	 */
 	private int dimensionX;
 	private int dimensionY;
 	private int dimensionZ;
+	
+	/**
+	 * Variable referencing to the terrainType of each cube of the world.
+	 */
 	private int[][][] terrainType;
 	
+	/**
+	 * Return the number of X cubes of this world.
+	 */
 	public int getNbCubesX(){
 		return this.dimensionX;
 	}
 	
+	/**
+	 * Return the number of Y cubes of this world.
+	 */
 	public int getNbCubesY(){
 		return this.dimensionY;
 	}
 	
+	/**
+	 * Return the number of Z cubes of this world.
+	 */
 	public int getNbCubesZ(){
 		return this.dimensionZ;
 	}
 	
-	
+	/**
+	 * Return the cubeType of the cube with coordinates x,y,z.
+	 */
 	public int getCubeType(int x, int y, int z){
 		return this.terrainType[x][y][z];
 	}
 	
+	/**
+	 * Check if the cube has a valid cubeType: air,rock,wood or workshop, which are represented
+	 * by the values 0,1,2 and 3.
+	 * @param value
+	 * 			The cubeType to check.
+	 * @return
+	 * 		| return true if the value is between 0 and 3.
+	 */
 	public static boolean isValidCubeType(int value) {
 		return value <= 3 && value >=0;
 	}
 	
+	/**
+	 * Set the cube on position (x,y,z) to the given value.
+	 * @param x
+	 * 		the x coordinate of the cube.
+	 * @param y
+	 * 		the y coordinate of the cube.
+	 * @param z
+	 * 		the z coordinate of the cube.
+	 * @param value
+	 * 		the new cubeType for this cube.
+	 * @throws IllegalArgumentException
+	 * 		The given cubeType is not a valid cubeType for the cube. 
+	 */
 	public void setCubeType(int x, int y, int z, int value) throws IllegalArgumentException{
 		if (!isValidCubeType(value))
 			throw new IllegalArgumentException();
 		this.terrainType[x][y][z] = value;
 	}
-	
+
+	/**
+	 * Check if the cube is passable. A cube is passable if his type is air or workshop.
+	 * @param x
+	 * 		the x coordinate of the cube
+	 * @param y
+	 * 		the y coordinate of the cube
+	 * @param z
+	 * 		the z coordinate of the cube
+	 * @return
+	 * 		| return true if a cube is passable.
+	 */
 	public boolean isPassable(int x, int y, int z){
 		return (this.terrainType[x][y][z]==0 
 				|| this.terrainType[x][y][z]==3);
@@ -74,7 +135,8 @@ public class World {
 	 * 
 	 * @param duration
 	 *            The duration to check.
-	 * @return ... | result == (dt >= 0 && dt < MAX_DURATION)
+	 * @return 
+	 * 		| return true if the duration is valid.
 	 */
 	public boolean isValidDuration(double dt) {
 		return dt >= 0 && dt <= MAX_DURATION;
