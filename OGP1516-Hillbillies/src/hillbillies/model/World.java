@@ -7,7 +7,7 @@ import hillbillies.util.ConnectedToBorder;
 
 public class World {
 	
-	public World(int[][][] terrainTypes, TerrainChangeListener modelListener){
+	public World(int[][][] terrainTypes, TerrainChangeListener modelListener)throws IllegalArgumentException{
 		this.dimensionX = terrainTypes.length;
 		this.dimensionY = terrainTypes[0].length;
 		this.dimensionZ = terrainTypes[0][0].length;
@@ -18,15 +18,14 @@ public class World {
 			for (int y=0;y<this.getNbCubesY();y++){
 				for (int z=0;z<this.getNbCubesZ();z++){
 					int value = terrainTypes[x][y][z];
+					if(!isValidCubeType(value))
+						throw new IllegalArgumentException();
 					if (value == 0 || value == 3){
 						this.temporary = this.connectedToBorder.changeSolidToPassable(x, y, z);
+						this.addCubesChanged(this.temporary);
+						if (!this.temporary.isEmpty())
+							this.addCubesChanged(this.temporary);
 						this.temporary.clear();
-					}else{
-						if( !this.isSolidConnectedToBorder(x, y, z)){
-							List<int[]> cube = new ArrayList<int[]>();
-							cube.add(new int[]{x,y,z});
-							this.addCubesChanged(cube);
-						}
 					}
 				}
 			}

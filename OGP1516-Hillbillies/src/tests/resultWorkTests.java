@@ -154,5 +154,4 @@ public class resultWorkTests {
 		assertFalse("log disappeared",world.cubeContainsLog(1, 2, 1));
 		assertFalse("boulder disappeared",world.cubeContainsBoulder(1, 2, 1));
 	}
-
 }

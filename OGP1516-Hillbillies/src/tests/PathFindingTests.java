@@ -70,7 +70,4 @@ public class PathFindingTests {
 				&& unit.getPosition()[0]==3.5;
 		assertTrue("unit reached end position", reachedEnd);
 	}
-	
-	
-	
 }

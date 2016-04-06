@@ -186,7 +186,7 @@ public class worldTests {
 	}
 
 	@Test
-	public void testCaveInWithin5Minutes() throws ModelException{
+	public void testCaveInWithin5Seconds() throws ModelException{
 		int[][][] types = new int[80][80][3];
 		types[1][0][1] = 1;
 		for (int i = 0; i<77; i++){
@@ -200,12 +200,13 @@ public class worldTests {
 		unit.workAt(1, 0, 1);
 		advanceTimeFor(world,15,0.1);
 		boolean noSolidCubes = this.noSolidCubes(world);
-		assertTrue("no solid cubes left",noSolidCubes);
+		assertTrue("no cubes left which are not connected to border",noSolidCubes);
 	}
 	
 	@Test
 	public void testCaveInMakingWorld() throws ModelException{
 		int[][][] types = new int[80][80][3];
+		types[0][0][1] = 1;
 		for (int i = 0; i<77; i++){
 			for (int j = 0; j<77; j++){
 				types[i+1][j+1][1] = 1;
@@ -214,13 +215,19 @@ public class worldTests {
 		World world = new World(types, new DefaultTerrainChangeListener());
 		advanceTimeFor(world,5,0.1);
 		boolean noSolidCubes = this.noSolidCubes(world);
-		assertTrue("no solid cubes left",noSolidCubes);
+		assertTrue("no cubes left which are not connected to border",noSolidCubes);
 	}
 	
+	/**
+	 * Check if there still are solid blocks in the world after caving in.
+	 * @param world
+	 * 		the world where the blocks has to cave in.
+	 * @return ...
+	 * 		| Return true if no solid blocks are found.
+	 */
 	public boolean noSolidCubes(World world){
 		for (int i = 1; i<79; i++){
 			for (int j = 1; j<79; j++){
-					System.out.println(world.isPassable(i, j, 1) + " " + i + " "+ j + " "+ 1);
 					if (!world.isPassable(i, j, 1)){
 						return false;
 				}
