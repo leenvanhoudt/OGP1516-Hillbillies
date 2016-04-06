@@ -130,8 +130,8 @@ public class World {
 	 * 		| return true if a cube is passable.
 	 */
 	public boolean isPassable(int x, int y, int z){
-		return (this.terrainType[x][y][z]==0 
-				|| this.terrainType[x][y][z]==3);
+		return (this.getCubeType(x, y, z)==0 
+				|| this.getCubeType(x, y, z)==3);
 	}
 	
 	/**
@@ -184,7 +184,6 @@ public class World {
 		}
 	}
 	
-	//TODO deze gebruiken wij nog nergens
 	public boolean isSolidConnectedToBorder(int x, int y, int z) {
 		return this.connectedToBorder.isSolidConnectedToBorder(x,y,z);
 	}
@@ -282,8 +281,8 @@ public class World {
 	}
 	
 	public boolean isValidStandingPosition(int x,int y,int z){
-		return ((z == 0 || this.terrainType[x][y][z-1] == 1 || this.terrainType[x][y][z-1] == 2) 
-				&& (this.terrainType[x][y][z] == 0 || this.terrainType[x][y][z] == 3));
+		return ((z == 0 || this.getCubeType(x, y, z-1) == 1 || this.getCubeType(x, y, z-1) == 2) 
+				&& (this.getCubeType(x, y, z) == 0 || this.getCubeType(x, y, z) == 3));
 	}
 	
 	public Set<Faction> getActiveFactions(){
@@ -313,7 +312,7 @@ public class World {
 	
 	private List<int[]> cubesChanged = new ArrayList<int[]>();
 	
-	private void updateCubes(){
+	private void updateCubes()throws IllegalArgumentException{
 		for (int[] cube : this.getCubesChanged()){
 			double P = 0.25;
 			Random random = new Random();

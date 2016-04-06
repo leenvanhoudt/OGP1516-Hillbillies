@@ -45,14 +45,14 @@ public class ResultWork {
 		}
 	}
 	
-	private void improveEquipment(int x, int y, int z){
+	private void improveEquipment(int x, int y, int z) throws IllegalArgumentException{
 		unit.setWeight(unit.getWeight()+1);
 		unit.setToughness(unit.getToughness()+1);
 		unit.getWorld().removeLog(unit.getWorld().getCubeLog(x, y, z));
 		unit.getWorld().removeBoulder(unit.getWorld().getCubeBoulder(x, y, z));
 	}
 	
-	private void pickUpBoulder(int x, int y, int z){
+	private void pickUpBoulder(int x, int y, int z)throws IllegalArgumentException{
 		unit.boulder = unit.getWorld().getCubeBoulder(x, y, z);
 		unit.boulder.setWorld(unit.getWorld());
 		unit.weight = (unit.getWeight() + unit.boulder.getBoulderWeight());
@@ -60,7 +60,7 @@ public class ResultWork {
 		unit.isCarryingBoulder = true;
 	}
 	
-	private void pickUpLog(int x, int y, int z){
+	private void pickUpLog(int x, int y, int z) throws IllegalArgumentException{
 		unit.log = unit.getWorld().getCubeLog(x, y, z);
 		unit.log.setWorld(unit.getWorld());
 		unit.weight = (unit.getWeight() + unit.log.getLogWeight());
@@ -68,7 +68,7 @@ public class ResultWork {
 		unit.isCarryingLog = true;
 	}
 	
-	private void workOnWood(int x, int y, int z){
+	private void workOnWood(int x, int y, int z) throws IllegalArgumentException{
 		List<int[]> changedCubes = unit.getWorld().connectedToBorder.changeSolidToPassable(x,y,z);
 		if (!changedCubes.isEmpty())
 			unit.getWorld().addCubesChanged(changedCubes);
@@ -80,7 +80,7 @@ public class ResultWork {
 		unit.getWorld().modelListener.notifyTerrainChanged(x, y, z);
 	}
 	
-	private void workOnRock(int x, int y, int z){
+	private void workOnRock(int x, int y, int z)throws IllegalArgumentException{
 		List<int[]> changedCubes = unit.getWorld().connectedToBorder.changeSolidToPassable(x,y,z);
 		if (!changedCubes.isEmpty())
 			unit.getWorld().addCubesChanged(changedCubes);

@@ -8,7 +8,8 @@ import be.kuleuven.cs.som.annotate.Raw;
 
 public class PathFinding {
 
-	public ArrayList<Cube> findPath(int[] cubeEndPosition) throws IndexOutOfBoundsException{
+	public ArrayList<Cube> findPath(int[] cubeEndPosition) throws IllegalArgumentException,
+			IndexOutOfBoundsException{
 		Cube[][][] grid = this.makeGrid(cubeEndPosition);
 		ArrayList<Cube> open = new ArrayList<Cube>();
 		ArrayList<Cube> closed = new ArrayList<Cube>();
@@ -24,7 +25,6 @@ public class PathFinding {
 				unit.setCurrentSpeed(0);
 				unit.defaultBehaviorCase3 = false;
 				unit.isMovingTo = false;
-				//TODO facade error
 				throw new IndexOutOfBoundsException();
 			}
 

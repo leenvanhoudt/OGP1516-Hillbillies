@@ -98,6 +98,9 @@ public class Unit {
 	 * @post ... 
 	 * 		| The number of staminaPoints of this new unit is equal to the maximum value of staminaPoints. 
 	 * 		| new.getStaminaPoints() == staminaPoints
+	 * @post ...
+	 * 		| The defaultBehavior of this new unit is equal to the given enableDefaultBehavior parameter.
+	 * 		| new.isDefaultBehaviorEnabled == true
 	 * @effect ... 
 	 * 		| The name of this new unit is set to the given name.
 	 *      | this.setName(name)
@@ -148,6 +151,7 @@ public class Unit {
 		}
 		setHitPoints(this.getMaxHitPoints());
 		setStaminaPoints(this.getMaxStaminaPoints());
+		this.setDefaultBehaviorEnabled(enableDefaultBehavior);
 	}
 
 	/**
@@ -903,7 +907,7 @@ public class Unit {
 	 * 		| If he was carrying a boulder or a log, it was added to the world at the position of the dead unit.
 	 * 		| this.getWorld().addBoulder(this.boulder) || this.getWorld().addLog(this.log)
 	 */
-	private void death(){
+	private void death() throws IllegalArgumentException{
 		if(!this.isAlive()){
 			this.isFalling = false;
 			this.isWorking = false;
@@ -982,7 +986,7 @@ public class Unit {
 	 * 		| If the unit is already falling, but hasn't reached a standing position yet, he will keep falling.
 	 * 		| this.moveToAdjacent(0,0,-1)
 	 */
-	private void falling(){
+	private void falling() throws IllegalArgumentException{
 		if (this.isFallingPosition(this.getCubeCoordinate()[0], this.getCubeCoordinate()[1], this.getCubeCoordinate()[2])){
 			this.setCurrentSpeed(0);
 			this.isFalling = true;
@@ -1048,10 +1052,9 @@ public class Unit {
 	 * 		| He will lose 10 experiencePoints
 	 * 		| this.setExperiencePoints(this.getExperiencePoints()-10)
 	 */
-	private void experiencePointsAdvanceTime() {
+	private void experiencePointsAdvanceTime() throws IllegalArgumentException{
 		Random random = new Random();		
 		int randomNumber = random.nextInt(3);
-		
 		if (randomNumber == 0){
 			if (this.getAgility()!=MAX_VALUE){
 				this.setAgility(this.getAgility() + 1);
@@ -1316,7 +1319,8 @@ public class Unit {
 	 * 		| if (!this.isAttacking() && !this.isMoving() && !this.isWorking() && !this.isResting())
 	 *		|	then this.defaultBehavior()
 	 */
-	private void defaultBehaviorEnabledAdvanceTime(double dt) throws IllegalArgumentException, IndexOutOfBoundsException {
+	private void defaultBehaviorEnabledAdvanceTime(double dt) throws IllegalArgumentException,
+			IndexOutOfBoundsException {
 		if (!this.isAttacking() && !this.isMoving() && !this.isWorking() && !this.isResting()) {
 			this.defaultBehavior();
 		}
@@ -1719,7 +1723,7 @@ public class Unit {
 	 *      | 	then this.attack(defender) 
 	 *      | 		defender.defend(this)
 	 */
-	public void fight(Unit defender) {
+	public void fight(Unit defender) throws IllegalArgumentException{
 		if (!this.isFalling && this.getFaction()!=defender.getFaction() 
 				&& defender != this){
 			this.attack(defender);
@@ -1856,7 +1860,7 @@ public class Unit {
 	 * 		| new.isResting == true 
 	 * 		| new.getCurrentSpeed() == 0
 	 */
-	public void rest() {
+	public void rest() throws IllegalArgumentException {
 		if (!this.isFalling){
 			this.isResting = true;
 			if (this.isWorking()) {
@@ -2045,7 +2049,7 @@ public class Unit {
 	 *      | !isValidFaction(getFaction())
 	 */
 	@Raw
-	public void setFaction(Faction faction) {
+	public void setFaction(Faction faction) throws IllegalArgumentException{
 		if (!isValidFaction(faction))
 			throw new IllegalArgumentException();
 		this.faction = faction;

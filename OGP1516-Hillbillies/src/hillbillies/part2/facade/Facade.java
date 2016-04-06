@@ -109,14 +109,11 @@ public class Facade implements IFacade{
 		return unit.getCurrentStaminaPoints();	
 	}
 	
-	//The methods advanceTime(Unit, double) and work(Unit) from part 1 are deprecated and no longer need to be implemented.
 	@Override
 	public void advanceTime(Unit unit, double dt) throws ModelException {
 		try{
 			unit.advanceTime(dt);		
-		}catch(IllegalArgumentException e){
-			throw new ModelException();
-		}catch(IndexOutOfBoundsException i){
+		}catch(Throwable e){
 			throw new ModelException();
 		}
 	}
@@ -172,13 +169,11 @@ public class Facade implements IFacade{
 	public void moveTo(Unit unit, int[] cube) throws ModelException {
 		try{
 			unit.moveTo(cube);		
-		}catch(IllegalArgumentException e){
-			throw new ModelException();
-		}catch(IndexOutOfBoundsException i){
+		}catch(Throwable e){
 			throw new ModelException();
 		}
 	}
-	//The methods advanceTime(Unit, double) and work(Unit) from part 1 are deprecated and no longer need to be implemented.
+
 	@Override
 	public void work(Unit unit) throws ModelException {
 		unit.work();
@@ -205,7 +200,11 @@ public class Facade implements IFacade{
 
 	@Override
 	public void rest(Unit unit) throws ModelException {
-		unit.rest();
+		try{
+			unit.rest();
+		}catch(IllegalArgumentException e){
+			throw new ModelException();
+		}
 	}
 
 	@Override
@@ -225,8 +224,12 @@ public class Facade implements IFacade{
 
 	@Override
 	public World createWorld(int[][][] terrainTypes, TerrainChangeListener modelListener) throws ModelException {
-		World world = new World(terrainTypes,modelListener);
-		return world;
+		try{
+			World world = new World(terrainTypes,modelListener);
+			return world;
+		}catch(IllegalArgumentException e){
+			throw new ModelException();
+		}
 	}
 
 	@Override
@@ -260,16 +263,17 @@ public class Facade implements IFacade{
 
 	@Override
 	public void setCubeType(World world, int x, int y, int z, int value) throws ModelException {
-		world.setCubeType(x, y, z, value);
+		try{
+			world.setCubeType(x, y, z, value);
+		}catch(IllegalArgumentException e){
+			throw new ModelException();
+		}
+		
 	}
 
 	@Override
 	public boolean isSolidConnectedToBorder(World world, int x, int y, int z) throws ModelException {
-		try{
-			return world.isSolidConnectedToBorder(x, y, z);
-		} catch (IllegalArgumentException e){
-			throw new ModelException();
-		}
+		return world.isSolidConnectedToBorder(x, y, z);
 	}
 
 	@Override
