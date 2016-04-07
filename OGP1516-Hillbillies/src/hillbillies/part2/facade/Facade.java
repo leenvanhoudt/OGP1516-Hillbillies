@@ -200,11 +200,7 @@ public class Facade implements IFacade{
 
 	@Override
 	public void rest(Unit unit) throws ModelException {
-		try{
-			unit.rest();
-		}catch(IllegalArgumentException e){
-			throw new ModelException();
-		}
+		unit.rest();
 	}
 
 	@Override

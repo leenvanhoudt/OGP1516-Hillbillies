@@ -11,9 +11,9 @@ import ogp.framework.util.Util;
  * They can execute multiple activities: basic movements, work, attack, rest, fall and die.
  * Also the awarding or losing of 3 sorts of points are worked out.
  * 
- * @author Laura Vranken & Leen Van Houdt, 2e bach Ingenieurswetenschappen:
- *         Objectgericht Programmeren link code repository:
- *         https://github.com/leenvanhoudt/OGP1516-Hillbillies
+ * @author Laura Vranken & Leen Van Houdt, 
+ * 			2e bach Ingenieurswetenschappen: Objectgericht Programmeren 
+ * 			link code repository: https://github.com/leenvanhoudt/OGP1516-Hillbillies
  * 
  * @invar The name of each unit must be a valid name for any unit. 
  * 		| isValidName(getName())
@@ -42,6 +42,7 @@ import ogp.framework.util.Util;
  */
 public class Unit {
 	/**
+	 * Create a new unit with the given characteristics.
 	 * 
 	 * @param name
 	 *            The name of the hillbilly.
@@ -167,7 +168,7 @@ public class Unit {
 	public String getName() {
 		return this.name;
 	}
-	//TODO formeel commentaar
+
 	/**
 	 * Check whether the given name is a valid name for any unit.
 	 * 
@@ -491,7 +492,6 @@ public class Unit {
 		return this.position;
 	}
 	
-	//TODO formeel
 	/**
 	 * Check whether the given position is a valid position for any unit.
 	 * 
@@ -916,13 +916,13 @@ public class Unit {
 			this.isMovingTo = false;
 			this.stopSprinting();
 			this.setCurrentSpeed(0);
-			if (this.isCarryingBoulder){
+			if (this.isCarryingBoulder()){
 				this.isCarryingBoulder = false;
 				this.boulder.setPosition(this.getPosition()[0]+LC/2,this.getPosition()[1]+LC/2,this.getPosition()[2]+LC/2);
 				this.setWeight(this.getWeight()-this.boulder.getBoulderWeight());
 				this.getWorld().addBoulder(this.boulder);
 			}
-			else if (this.isCarryingLog){
+			else if (this.isCarryingLog()){
 				this.isCarryingLog = false;
 				this.log.setPosition(this.getPosition()[0]+LC/2,this.getPosition()[1]+LC/2,this.getPosition()[2]+LC/2);
 				this.setWeight(this.getWeight()-this.log.getLogWeight());
@@ -998,6 +998,7 @@ public class Unit {
 		}
 		else if (this.getWorld().isValidStandingPosition(this.getCubeCoordinate()[0], this.getCubeCoordinate()[1], this.getCubeCoordinate()[2])
 				&& (this.isFalling && Util.fuzzyEquals(this.getPosition()[2],this.getNextPosition()[2]))){
+			this.setPosition(this.getNextPosition());
 			this.isFalling = false;
 		}
 		else if (this.isFalling){
@@ -1489,6 +1490,7 @@ public class Unit {
 	 * Return the currentSpeed of this unit.
 	 */
 	@Basic
+	@Raw
 	public double getCurrentSpeed() {
 		return this.currentSpeed;
 	}
@@ -1611,6 +1613,7 @@ public class Unit {
 		this.cubeEndPosition = cube;
 		if (!this.getWorld().isPassable(this.cubeEndPosition[0], this.cubeEndPosition[1], this.cubeEndPosition[2])
 				|| this.isFallingPosition(this.cubeEndPosition[0], this.cubeEndPosition[1], this.cubeEndPosition[2])){
+			this.defaultBehaviorCase3 = false;
 			throw new IllegalArgumentException();
 		}
 		else{
@@ -1860,7 +1863,7 @@ public class Unit {
 	 * 		| new.isResting == true 
 	 * 		| new.getCurrentSpeed() == 0
 	 */
-	public void rest() throws IllegalArgumentException {
+	public void rest() {
 		if (!this.isFalling){
 			this.isResting = true;
 			if (this.isWorking()) {
@@ -2064,7 +2067,6 @@ public class Unit {
 	 * Return the world of this unit.
 	 */
 	@Basic
-	@Raw
 	public World getWorld() {
 		return this.world;
 	}

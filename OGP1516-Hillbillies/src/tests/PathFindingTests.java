@@ -59,7 +59,11 @@ public class PathFindingTests {
 	public void testPathFound() throws ModelException{
 		int[][][] types = new int[4][4][4];
 		types[0][0][0] = 1;
+		types[1][0][0] = 1;
 		types[1][0][1] = 1;
+		types[1][1][1] = 1;
+		types[1][2][1] = 1;
+		types[2][2][1] = 1;
 		types[2][2][2] = 1;
 		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit unit = new Unit("TestUnit", new int[] { 0, 0, 1 }, 50, 50, 50, 50, false);
@@ -67,7 +71,7 @@ public class PathFindingTests {
 		unit.moveTo(new int[] {3,3,3});
 		advanceTimeFor(world, 100, 0.1);
 		boolean reachedEnd = unit.getPosition()[0]==3.5 && unit.getPosition()[1]==3.5
-				&& unit.getPosition()[0]==3.5;
+				&& unit.getPosition()[2]==3.5;
 		assertTrue("unit reached end position", reachedEnd);
 	}
 }
