@@ -2,8 +2,6 @@ package hillbillies.part2.facade;
 
 import java.util.Set;
 
-import org.junit.internal.Throwables;
-
 import hillbillies.model.Boulder;
 import hillbillies.model.Faction;
 import hillbillies.model.Log;

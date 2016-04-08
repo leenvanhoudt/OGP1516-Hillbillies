@@ -28,7 +28,7 @@ public class World {
 	 * @param modelListener
 	 * 		The listener for updating the world GUI.
 	 * @post ...
-	 * 		| The class connectedToBorder is initialised as a world, with the given dimensions,
+	 * 		| The class connectedToBorder is initialized as a world, with the given dimensions,
 	 * 		| full of solid blocks.
 	 * @effect ...
 	 * 		| All cubes within the dimension of the world that are air or workshop are changed from
@@ -37,7 +37,7 @@ public class World {
 	 * 		| All cubes are checked if they are connected to border. If not, they are added to the list
 	 * 		| of cubes that have to cave in.
 	 * @throws IllegalArgumentException
-	 * 		| If the cubeType hasn't a valid value.
+	 * 		| If the cubeType doesn't have a valid value.
 	 */
 	public World(int[][][] terrainTypes, TerrainChangeListener modelListener)throws IllegalArgumentException{
 		this.dimensionX = terrainTypes.length;
@@ -64,17 +64,17 @@ public class World {
 	}
 	
 	/**
-	 * List for saving temporarily the returned list of this.connectedToBorder.changeSolidToPassable(x,y,z).
+	 * List for temporarily saving the returned list of this.connectedToBorder.changeSolidToPassable(x,y,z).
 	 */
 	private List<int[]> temporary = new ArrayList<int[]>();
 	
 	/**
-	 * Initialise an object of the class ConnectedToBorder.
+	 * Initialize an object of the class ConnectedToBorder.
 	 */
 	public ConnectedToBorder connectedToBorder;
 	
 	/**
-	 * Initialise the TerrainChangeListener.
+	 * Initialize the TerrainChangeListener.
 	 */
 	public TerrainChangeListener modelListener;
 
@@ -246,7 +246,7 @@ public class World {
 	
 	/**
 	 * Spawn a unit with random characteristics at a random standing place in the world. The unit
-	 * will be added at the faction with the smallest number of units.
+	 * It will be added to the faction with the smallest number of units.
 	 * 
 	 * @param enableDefaultBehavior
 	 * 		Check if default behaviour is enabled.
@@ -281,7 +281,7 @@ public class World {
 	 * Search a valid standing position.
 	 * 
 	 * @return
-	 * 		| Return the founded standing position.
+	 * 		| Return the standing position that was found.
 	 */
 	private int[] searchValidPosition() {
 		Random random = new Random();
@@ -349,10 +349,10 @@ public class World {
 	}
 	
 	/**
-	 * Add an already created unit to the world at the faction with the smallest number of units.
+	 * Add an already created unit to the world to the faction with the smallest number of units.
 	 * 
 	 * @param unit
-	 * 		The unit which have to be added to the world.
+	 * 		The unit which has to be added to the world.
 	 * @post ...
 	 * 		| The unit is added to the world.
 	 */
@@ -371,8 +371,9 @@ public class World {
 	}
 	
 	/**
-	 * Check if the cube is a valid standing place: a inpassable block underneath the cube or the cube
-	 * is located at the bottom of the world and the cube itself must be passable.
+	 * Check if the cube is a valid standing place: there is an inpassable cube 
+	 * underneath the cube or the cube is located at the bottom of the world and 
+	 * the cube itself must be passable.
 	 * 
 	 * @param x
 	 * 		The x coordinate of the cube.
@@ -444,7 +445,7 @@ public class World {
 	 * that the cube caved in.
 	 * 
 	 * @effect ...
-	 * 		| The cubes of the list cubesChanged are caved in and sometimes there is a boulder of a log 
+	 * 		| The cubes of the list cubesChanged are caved in and sometimes there is a boulder or a log 
 	 * 		| dropped at that place.
 	 */
 	private void updateCubes()throws IllegalArgumentException{
@@ -525,7 +526,7 @@ public class World {
 	}
 	
 	/**
-	 * Remove a boulder to the set of boulders of the world.
+	 * Remove a boulder from the set of boulders of the world.
 	 * 
 	 * @param boulder
 	 * 		The boulder that has to be removed from the world.
@@ -587,7 +588,7 @@ public class World {
 	}
 	
 	/**
-	 * Return the boulder of a cube.
+	 * Return the boulder located at the given cube.
 	 * 
 	 * @param x
 	 * 		the x coordinate of a cube.
@@ -611,7 +612,7 @@ public class World {
 	}
 	
 	/**
-	 * Return the log of a cube.
+	 * Return the log located at the given cube.
 	 * 
 	 * @param x
 	 * 		the x coordinate of a cube.

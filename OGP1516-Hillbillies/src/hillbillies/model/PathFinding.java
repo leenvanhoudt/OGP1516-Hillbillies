@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import be.kuleuven.cs.som.annotate.Basic;
-import be.kuleuven.cs.som.annotate.Raw;
 
 /**
  * A class which can be used to find paths between cubes.
@@ -30,7 +29,7 @@ public class PathFinding {
 		Cube[][][] grid = this.makeGrid(cubeEndPosition);
 		ArrayList<Cube> open = new ArrayList<Cube>();
 		ArrayList<Cube> closed = new ArrayList<Cube>();
-		Cube startCube = grid[unit.getCubeCoordinate()[0]][unit.getCubeCoordinate()[1]][unit.getCubeCoordinate()[2]];
+		Cube startCube = grid[this.getUnit().getCubeCoordinate()[0]][this.getUnit().getCubeCoordinate()[1]][this.getUnit().getCubeCoordinate()[2]];
 		open.add(startCube);
 		Cube current = startCube;
 		Cube minimum = startCube;
@@ -39,9 +38,9 @@ public class PathFinding {
 				|| !(current.getY() == cubeEndPosition[1])
 				|| !(current.getZ() == cubeEndPosition[2])){
 			if (open.isEmpty()){
-				unit.setCurrentSpeed(0);
-				unit.defaultBehaviorCase3 = false;
-				unit.isMovingTo = false;
+				this.getUnit().setCurrentSpeed(0);
+				this.getUnit().defaultBehaviorCase3 = false;
+				this.getUnit().isMovingTo = false;
 				throw new IndexOutOfBoundsException();
 			}
 
@@ -68,10 +67,10 @@ public class PathFinding {
 	 * 		| Result is a 3D list of Cubes.
 	 */
 	private Cube[][][] makeGrid(int[] cubeEndPosition){
-		Cube[][][] grid = new Cube[unit.getWorld().getNbCubesX()][unit.getWorld().getNbCubesY()][unit.getWorld().getNbCubesZ()];
-		for (int i=0; i<unit.getWorld().getNbCubesX(); i++){
-			for (int j=0; j<unit.getWorld().getNbCubesY(); j++){
-				for (int k=0; k<unit.getWorld().getNbCubesZ(); k++){
+		Cube[][][] grid = new Cube[this.getUnit().getWorld().getNbCubesX()][this.getUnit().getWorld().getNbCubesY()][this.getUnit().getWorld().getNbCubesZ()];
+		for (int i=0; i<this.getUnit().getWorld().getNbCubesX(); i++){
+			for (int j=0; j<this.getUnit().getWorld().getNbCubesY(); j++){
+				for (int k=0; k<this.getUnit().getWorld().getNbCubesZ(); k++){
 					grid[i][j][k] = new Cube(i,j,k);
 					grid[i][j][k].setHCost(cubeEndPosition);
 				}
@@ -125,12 +124,12 @@ public class PathFinding {
 		for (int i=-1; i<2; i++){
 			for (int j=-1; j<2; j++){
 				for (int k=-1; k<2; k++){
-					if (current.getX()+i>=0 && current.getX()+i<unit.getWorld().getNbCubesX() 
-							&& current.getY()+j>=0 && current.getY()+j<unit.getWorld().getNbCubesY() 
+					if (current.getX()+i>=0 && current.getX()+i<this.getUnit().getWorld().getNbCubesX() 
+							&& current.getY()+j>=0 && current.getY()+j<this.getUnit().getWorld().getNbCubesY() 
 							&& current.getZ()+k>=0 && current.getZ()+k<unit.getWorld().getNbCubesZ()){
 						Cube adjacent = grid[current.getX()+i][current.getY()+j][current.getZ()+k];
-						if (unit.getWorld().isPassable(adjacent.getX(), adjacent.getY(), adjacent.getZ())
-								&& !unit.isFallingPosition(adjacent.getX(), adjacent.getY(), adjacent.getZ())){
+						if (this.getUnit().getWorld().isPassable(adjacent.getX(), adjacent.getY(), adjacent.getZ())
+								&& !this.getUnit().isFallingPosition(adjacent.getX(), adjacent.getY(), adjacent.getZ())){
 							if (((i==-1 || i==1) && j==0 && k==0) || ((j==-1 || j==1) && i==0 && k==0) || ((k==-1 || k==1) && j==0 && i==0)){
 								this.updateCost(current, adjacent, current.getGCost()+10, open, closed);
 							}
@@ -173,7 +172,7 @@ public class PathFinding {
 	 */
 	private void updateCost(Cube current, Cube adjacent, int cost,ArrayList<Cube> open, ArrayList<Cube> closed){
 		int finalCost = adjacent.getHCost()+cost;
-		if ((unit.getWorld().isPassable(adjacent.getX(),adjacent.getY(),adjacent.getZ()) && !closed.contains(adjacent))
+		if ((this.getUnit().getWorld().isPassable(adjacent.getX(),adjacent.getY(),adjacent.getZ()) && !closed.contains(adjacent))
 				&& (finalCost < adjacent.getFCost() || !open.contains(adjacent))){
 			adjacent.setFCost(finalCost);
 			adjacent.setGCost(cost);

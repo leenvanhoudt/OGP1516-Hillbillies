@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import org.junit.Test;
 
 import hillbillies.model.Boulder;
-import hillbillies.model.Cube;
 import hillbillies.model.Log;
 import hillbillies.model.Unit;
 import hillbillies.model.World;

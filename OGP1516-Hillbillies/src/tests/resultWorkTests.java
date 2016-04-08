@@ -148,9 +148,9 @@ public class resultWorkTests {
 		boulder.setWorld(world);
 		boulder.setPosition(1, 2, 1);
 		unit.workAt(1, 2, 1);
-		advanceTimeFor(world,100,0.1);
+		advanceTimeFor(world,10,0.1);
 		assertTrue("weight increased",unit.getWeight()-weight == 1);
-		assertTrue("toughness increased",unit.getToughness()-toughness == 1);
+		assertTrue("toughness increased",unit.getToughness()-toughness >= 1);
 		assertFalse("log disappeared",world.cubeContainsLog(1, 2, 1));
 		assertFalse("boulder disappeared",world.cubeContainsBoulder(1, 2, 1));
 	}

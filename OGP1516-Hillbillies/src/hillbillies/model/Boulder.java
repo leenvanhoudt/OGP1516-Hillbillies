@@ -65,7 +65,9 @@ public class Boulder {
 	 *            The position to check.
 	 * @return ... 
 	 * 		| Return true if the position has 3 coordinates, which are
-	 *         equal and larger than 0 and smaller than 50.
+	 *      | equal or larger than 0 and smaller than the maximum 
+	 *      | dimensions of the world and if the position is passable.
+.
 	 */
 	private boolean isValidPosition(double[] position) {
 		if (position.length != 3 

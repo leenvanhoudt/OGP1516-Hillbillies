@@ -217,7 +217,7 @@ public class Unit {
 	 * Constant values limiting the strength, agility and toughness.
 	 */
 	private static final int MIN_VALUE = 1;
-	private static final int MAX_VALUE = 200;
+	public static final int MAX_VALUE = 200;
 	public static final int MIN_INITIAL_VALUE = 25;
 	public static final int MAX_INITIAL_VALUE = 100;
 
@@ -914,6 +914,7 @@ public class Unit {
 			this.isAttacking = false;
 			this.isResting = false;
 			this.isMovingTo = false;
+			this.defaultBehaviorCase3 = false;
 			this.stopSprinting();
 			this.setCurrentSpeed(0);
 			if (this.isCarryingBoulder()){
@@ -994,6 +995,7 @@ public class Unit {
 			this.isAttacking = false;
 			this.isResting = false;
 			this.isMovingTo = false;
+			this.defaultBehaviorCase3 = false;
 			this.moveToAdjacent(0, 0, -1);
 		}
 		else if (this.getWorld().isValidStandingPosition(this.getCubeCoordinate()[0], this.getCubeCoordinate()[1], this.getCubeCoordinate()[2])
@@ -1142,10 +1144,12 @@ public class Unit {
 			double[] newPosition = new double[] { this.getPosition()[0] + v[0] * dt, this.getPosition()[1] + v[1] * dt,
 					this.getPosition()[2] + v[2] * dt };
 			this.setOrientation(Math.atan2(v[1], v[0]));
-			if (isValidPosition(newPosition)&&this.getWorld().isPassable((int)Math.floor(newPosition[0]), (int)Math.floor(newPosition[1]), (int)Math.floor(newPosition[2])))
+			if (isValidPosition(newPosition))
 				this.setPosition(newPosition);
 			else {
 				this.setCurrentSpeed(0);
+				this.isMovingTo = false;
+				this.defaultBehaviorCase3 = false;
 			}
 		} else {
 			this.setPosition(this.getNextPosition());
@@ -1248,7 +1252,7 @@ public class Unit {
 	}
 	
 	/**
-	 * Initialise an object of the class ResultWork.
+	 * Initialize an object of the class ResultWork.
 	 */
 	private ResultWork resultWork = new ResultWork();
 
@@ -1398,7 +1402,7 @@ public class Unit {
 				this.calculateSpeed(this.getNextPosition());
 				if (this.getWorld().isPassable((int)Math.floor(this.getNextPosition()[0]), (int)Math.floor(this.getNextPosition()[1]), (int)Math.floor(this.getNextPosition()[2]))){
 					this.setCurrentSpeed(this.sprintingSpeed);
-				}				
+				}
 			} else {
 				this.calculateNextPosition(dx, dy, dz);
 				this.calculateSpeed(this.getNextPosition()); 
@@ -1425,7 +1429,7 @@ public class Unit {
 	 *            The distance to the next z coordinate.
 	 * 
 	 * @post ... 
-	 * 		| The next position of the cube centre is saved. 
+	 * 		| The next position of the cube center is saved. 
 	 * 		| new.nextPosition == nextCubeCenterPosition
 	 */
 	private void calculateNextPosition(int dx, int dy, int dz) {
@@ -1591,7 +1595,7 @@ public class Unit {
 	}
 	
 	/**
-	 * Initialise an object of the class PathFinding.
+	 * Initialize an object of the class PathFinding.
 	 */
 	private PathFinding pathFinding = new PathFinding();
 	
@@ -1609,17 +1613,23 @@ public class Unit {
 	 * 		| (!this.getWorld().isPassable(cubeEndPosition)
 	 * 		| (this.isFallingPosition)
 	 */
-	public void moveTo(int[] cube) throws IllegalArgumentException, IndexOutOfBoundsException {
+	public void moveTo(int[] cube) throws IllegalArgumentException {
 		this.cubeEndPosition = cube;
 		if (!this.getWorld().isPassable(this.cubeEndPosition[0], this.cubeEndPosition[1], this.cubeEndPosition[2])
 				|| this.isFallingPosition(this.cubeEndPosition[0], this.cubeEndPosition[1], this.cubeEndPosition[2])){
 			this.defaultBehaviorCase3 = false;
+			this.isMovingTo = false;
+			this.setCurrentSpeed(0);
 			throw new IllegalArgumentException();
 		}
 		else{
 			if (!this.isMovingTo){
 				pathFinding.setUnit(this);
-				this.path = pathFinding.findPath(this.cubeEndPosition);
+				try{
+					this.path = pathFinding.findPath(this.cubeEndPosition);
+				}catch(IndexOutOfBoundsException e){
+					throw new IllegalArgumentException();
+				}
 				this.isMovingTo = true;
 			}
 			if (this.getCubeCoordinate()[0] == this.cubeEndPosition[0] 
@@ -1972,7 +1982,7 @@ public class Unit {
 	 */
 	private void defaultBehavior() throws IllegalArgumentException, IndexOutOfBoundsException {
 		Random random = new Random();
-		int i = random.nextInt(5);
+		int i=random.nextInt(5);
 		int[] randomPosition = new int[] { random.nextInt(this.getWorld().getNbCubesX()), 
 				random.nextInt(this.getWorld().getNbCubesY()), random.nextInt(this.getWorld().getNbCubesZ()) };
 		double[] randomPosition2 = new double[] {randomPosition[0]+ LC/2, randomPosition[1]+LC/2, randomPosition[2]+LC/2};
@@ -2059,7 +2069,7 @@ public class Unit {
 	}
 
 	/**
-	 * Initialising an object of the class Faction.
+	 * Initializing an object of the class Faction.
 	 */
 	private Faction faction = new Faction();
 
@@ -2085,7 +2095,7 @@ public class Unit {
 	}
 	
 	/**
-	 * Initialising an object of the class World.
+	 * Initializing an object of the class World.
 	 */
 	private World world;
 

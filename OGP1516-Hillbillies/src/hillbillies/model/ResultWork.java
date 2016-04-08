@@ -3,7 +3,6 @@ package hillbillies.model;
 import java.util.List;
 
 import be.kuleuven.cs.som.annotate.Basic;
-import be.kuleuven.cs.som.annotate.Raw;
 
 /**
  * A class that can be used to see what result a completed work order will have.
@@ -115,7 +114,7 @@ public class ResultWork {
 	}
 	
 	/**
-	 * Pick up de boulder located at the given position.
+	 * Pick up the boulder located at the given position.
 	 * 
 	 * @param x
 	 * 		The x coordinate of the cube that was worked on.
@@ -137,7 +136,7 @@ public class ResultWork {
 	}
 	
 	/**
-	 * Pick up de log located at the given position.
+	 * Pick up the log located at the given position.
 	 * 
 	 * @param x
 	 * 		The x coordinate of the cube that was worked on.
