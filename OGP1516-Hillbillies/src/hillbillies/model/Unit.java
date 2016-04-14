@@ -1326,7 +1326,7 @@ public class Unit {
 	 */
 	private void defaultBehaviorEnabledAdvanceTime(double dt) throws IllegalArgumentException,
 			IndexOutOfBoundsException {
-		if (!this.isAttacking() && !this.isMoving() && !this.isWorking() && !this.isResting()) {
+		if (!this.isAttacking() && !this.isMoving() && !this.isWorking() && !this.isResting() && !this.isFalling) {
 			this.defaultBehavior();
 		}
 	}
