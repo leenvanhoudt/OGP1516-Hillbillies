@@ -174,6 +174,12 @@ public class TaskFactory implements ITaskFactory<MyExpression,MyStatement,Task>{
 	}
 
 	@Override
+	public MyExpression createPositionOf(MyExpression unit, SourceLocation sourceLocation) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
 	public MyExpression createLiteralPosition(int x, int y, int z, SourceLocation sourceLocation) {
 		// TODO Auto-generated method stub
 		return null;
@@ -214,5 +220,7 @@ public class TaskFactory implements ITaskFactory<MyExpression,MyStatement,Task>{
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	
 	
 }
