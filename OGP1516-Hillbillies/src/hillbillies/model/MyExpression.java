@@ -1,5 +1,9 @@
 package hillbillies.model;
 
-public class MyExpression {
+import hillbillies.part3.programs.SourceLocation;
 
+public abstract class MyExpression {
+
+	public abstract Object evaluate(World world, Unit unit, int[] selectedCubes, SourceLocation sourceLocation);
+	
 }
