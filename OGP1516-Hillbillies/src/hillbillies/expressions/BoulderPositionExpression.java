@@ -1,6 +1,5 @@
 package hillbillies.expressions;
 
-import java.util.List;
 
 import hillbillies.model.Boulder;
 import hillbillies.model.Unit;
@@ -16,7 +15,7 @@ public class BoulderPositionExpression extends CubePositionExpression {
 	}
 	
 	@Override
-	public int[] evaluate(World world, Unit unit, int[] selectedCubes, SourceLocation sourceLocation) {
+	public int[] evaluate(World world, Unit unit, int[] selectedCube, SourceLocation sourceLocation) {
 		// TODO Auto-generated method stub
 		double minimum = world.getNbCubesX() + world.getNbCubesY() + world.getNbCubesZ();
 		Boulder closestBoulder = new Boulder();

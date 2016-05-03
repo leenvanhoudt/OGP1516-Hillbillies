@@ -1,6 +1,5 @@
 package hillbillies.statements;
 
-import java.util.List;
 
 import hillbillies.model.MyExpression;
 import hillbillies.model.MyStatement;
@@ -22,7 +21,7 @@ public class AssignmentStatement extends MyStatement {
 
 
 	@Override
-	public void execute(World world, Unit unit, List<int[]> selectedCubes, SourceLocation sourceLocation) {
+	public void execute(World world, Unit unit, int[] selectedCube, SourceLocation sourceLocation) {
 		// TODO Auto-generated method stub
 		
 	}

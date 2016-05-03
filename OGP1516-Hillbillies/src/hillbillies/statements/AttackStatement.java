@@ -1,6 +1,5 @@
 package hillbillies.statements;
 
-import java.util.List;
 
 import hillbillies.expressions.EnemyExpression;
 import hillbillies.model.MyExpression;
@@ -20,7 +19,7 @@ public class AttackStatement extends MyStatement {
 	}
 
 	@Override
-	public void execute(World world, Unit unit,List<int[]> selectedCubes, SourceLocation sourceLocation) {
+	public void execute(World world, Unit unit,int[] selectedCube, SourceLocation sourceLocation) {
 		// TODO Auto-generated method stub
 		if (this.expressionUnit instanceof EnemyExpression ){
 			EnemyExpression enemy = (EnemyExpression) this.expressionUnit;

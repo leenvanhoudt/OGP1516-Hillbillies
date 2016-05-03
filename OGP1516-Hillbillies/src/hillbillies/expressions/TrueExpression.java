@@ -1,7 +1,5 @@
 package hillbillies.expressions;
 
-import java.util.List;
-
 import hillbillies.model.MyExpression;
 import hillbillies.model.Unit;
 import hillbillies.model.World;
@@ -16,7 +14,7 @@ public class TrueExpression extends BooleanExpression {
 	}
 
 	@Override
-	public Boolean evaluate(World world, Unit unit, int[] selectedCubes, SourceLocation sourceLocation) {
+	public Boolean evaluate(World world, Unit unit, int[] selectedCube, SourceLocation sourceLocation) {
 		// TODO Auto-generated method stub
 		return true;
 	}

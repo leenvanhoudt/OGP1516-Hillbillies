@@ -1,6 +1,6 @@
 package hillbillies.expressions;
 
-import java.util.List;
+import java.util.Set;
 
 import hillbillies.model.MyExpression;
 import hillbillies.model.Unit;
@@ -10,10 +10,23 @@ import hillbillies.part3.programs.SourceLocation;
 public class FriendExpression extends UnitExpression {
 
 
+	private SourceLocation sourceLocation;
+
+	public FriendExpression(SourceLocation sourceLocation){
+		this.sourceLocation = sourceLocation;
+	}
+	
 	@Override
-	public Unit evaluate(World world, Unit unit, int[] selectedCubes, SourceLocation sourceLocation) {
+	public Unit evaluate(World world, Unit unit, int[] selectedCube, SourceLocation sourceLocation) {
 		// TODO Auto-generated method stub
-		return null;
+		Set<Unit> allUnits = world.getUnits();
+		for (Unit randomUnit: allUnits){
+			if (randomUnit.getFaction() == unit.getFaction()){
+				return randomUnit;
+			}
+		}
+		//TODO check exception
+		throw new IndexOutOfBoundsException();
 	}
 
 }

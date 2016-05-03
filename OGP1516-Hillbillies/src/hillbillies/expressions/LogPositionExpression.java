@@ -1,6 +1,5 @@
 package hillbillies.expressions;
 
-import java.util.List;
 
 import hillbillies.model.Log;
 import hillbillies.model.MyExpression;
@@ -17,7 +16,7 @@ public class LogPositionExpression extends CubePositionExpression {
 	}
 
 	@Override
-	public int[] evaluate(World world, Unit unit, int[] selectedCubes, SourceLocation sourceLocation) {
+	public int[] evaluate(World world, Unit unit, int[] selectedCube, SourceLocation sourceLocation) {
 		// TODO Auto-generated method stub
 		double minimum = world.getNbCubesX() + world.getNbCubesY() + world.getNbCubesZ();
 		Log closestLog = new Log();

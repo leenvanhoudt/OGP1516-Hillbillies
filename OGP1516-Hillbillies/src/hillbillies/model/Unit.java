@@ -920,13 +920,13 @@ public class Unit {
 			if (this.isCarryingBoulder()){
 				this.isCarryingBoulder = false;
 				this.boulder.setPosition(this.getPosition()[0]+LC/2,this.getPosition()[1]+LC/2,this.getPosition()[2]+LC/2);
-				this.setWeight(this.getWeight()-this.boulder.getBoulderWeight());
+				this.setWeight(this.getWeight()-this.boulder.getCarriedItemWeight());
 				this.getWorld().addBoulder(this.boulder);
 			}
 			else if (this.isCarryingLog()){
 				this.isCarryingLog = false;
 				this.log.setPosition(this.getPosition()[0]+LC/2,this.getPosition()[1]+LC/2,this.getPosition()[2]+LC/2);
-				this.setWeight(this.getWeight()-this.log.getLogWeight());
+				this.setWeight(this.getWeight()-this.log.getCarriedItemWeight());
 				this.getWorld().addLog(this.log);
 			}
 			this.getFaction().removeUnitFromFaction(this);

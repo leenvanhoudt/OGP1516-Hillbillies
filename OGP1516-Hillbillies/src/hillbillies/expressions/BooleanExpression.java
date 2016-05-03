@@ -8,6 +8,6 @@ import hillbillies.part3.programs.SourceLocation;
 
 public abstract class BooleanExpression extends MyExpression{
 
-	public abstract Boolean evaluate(World world, Unit unit, int[] selectedCubes,SourceLocation sourceLocation);
+	public abstract Boolean evaluate(World world, Unit unit, int[] selectedCube,SourceLocation sourceLocation);
 
 }

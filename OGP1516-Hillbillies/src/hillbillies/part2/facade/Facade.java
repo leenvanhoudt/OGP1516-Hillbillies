@@ -274,7 +274,7 @@ public class Facade implements IFacade{
 	public Unit spawnUnit(World world, boolean enableDefaultBehavior) throws ModelException {
 		try{
 			return world.spawnUnit(enableDefaultBehavior);
-		}catch(IllegalArgumentException e){
+		}catch(Throwable e){
 			throw new ModelException();
 		}
 	}

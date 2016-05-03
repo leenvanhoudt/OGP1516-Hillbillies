@@ -2,6 +2,8 @@ package hillbillies.model;
 
 import java.util.List;
 
+import ogp.framework.util.ModelException;
+
 public class Task {
 
 	private String nameTask;
@@ -19,4 +21,10 @@ public class Task {
 	public List<int[]> getSelectedCubes(){
 		return this.getSelectedCubes();
 	}
+	
+	public boolean isWellFormed(){
+		return false;
+	}
+	
+	
 }

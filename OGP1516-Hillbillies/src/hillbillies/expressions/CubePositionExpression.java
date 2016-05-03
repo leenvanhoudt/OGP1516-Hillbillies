@@ -7,9 +7,6 @@ import hillbillies.part3.programs.SourceLocation;
 
 public abstract class CubePositionExpression extends MyExpression {
 
-	public abstract int[] evaluate(World world, Unit unit, int[] selectedCubes, SourceLocation sourceLocation);
+	public abstract int[] evaluate(World world, Unit unit, int[] selectedCube, SourceLocation sourceLocation);
 
-	public int[] getPosition(int[] selectedCubes){
-		return selectedCubes;
-	}
 }
