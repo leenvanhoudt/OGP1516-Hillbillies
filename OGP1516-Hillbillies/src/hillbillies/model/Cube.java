@@ -164,5 +164,41 @@ public class Cube {
 	 * Object of the class cube registering the parent of the cube.
 	 */
 	private Cube parent;
+	
+	
+	public int getDijkstraCost(){
+		return this.dijkstraCost;
+	}
 
+	
+	public void setDijkstraCost(int value){
+		this.dijkstraCost = value;
+	}
+	
+	private int dijkstraCost;
+	
+	/**
+	 * Return the parent of the cube.
+	 */
+	@Basic
+	public Cube getDijkstraParent(){
+		return this.DijkstraParent;
+	}
+	
+	/**
+	 * Set the parent of the cube to the given parent.
+	 * 
+	 * @param parent
+	 * 		The cube to which to set the cubes parent.
+	 * @post ...
+	 * 		| The cubes parent is set to the given parent.
+	 */
+	public void setDijkstraParent(Cube parent){
+		this.DijkstraParent = parent;
+	}
+	
+	/**
+	 * Object of the class cube registering the parent of the cube.
+	 */
+	private Cube DijkstraParent;
 }

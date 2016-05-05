@@ -22,9 +22,9 @@ public class AttackStatement extends MyStatement {
 	public void execute(World world, Unit unit,int[] selectedCube, SourceLocation sourceLocation) {
 		// TODO Auto-generated method stub
 		if (this.expressionUnit instanceof EnemyExpression ){
-			EnemyExpression enemy = (EnemyExpression) this.expressionUnit;
-			//haal enemy unit uit expression
-			//unit.fight(defender);
+			EnemyExpression hillbilly = (EnemyExpression) this.expressionUnit;
+			Unit enemy = hillbilly.evaluate(world, unit, selectedCube, sourceLocation);
+			unit.fight(enemy);
 		} else{
 			throw new IllegalArgumentException();
 		}

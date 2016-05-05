@@ -857,6 +857,8 @@ public class Unit {
 			if (this.getExperiencePoints() >= 10)
 				this.experiencePointsAdvanceTime();
 			this.sprintingAdvanceTime(dt);
+			if (this.isFollowing)
+				this.followAdvanceTime();
 			if (this.isMoving())
 				this.isMovingAdvanceTime(dt);
 			if (this.isMovingTo && this.getPosition() == this.getNextPosition())
@@ -2026,7 +2028,30 @@ public class Unit {
 	 */
 	private boolean defaultBehaviorEnabled = false;
 	
+	public void follow(Unit followedUnit){
+		this.isFollowing = true;
+		this.followedUnit = followedUnit;
+	}
+	
+	public void followAdvanceTime(){
+		if ((this.oldPositionFollowedUnit == null || 
+				(this.oldPositionFollowedUnit[0] == this.getCubeCoordinate()[0] &&
+				this.oldPositionFollowedUnit[1] == this.getCubeCoordinate()[1] &&
+				this.oldPositionFollowedUnit[2] == this.getCubeCoordinate()[2])) &&
+				!(this.followedUnit.getCubeCoordinate()[0] == this.getCubeCoordinate()[0] &&
+				this.followedUnit.getCubeCoordinate()[1] == this.getCubeCoordinate()[1] &&
+				this.followedUnit.getCubeCoordinate()[2] == this.getCubeCoordinate()[2])){
+			int [] posFollowedUnit = {this.followedUnit.getCubeCoordinate()[0],
+					this.followedUnit.getCubeCoordinate()[1], this.followedUnit.getCubeCoordinate()[2]};
+			this.oldPositionFollowedUnit = posFollowedUnit;
+			this.moveTo(posFollowedUnit);
+		}
+	}
 
+	private boolean isFollowing = false;
+	private Unit followedUnit;
+	private int[] oldPositionFollowedUnit;
+	
 	/**
 	 * Return the faction of this unit.
 	 */

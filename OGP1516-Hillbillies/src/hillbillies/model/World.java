@@ -261,7 +261,7 @@ public class World {
 				Faction newFaction = new Faction();
 				this.activeFactionSet.add(newFaction);
 				this.activeFactionList.add(newFaction);
-			}			
+			}
 			this.sort();
 			int[] validPosition = this.searchValidPosition();
 			Random random = new Random();
@@ -368,6 +368,7 @@ public class World {
 			unit.setFaction(this.activeFactionList.get(0));
 			unit.setWorld(this);
 		}
+		throw new IllegalArgumentException();
 	}
 	
 	/**
@@ -588,6 +589,28 @@ public class World {
 	}
 	
 	/**
+	 * Check if a cube contains a unit.
+	 * 
+	 * @param x
+	 * 		the x coordinate of the cube.
+	 * @param y
+	 * 		the y coordinate of the cube.
+	 * @param z
+	 * 		the z coordinate of the cube.
+	 * @return ...
+	 * 		| Return true if a cube contains a unit.
+	 */
+	public boolean cubeContainsUnit(int x, int y, int z){
+		for (Unit unit:this.getUnits()){
+			if (unit.getCubeCoordinate()[0]==x && unit.getCubeCoordinate()[1]==y
+					&& unit.getCubeCoordinate()[2]==z){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
 	 * Return the boulder located at the given cube.
 	 * 
 	 * @param x
@@ -633,5 +656,32 @@ public class World {
 			}
 		}
 		throw new IllegalArgumentException();
+	}
+	
+	/**
+	 * Return the unit located at the given cube. The unit may not be equal to the given unit
+	 * that is also standing on that cube.
+	 * 
+	 * @param x
+	 * 		the x coordinate of a cube.
+	 * @param y
+	 * 		the y coordinate of a cube.
+	 * @param z
+	 * 		the z coordinate of a cube.
+	 * @param givenUnit
+	 * 		the unit already standing on the cube.
+	 * @return ...
+	 * 		| Return the other unit located at that cube.
+	 * @throws IllegalArgumentException ...
+	 * 		| If there is no other unit located at that cube.
+	 */
+	public Boolean getCubeOtherUnit(int x, int y, int z, Unit givenUnit){
+		for (Unit unit:this.getUnits()){
+			if (unit.getCubeCoordinate()[0]==x && unit.getCubeCoordinate()[1]==y
+					&& unit.getCubeCoordinate()[2]==z && unit != givenUnit){
+				return true;
+			}
+		}
+		return false;
 	}
 }
