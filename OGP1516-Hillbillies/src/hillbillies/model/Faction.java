@@ -3,6 +3,7 @@ package hillbillies.model;
 import java.util.*;
 
 import be.kuleuven.cs.som.annotate.Basic;
+import hillbillies.scheduler.Scheduler;
 /**
  * A class of factions and their units.
  * 
@@ -67,4 +68,14 @@ public class Faction {
 		return (this.getUnitsOfFaction()).size();
 	}
 
+	
+	public Scheduler getScheduler(){
+		return this.scheduler;
+	}
+	
+	public void setScheduler(Scheduler scheduler){
+		this.scheduler = scheduler;
+	}
+	
+	private Scheduler scheduler;
 }

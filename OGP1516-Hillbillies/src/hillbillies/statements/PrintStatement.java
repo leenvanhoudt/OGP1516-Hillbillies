@@ -19,9 +19,9 @@ public class PrintStatement extends MyStatement{
 	}
 
 	@Override
-	public void execute(World world, Unit unit, int[] selectedCube,SourceLocation sourceLocation) {
+	public void execute(World world, Unit unit, int[] selectedCube) {
 		// TODO Auto-generated method stub
-		System.out.println(this.expressionValue.evaluate(world, unit, selectedCube, sourceLocation));
+		System.out.println(this.expressionValue.evaluate(world, unit, selectedCube, this.sourceLocation));
 	}
 
 }

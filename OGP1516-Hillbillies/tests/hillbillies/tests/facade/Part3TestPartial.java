@@ -9,14 +9,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 import hillbillies.model.Faction;
-import hillbillies.model.Scheduler;
-import hillbillies.model.Task;
 import hillbillies.model.Unit;
 import hillbillies.model.World;
 import hillbillies.part2.listener.DefaultTerrainChangeListener;
 import hillbillies.part3.facade.Facade;
 import hillbillies.part3.facade.IFacade;
 import hillbillies.part3.programs.TaskParser;
+import hillbillies.scheduler.Scheduler;
+import hillbillies.scheduler.Task;
 import ogp.framework.util.ModelException;
 
 public class Part3TestPartial {

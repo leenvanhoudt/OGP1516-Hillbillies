@@ -8,11 +8,11 @@ import java.util.stream.Collectors;
 
 import hillbillies.common.internal.ui.viewparts.ControlArea;
 import hillbillies.model.Faction;
-import hillbillies.model.Task;
 import hillbillies.model.Unit;
 import hillbillies.part2.internal.ui.sprites.FactionColors;
 import hillbillies.part3.internal.controller.ActionExecutorPart3;
 import hillbillies.part3.internal.providers.IGameObjectInfoProvider3;
+import hillbillies.scheduler.Task;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;

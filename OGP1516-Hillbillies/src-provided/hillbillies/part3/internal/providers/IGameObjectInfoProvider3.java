@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.Set;
 
 import hillbillies.model.Faction;
-import hillbillies.model.Task;
 import hillbillies.model.Unit;
 import hillbillies.part2.internal.providers.IGameObjectInfoProvider;
+import hillbillies.scheduler.Task;
 
 public interface IGameObjectInfoProvider3 extends IGameObjectInfoProvider {
 

@@ -21,15 +21,15 @@ public class WhileStatement extends MyStatement {
 	}
 	
 	@Override
-	public void execute(World world, Unit unit,int[] selectedCube, SourceLocation sourceLocation) {
+	public void execute(World world, Unit unit,int[] selectedCube) {
 		// TODO Auto-generated method stub
 		if (!(this.expressionCondition instanceof BooleanExpression)){
 			throw new Error("no boolean expression");
 		}
 		BooleanExpression condition = (BooleanExpression) this.expressionCondition;
 		
-		while(condition.evaluate(world, unit, selectedCube, sourceLocation)){
-			this.statementBody.execute(world, unit, selectedCube, sourceLocation);
+		while(condition.evaluate(world, unit, selectedCube, this.sourceLocation)){
+			this.statementBody.execute(world, unit, selectedCube);
 		}
 	}
 

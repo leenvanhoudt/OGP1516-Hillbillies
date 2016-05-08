@@ -18,9 +18,9 @@ public class SequenceStatement extends MyStatement {
 	}
 	
 	@Override
-	public void execute(World world, Unit unit, int[] selectedCube,SourceLocation sourceLocation) {
+	public void execute(World world, Unit unit, int[] selectedCube) {
 		for (int k = 0; k<this.statementList.size(); k++){
-			this.statementList.get(k).execute(world, unit, selectedCube, sourceLocation);
+			this.statementList.get(k).execute(world, unit, selectedCube);
 		}
 	}
 

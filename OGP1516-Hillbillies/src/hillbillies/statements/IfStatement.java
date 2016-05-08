@@ -25,7 +25,7 @@ public class IfStatement extends MyStatement {
 	
 	
 	@Override
-	public void execute(World world, Unit unit,int[] selectedCube, SourceLocation sourceLocation) {
+	public void execute(World world, Unit unit,int[] selectedCube) {
 		// TODO Auto-generated method stub
 		if (!(this.expressionCondition instanceof BooleanExpression)){
 			throw new Error("geen boolean expression");
@@ -33,9 +33,9 @@ public class IfStatement extends MyStatement {
 		BooleanExpression con = (BooleanExpression) this.expressionCondition;
 		
 		if (con.evaluate(world, unit, selectedCube, sourceLocation)){
-			this.statementIfBody.execute(world, unit, selectedCube, sourceLocation);
+			this.statementIfBody.execute(world, unit, selectedCube);
 		}else{
-			this.statementElseBody.execute(world, unit, selectedCube, sourceLocation);
+			this.statementElseBody.execute(world, unit, selectedCube);
 		}
 	}
 

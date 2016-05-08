@@ -19,7 +19,7 @@ public class FollowStatement extends MyStatement {
 	}
 
 	@Override
-	public void execute(World world, Unit unit,int[] selectedCube, SourceLocation sourceLocation) {
+	public void execute(World world, Unit unit,int[] selectedCube) {
 		// TODO Auto-generated method stub
 		if (!(this.expressionUnit instanceof UnitExpression))
 			throw new Error("no unit expression");

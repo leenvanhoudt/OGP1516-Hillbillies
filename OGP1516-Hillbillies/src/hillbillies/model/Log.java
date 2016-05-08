@@ -15,7 +15,7 @@ import be.kuleuven.cs.som.annotate.Raw;
  * @invar The position of each log must be a valid position for any log.
  *      | isValidPosition(getPosition())
  */
-public class Log extends CarriedItem{
+public class Log extends Material{
 	
 	public Log(){
 		super();

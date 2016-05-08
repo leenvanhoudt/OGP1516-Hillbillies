@@ -22,6 +22,4 @@ public class ReadVariableExpression extends MyExpression {
 	}
 
 
-	
-
 }

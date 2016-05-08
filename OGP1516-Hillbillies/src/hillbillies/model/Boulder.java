@@ -13,7 +13,7 @@ import be.kuleuven.cs.som.annotate.Raw;
  * @invar The position of each boulder must be a valid position for any boulder.
  *      | isValidPosition(getPosition())
  */
-public class Boulder extends CarriedItem{
+public class Boulder extends Material{
 	
 	public Boulder(){
 		super();

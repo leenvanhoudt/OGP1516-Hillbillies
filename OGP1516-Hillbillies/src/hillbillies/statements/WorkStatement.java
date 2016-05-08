@@ -18,12 +18,12 @@ public class WorkStatement extends MyStatement{
 	}
 	
 	@Override
-	public void execute(World world, Unit unit, int[] selectedCube,SourceLocation sourceLocation) {
+	public void execute(World world, Unit unit, int[] selectedCube) {
 		// TODO Auto-generated method stub
 		if (!(this.expressionPosition instanceof CubePositionExpression))
 			throw new Error("no position expression");
 		CubePositionExpression pos = (CubePositionExpression) this.expressionPosition;
-		int[] position = pos.evaluate(world, unit, selectedCube, sourceLocation);
+		int[] position = pos.evaluate(world, unit, selectedCube, this.sourceLocation);
 		unit.workAt(position[0], position[1], position[2]);
 	}
 

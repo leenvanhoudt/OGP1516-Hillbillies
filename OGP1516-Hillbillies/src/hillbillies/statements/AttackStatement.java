@@ -19,7 +19,7 @@ public class AttackStatement extends MyStatement {
 	}
 
 	@Override
-	public void execute(World world, Unit unit,int[] selectedCube, SourceLocation sourceLocation) {
+	public void execute(World world, Unit unit,int[] selectedCube) {
 		// TODO Auto-generated method stub
 		if (this.expressionUnit instanceof EnemyExpression ){
 			EnemyExpression hillbilly = (EnemyExpression) this.expressionUnit;

@@ -18,13 +18,13 @@ public class MoveToStatement extends MyStatement {
 	}
 	
 	@Override
-	public void execute(World world, Unit unit, int[] selectedCube,SourceLocation sourceLocation) {
+	public void execute(World world, Unit unit, int[] selectedCube) {
 		// TODO Auto-generated method stub
 		if (!(this.expressionPosition instanceof CubePositionExpression)){
 			throw new Error("no position expression");
 		}
 		CubePositionExpression pos = (CubePositionExpression) this.expressionPosition;
-		int[] cube = pos.evaluate(world, unit, selectedCube, sourceLocation);
+		int[] cube = pos.evaluate(world, unit, selectedCube, this.sourceLocation);
 		unit.moveTo(cube);
 	}
 

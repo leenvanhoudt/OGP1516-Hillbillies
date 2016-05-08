@@ -5,49 +5,49 @@ import java.util.Random;
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Raw;
 
-public abstract class CarriedItem {
+public abstract class Material {
 
 	/**
-	 * Creating a item with random weight.
+	 * Creating a material with random weight.
 	 * 
 	 * @effect ...
-	 * 		| The weight of the item is set.
+	 * 		| The weight of the material is set.
 	 */
-	public CarriedItem(){
-		this.setCarriedItemWeight();
+	public Material(){
+		this.setMaterialWeight();
 	}
 
 	/**
-	 * Return the weight of this item.
+	 * Return the weight of this material.
 	 */
 	@Basic
-	public int getCarriedItemWeight() {
-		return this.carriedItemWeight;
+	public int getMaterialWeight() {
+		return this.materialWeight;
 	}
 	
 	/**
-	 * Set the item weight to a random number between 10 and 50.
+	 * Set the material weight to a random number between 10 and 50.
 	 * 
 	 * @post ...
-	 * 		| carriedItemWeight is set to a random int between 10 and 50 inclusively.
+	 * 		| materialWeight is set to a random int between 10 and 50 inclusively.
 	 */
-	private final void setCarriedItemWeight(){
+	private final void setMaterialWeight(){
 		Random random = new Random();
-		this.carriedItemWeight = random.nextInt(41)+10;
+		this.materialWeight = random.nextInt(41)+10;
 	}
 	
 	/**
-	 * Variable registering the weight of this item.
+	 * Variable registering the weight of this material.
 	 */
-	private int carriedItemWeight;
+	private int materialWeight;
 	
 	/**
-	 * Return the position of this item.
+	 * Return the position of this material.
 	 */
 	@Basic
 	@Raw
 	public double[] getPosition(){
-		return this.carriedItemPosition;
+		return this.materialPosition;
 	}
 	
 	/**
@@ -74,9 +74,9 @@ public abstract class CarriedItem {
 	}
 	
 	/**
-	 * Set the position of this item to the given position.
+	 * Set the position of this material to the given position.
 	 * Set the nextPosition to the position below the given position.
-	 * This is the position the item would fall to if it wasn't solid.
+	 * This is the position the material would fall to if it wasn't solid.
 	 * 
 	 * @param x
 	 * 		The x coordinate of the new position.
@@ -85,14 +85,14 @@ public abstract class CarriedItem {
 	 * @param z
 	 * 		The z coordinate of the new position.
 	 * @post ...
-	 * 		| carriedItemPosition is set to the given position.
-	 * 		| If the item isn't falling, startFallingPosition is set to the given
+	 * 		| materialPosition is set to the given position.
+	 * 		| If the material isn't falling, startFallingPosition is set to the given
 	 * 		| position and nextPosition is set to the position below the given position.
 	 * 
 	 */
 	@Raw
 	public void setPosition(double x, double y, double z){
-		this.carriedItemPosition = new double[]{x,y,z};
+		this.materialPosition = new double[]{x,y,z};
 		if (!this.isFalling){
 			this.startFallingPosition = new double[]{this.getPosition()[0],this.getPosition()[1],this.getPosition()[2]};
 			this.nextPosition = new double[]{this.getPosition()[0],this.getPosition()[1],this.getPosition()[2]-1};
@@ -100,21 +100,21 @@ public abstract class CarriedItem {
 	}
 	
 	/**
-	 * Variables registering the startFallingPosition, nexPosition and carriedItemPosition
-	 * of the item.
+	 * Variables registering the startFallingPosition, nexPosition and materialPosition
+	 * of the material.
 	 */
 	private double[] startFallingPosition;
 	private double[] nextPosition;
-	private double[] carriedItemPosition;
+	private double[] materialPosition;
 	
 	/**
-	 * Update the game time of the item. If the item is placed above a passable
+	 * Update the game time of the material. If the material is placed above a passable
 	 * cube, it will start falling.
 	 * 
 	 * @param dt
-	 * 		The time between each update of the item. 
+	 * 		The time between each update of the material. 
 	 * @effect ...
-	 * 		| If the position of the item is not a valid standing position, it will
+	 * 		| If the position of the material is not a valid standing position, it will
 	 * 		| start falling.
 	 */
 	public void advanceTime(double dt){
@@ -125,15 +125,15 @@ public abstract class CarriedItem {
 	}
 	
 	/**
-	 * Make the item fall. If the item has reached a position above an inpassable
+	 * Make the material fall. If the material has reached a position above an inpassable
 	 * cube, it will stop falling. Otherwise, it will keep falling until it reaches
 	 * such position.
 	 * 
 	 * @param dt
-	 * 		The time between each update of the item.
+	 * 		The time between each update of the material.
 	 * @effect ...
-	 * 		| If the item has reached a valid standing position, it will stop falling.
-	 * 		| If the items position still isn't a valid standing position, it will
+	 * 		| If the material has reached a valid standing position, it will stop falling.
+	 * 		| If the materials position still isn't a valid standing position, it will
 	 * 		| keep falling.
 	 */
 	private void falling(double dt){
@@ -161,12 +161,12 @@ public abstract class CarriedItem {
 	}
 	
 	/**
-	 * Boolean registering if the item is falling.
+	 * Boolean registering if the material is falling.
 	 */
 	private boolean isFalling = false;
 
 	/**
-	 * Return the world of this item.
+	 * Return the world of this material.
 	 */
 	@Basic
 	public World getWorld() {
@@ -174,19 +174,19 @@ public abstract class CarriedItem {
 	}
 	
 	/**
-	 * Set the world of this item to the given world.
+	 * Set the world of this material to the given world.
 	 * 
 	 * @param world
-	 * 		The world in which the item is placed.
+	 * 		The world in which the material is placed.
 	 * @effect ...
-	 * 		| The world of the item is set to the given world.
+	 * 		| The world of the material is set to the given world.
 	 */
 	public void setWorld(World world){
 		this.world = world;
 	}
 	
 	/**
-	 * Initialize an object of the class world in which the item is placed.
+	 * Initialize an object of the class world in which the material is placed.
 	 */
 	private World world;
 }

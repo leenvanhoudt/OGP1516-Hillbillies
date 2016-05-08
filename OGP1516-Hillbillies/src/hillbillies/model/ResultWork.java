@@ -81,12 +81,12 @@ public class ResultWork {
 		if (unit.isCarryingLog()){
 			unit.isCarryingLog = false;
 			unit.log.setPosition(x+Unit.LC/2,y+Unit.LC/2,z+Unit.LC/2);
-			unit.setWeight(unit.getWeight()-unit.log.getCarriedItemWeight());
+			unit.setWeight(unit.getWeight()-unit.log.getMaterialWeight());
 			unit.getWorld().addLog(unit.log);
 		} else{
 			unit.isCarryingBoulder = false;
 			unit.boulder.setPosition(x+Unit.LC/2,y+Unit.LC/2,z+Unit.LC/2);
-			unit.setWeight(unit.getWeight()-unit.boulder.getCarriedItemWeight());
+			unit.setWeight(unit.getWeight()-unit.boulder.getMaterialWeight());
 			unit.getWorld().addBoulder(unit.boulder);
 		}
 	}
@@ -130,7 +130,7 @@ public class ResultWork {
 	private void pickUpBoulder(int x, int y, int z)throws IllegalArgumentException{
 		unit.boulder = unit.getWorld().getCubeBoulder(x, y, z);
 		unit.boulder.setWorld(unit.getWorld());
-		unit.weight = (unit.getWeight() + unit.boulder.getCarriedItemWeight());
+		unit.weight = (unit.getWeight() + unit.boulder.getMaterialWeight());
 		unit.getWorld().removeBoulder(unit.boulder);
 		unit.isCarryingBoulder = true;
 	}
@@ -152,7 +152,7 @@ public class ResultWork {
 	private void pickUpLog(int x, int y, int z) throws IllegalArgumentException{
 		unit.log = unit.getWorld().getCubeLog(x, y, z);
 		unit.log.setWorld(unit.getWorld());
-		unit.weight = (unit.getWeight() + unit.log.getCarriedItemWeight());
+		unit.weight = (unit.getWeight() + unit.log.getMaterialWeight());
 		unit.getWorld().removeLog(unit.log);
 		unit.isCarryingLog = true;
 	}

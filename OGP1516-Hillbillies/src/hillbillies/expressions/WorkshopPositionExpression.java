@@ -1,6 +1,5 @@
 package hillbillies.expressions;
 
-import hillbillies.model.MyExpression;
 import hillbillies.model.PathFinding;
 import hillbillies.model.Unit;
 import hillbillies.model.World;
@@ -11,7 +10,7 @@ public class WorkshopPositionExpression extends CubePositionExpression{
 	private SourceLocation sourceLocation;
 	private PathFinding pathfinding;
 
-	public WorkshopPositionExpression(){
+	public WorkshopPositionExpression(SourceLocation sourceLocation){
 		this.sourceLocation = sourceLocation;
 	}
 

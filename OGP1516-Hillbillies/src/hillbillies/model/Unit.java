@@ -4,6 +4,7 @@ import java.util.*;
 
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Raw;
+import hillbillies.scheduler.Task;
 import ogp.framework.util.Util;
 
 /**
@@ -922,13 +923,13 @@ public class Unit {
 			if (this.isCarryingBoulder()){
 				this.isCarryingBoulder = false;
 				this.boulder.setPosition(this.getPosition()[0]+LC/2,this.getPosition()[1]+LC/2,this.getPosition()[2]+LC/2);
-				this.setWeight(this.getWeight()-this.boulder.getCarriedItemWeight());
+				this.setWeight(this.getWeight()-this.boulder.getMaterialWeight());
 				this.getWorld().addBoulder(this.boulder);
 			}
 			else if (this.isCarryingLog()){
 				this.isCarryingLog = false;
 				this.log.setPosition(this.getPosition()[0]+LC/2,this.getPosition()[1]+LC/2,this.getPosition()[2]+LC/2);
-				this.setWeight(this.getWeight()-this.log.getCarriedItemWeight());
+				this.setWeight(this.getWeight()-this.log.getMaterialWeight());
 				this.getWorld().addLog(this.log);
 			}
 			this.getFaction().removeUnitFromFaction(this);
@@ -1983,6 +1984,15 @@ public class Unit {
 	 * 		| this.fight(unit)
 	 */
 	private void defaultBehavior() throws IllegalArgumentException, IndexOutOfBoundsException {
+		//TODO if finished verwijder taak en reset manneke
+		if (!this.getFaction().getScheduler().getScheduledTasks().isEmpty()
+				&& this.getAssignedTask()==null){
+			System.out.println("default behavior assign task");
+			Task task = this.getFaction().getScheduler().getScheduledTasks().get(0);
+			this.setAssignedTask(task);
+			task.setAssignedUnit(this);
+			task.executeStatement();
+		}
 		Random random = new Random();
 		int i=random.nextInt(5);
 		int[] randomPosition = new int[] { random.nextInt(this.getWorld().getNbCubesX()), 
@@ -2051,6 +2061,17 @@ public class Unit {
 	private boolean isFollowing = false;
 	private Unit followedUnit;
 	private int[] oldPositionFollowedUnit;
+	
+	public Task getAssignedTask(){
+		System.out.println("unit get assigned task");
+		return this.assignedTask;
+	}
+	
+	public void setAssignedTask(Task task){
+		this.assignedTask = task;
+	}
+	
+	private Task assignedTask;
 	
 	/**
 	 * Return the faction of this unit.

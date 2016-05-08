@@ -5,6 +5,7 @@ import java.util.*;
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Raw;
 import hillbillies.part2.listener.TerrainChangeListener;
+import hillbillies.scheduler.Scheduler;
 import hillbillies.util.ConnectedToBorder;
 
 /**
@@ -259,8 +260,10 @@ public class World {
 		if (this.getUnits().size() < MAX_NB_UNITS_WORLD){
 			if (this.getActiveFactions().size()<MAX_NB_FACTIONS){
 				Faction newFaction = new Faction();
+				Scheduler newScheduler = new Scheduler();
 				this.activeFactionSet.add(newFaction);
 				this.activeFactionList.add(newFaction);
+				newFaction.setScheduler(newScheduler);
 			}
 			this.sort();
 			int[] validPosition = this.searchValidPosition();
