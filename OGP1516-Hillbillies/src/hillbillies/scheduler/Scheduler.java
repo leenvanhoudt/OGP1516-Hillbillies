@@ -64,7 +64,6 @@ public class Scheduler {
 	public void reset(Task task, Unit unit){
 		task.setAssignedUnit(null);
 		unit.setAssignedTask(null);
-		this.removeTask(task);
 	}
 	
 	//TODO leer iterator
