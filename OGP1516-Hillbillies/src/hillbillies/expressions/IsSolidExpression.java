@@ -17,6 +17,7 @@ public class IsSolidExpression extends BooleanExpression {
 
 	@Override
 	public Boolean evaluate(World world, Unit unit, int[] selectedCube, SourceLocation sourceLocation) throws ClassCastException {
+		System.out.println("ISSOLID EXP");
 		// TODO Auto-generated method stub
 		if (this.expressionPosition instanceof CubePositionExpression){
 			CubePositionExpression pos = (CubePositionExpression) this.expressionPosition;

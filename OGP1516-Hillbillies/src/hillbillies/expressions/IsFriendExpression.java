@@ -18,6 +18,7 @@ public class IsFriendExpression extends BooleanExpression{
 	
 	@Override
 	public Boolean evaluate(World world, Unit unit, int[] selectedCube, SourceLocation sourceLocation) {
+		System.out.println("ISFRIEND EXP");
 		// TODO Auto-generated method stub
 		if (this.expressionUnit instanceof UnitExpression){
 			UnitExpression hillbilly = (UnitExpression) this.expressionUnit;

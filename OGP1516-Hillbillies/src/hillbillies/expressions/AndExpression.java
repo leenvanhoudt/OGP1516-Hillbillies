@@ -20,6 +20,7 @@ public class AndExpression extends BooleanExpression {
 
 	@Override
 	public Boolean evaluate(World world, Unit unit, int[] selectedCube, SourceLocation sourceLocation) {
+		System.out.println("AND EXP");
 		// TODO Auto-generated method stub
 		if (!(this.expressionLeft instanceof BooleanExpression) || !(this.expressionRight instanceof
 				BooleanExpression)){

@@ -15,6 +15,7 @@ public class TrueExpression extends BooleanExpression {
 
 	@Override
 	public Boolean evaluate(World world, Unit unit, int[] selectedCube, SourceLocation sourceLocation) {
+		System.out.println("TRUE EXP");
 		// TODO Auto-generated method stub
 		return true;
 	}

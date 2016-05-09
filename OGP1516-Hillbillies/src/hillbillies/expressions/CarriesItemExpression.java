@@ -18,10 +18,11 @@ public class CarriesItemExpression extends BooleanExpression {
 	
 	@Override
 	public Boolean evaluate(World world, Unit unit, int[] selectedCube, SourceLocation sourceLocation) {
+		System.out.println("Carriesitem EXP");
 		// TODO Auto-generated method stub
 		if (this.expressionUnit instanceof UnitExpression){
 			UnitExpression hillbilly = (UnitExpression) this.expressionUnit;
-			Unit hilly = hillbilly.evaluate(world, unit, selectedCube, sourceLocation);
+			Unit hilly = hillbilly.evaluate(world, unit, selectedCube, this.sourceLocation);
 			return hilly.isCarryingBoulder() || hilly.isCarryingLog();
 		}
 		else{

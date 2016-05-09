@@ -19,6 +19,7 @@ public class OrExpression extends BooleanExpression{
 	
 	@Override
 	public Boolean evaluate(World world, Unit unit, int[] selectedCube, SourceLocation sourceLocation) {
+		System.out.println("OR EXP");
 		// TODO Auto-generated method stub
 		if (!(this.expressionLeft instanceof BooleanExpression) || !(this.expressionRight instanceof
 				BooleanExpression)){

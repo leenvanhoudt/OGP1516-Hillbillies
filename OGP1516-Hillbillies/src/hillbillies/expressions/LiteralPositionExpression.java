@@ -20,6 +20,7 @@ public class LiteralPositionExpression extends CubePositionExpression {
 	
 	@Override
 	public int[] evaluate(World world, Unit unit, int[] selectedCube, SourceLocation sourceLocation) {
+		System.out.println("LITERALPOSITION EXP");
 		// TODO Auto-generated method stub
 		int [] position = new int[] {this.xcoordinate, this.ycoordinate, this.zcoordinate};
 		return position;

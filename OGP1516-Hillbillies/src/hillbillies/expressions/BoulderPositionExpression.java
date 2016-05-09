@@ -18,6 +18,7 @@ public class BoulderPositionExpression extends CubePositionExpression {
 	
 	@Override
 	public int[] evaluate(World world, Unit unit, int[] selectedCube, SourceLocation sourceLocation) {
+		System.out.println("BOULDER EXP");
 		// TODO Auto-generated method stub
 		this.pathFinding.setUnit(unit);
 		return this.pathFinding.Dijkstra(0);

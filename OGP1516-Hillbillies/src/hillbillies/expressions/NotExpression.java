@@ -17,6 +17,7 @@ public class NotExpression extends BooleanExpression{
 	
 	@Override
 	public Boolean evaluate(World world, Unit unit, int[] selectedCube, SourceLocation sourceLocation) {
+		System.out.println("NOT EXP");
 		// TODO Auto-generated method stub
 		if (!(this.expressionExpression instanceof BooleanExpression)){
 			throw new IllegalStateException();

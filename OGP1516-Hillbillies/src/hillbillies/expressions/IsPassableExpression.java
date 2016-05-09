@@ -19,6 +19,7 @@ public class IsPassableExpression extends BooleanExpression{
 	
 	@Override
 	public Boolean evaluate(World world, Unit unit, int[] selectedCube, SourceLocation sourceLocation) {
+		System.out.println("ISPASSABLE EXP");
 		// TODO Auto-generated method stub
 		if(this.expressionPosition instanceof CubePositionExpression){
 			CubePositionExpression pos = (CubePositionExpression) this.expressionPosition;

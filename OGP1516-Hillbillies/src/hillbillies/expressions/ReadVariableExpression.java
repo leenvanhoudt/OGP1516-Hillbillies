@@ -17,6 +17,7 @@ public class ReadVariableExpression extends MyExpression {
 
 	@Override
 	public Object evaluate(World world, Unit unit,int[] selectedCube, SourceLocation sourceLocation) {
+		System.out.println("READVARIABLE EXP");
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -18,6 +18,7 @@ public class PositionOfExpression extends CubePositionExpression {
 	
 	@Override
 	public int[] evaluate(World world, Unit unit, int[] selectedCube, SourceLocation sourceLocation) {
+		System.out.println("POSITIONOF EXP");
 		// TODO Auto-generated method stub
 		if (this.expressionUnit instanceof UnitExpression){
 			UnitExpression hillbilly = (UnitExpression) this.expressionUnit;

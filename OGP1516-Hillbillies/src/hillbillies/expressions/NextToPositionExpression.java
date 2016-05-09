@@ -22,6 +22,7 @@ public class NextToPositionExpression extends CubePositionExpression{
 
 	@Override
 	public int[] evaluate(World world, Unit unit, int[] selectedCube, SourceLocation sourceLocation) {
+		System.out.println("NEXTO EXP");
 		// TODO Auto-generated method stub
 		if (!(this.expressionPosition instanceof CubePositionExpression)){
 			throw new Error("no position expression");

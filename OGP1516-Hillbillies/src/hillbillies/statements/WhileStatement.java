@@ -22,6 +22,7 @@ public class WhileStatement extends MyStatement {
 	
 	@Override
 	public void execute(World world, Unit unit,int[] selectedCube) {
+		System.out.println("WHILE STATEMENT");
 		// TODO Auto-generated method stub
 		if (!(this.expressionCondition instanceof BooleanExpression)){
 			throw new Error("no boolean expression");

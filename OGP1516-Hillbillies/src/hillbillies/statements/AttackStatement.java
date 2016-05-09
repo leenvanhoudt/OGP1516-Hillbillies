@@ -20,6 +20,7 @@ public class AttackStatement extends MyStatement {
 
 	@Override
 	public void execute(World world, Unit unit,int[] selectedCube) {
+		System.out.println("ATTACK STATAMENT");
 		// TODO Auto-generated method stub
 		if (this.expressionUnit instanceof EnemyExpression ){
 			EnemyExpression hillbilly = (EnemyExpression) this.expressionUnit;

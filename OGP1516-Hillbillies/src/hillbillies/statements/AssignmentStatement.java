@@ -22,6 +22,7 @@ public class AssignmentStatement extends MyStatement {
 
 	@Override
 	public void execute(World world, Unit unit, int[] selectedCube) {
+		System.out.println("ASSIGN STATEMENT");
 		// TODO Auto-generated method stub
 		
 	}

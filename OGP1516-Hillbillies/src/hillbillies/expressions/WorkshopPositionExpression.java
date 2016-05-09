@@ -16,6 +16,7 @@ public class WorkshopPositionExpression extends CubePositionExpression{
 
 	@Override
 	public int[] evaluate(World world, Unit unit,int[] selectedCube, SourceLocation sourceLocation) {
+		System.out.println("WORKSHOP EXP");
 		// TODO Auto-generated method stub
 		this.pathfinding.setUnit(unit);
 		return this.pathfinding.Dijkstra(3);

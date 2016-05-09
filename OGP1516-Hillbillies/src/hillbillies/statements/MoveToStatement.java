@@ -19,6 +19,7 @@ public class MoveToStatement extends MyStatement {
 	
 	@Override
 	public void execute(World world, Unit unit, int[] selectedCube) {
+		System.out.println("MOVE TO STATEMENT");
 		// TODO Auto-generated method stub
 		if (!(this.expressionPosition instanceof CubePositionExpression)){
 			throw new Error("no position expression");

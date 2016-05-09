@@ -17,6 +17,7 @@ public class EnemyExpression extends UnitExpression {
 	
 	@Override
 	public Unit evaluate(World world, Unit unit, int[] selectedCube, SourceLocation sourceLocation) {
+		System.out.println("ENEMY EXP");
 		// TODO Auto-generated method stub
 		Set<Unit> allUnits = world.getUnits();
 		for (Unit randomUnit: allUnits){

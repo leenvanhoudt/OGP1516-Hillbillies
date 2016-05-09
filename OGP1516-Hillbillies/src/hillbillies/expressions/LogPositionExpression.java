@@ -19,6 +19,7 @@ public class LogPositionExpression extends CubePositionExpression {
 
 	@Override
 	public int[] evaluate(World world, Unit unit, int[] selectedCube, SourceLocation sourceLocation) {
+		System.out.println("LOG EXP");
 		// TODO Auto-generated method stub
 		this.pathFinding.setUnit(unit);
 		return this.pathFinding.Dijkstra(1);
