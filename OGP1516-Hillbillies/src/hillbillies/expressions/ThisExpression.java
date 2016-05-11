@@ -1,23 +1,23 @@
 package hillbillies.expressions;
 
-import hillbillies.model.MyExpression;
 import hillbillies.model.Unit;
 import hillbillies.model.World;
-import hillbillies.part3.programs.SourceLocation;
+import hillbillies.scheduler.TaskComponents;
 
 public class ThisExpression extends UnitExpression {
 	
-	private SourceLocation sourceLocation;
 
-	public ThisExpression(SourceLocation sourceLocation){
-		this.sourceLocation = sourceLocation;
+	@Override
+	public Unit evaluate(TaskComponents taskComponents) {
+		System.out.println("THIS EXP");
+		// TODO Auto-generated method stub
+		return taskComponents.getUnit();
 	}
 
 	@Override
-	public Unit evaluate(World world, Unit unit, int[] selectedCube, SourceLocation sourceLocation) {
-		System.out.println("THIS EXP");
+	public Boolean containSelectedCube() {
 		// TODO Auto-generated method stub
-		return unit;
+		return false;
 	}
 
 }

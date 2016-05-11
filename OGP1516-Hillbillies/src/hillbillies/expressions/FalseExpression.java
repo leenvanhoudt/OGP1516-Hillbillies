@@ -1,22 +1,21 @@
 package hillbillies.expressions;
 
 
-import hillbillies.model.MyExpression;
 import hillbillies.model.Unit;
 import hillbillies.model.World;
-import hillbillies.part3.programs.SourceLocation;
+import hillbillies.scheduler.TaskComponents;
 
 public class FalseExpression extends BooleanExpression{
-
-	private SourceLocation sourceLocation;
-
-	public FalseExpression(SourceLocation sourceLocation){
-		this.sourceLocation = sourceLocation;
-	}
 	
 	@Override
-	public Boolean evaluate(World world, Unit unit, int[] selectedCube, SourceLocation sourceLocation) {
+	public Boolean evaluate(TaskComponents taskComponents) {
 		System.out.println("FALSE EXP");
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Boolean containSelectedCube() {
 		// TODO Auto-generated method stub
 		return false;
 	}

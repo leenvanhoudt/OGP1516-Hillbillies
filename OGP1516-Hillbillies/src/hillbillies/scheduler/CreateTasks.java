@@ -3,8 +3,6 @@ package hillbillies.scheduler;
 import java.util.ArrayList;
 import java.util.List;
 
-import hillbillies.model.MyStatement;
-
 public class CreateTasks {
 	
 	private String name;
@@ -21,18 +19,19 @@ public class CreateTasks {
 	
 	public List<Task> tasks(){
 		System.out.println("create task");
-		List<Task> taskonmorecubes = new ArrayList<Task>();
+		List<Task> taskOnMoreCubes = new ArrayList<Task>();
 		if (!this.selectedCubes.isEmpty()){
 			for (int[] cube: this.selectedCubes){
 				Task task = new Task(this.name,this.priority,this.statementActivity,cube);
-				taskonmorecubes.add(task);
+				taskOnMoreCubes.add(task);
 			}
+		} else if (this.selectedCubes.isEmpty() && !this.statementActivity.containSelectedCube()){
+			Task task = new Task(this.name,this.priority,this.statementActivity,null);
+			taskOnMoreCubes.add(task);
 		} else{
-			//TODO If selectedCubes is empty and the 'selected' expression does not occur 
-			//in the activity, a list with exactly one Task instance should be returned.
-			// ander geval: empty en wel selected -> error
+			throw new Error("no selectedCube when needed for task");
 		}
-		return taskonmorecubes;
+		return taskOnMoreCubes;
 	}
 
 }

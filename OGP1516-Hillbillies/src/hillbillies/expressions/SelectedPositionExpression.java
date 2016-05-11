@@ -1,24 +1,22 @@
 package hillbillies.expressions;
 
-import hillbillies.model.MyExpression;
 import hillbillies.model.Unit;
 import hillbillies.model.World;
-import hillbillies.part3.programs.SourceLocation;
+import hillbillies.scheduler.TaskComponents;
 
 public class SelectedPositionExpression extends CubePositionExpression {
-
-	
-	private SourceLocation sourceLocation;
-
-	public SelectedPositionExpression(SourceLocation sourceLocation){
-		this.sourceLocation = sourceLocation;
-	}
 	
 	@Override
-	public int[] evaluate(World world, Unit unit, int[] selectedCube,SourceLocation sourceLocation) {
+	public int[] evaluate(TaskComponents taskComponents) {
 		System.out.println("SELECTEDCUBE EXP");
 		// TODO Auto-generated method stub
-		return selectedCube;
+		return taskComponents.getSelectedCube();
+	}
+
+	@Override
+	public Boolean containSelectedCube() {
+		// TODO Auto-generated method stub
+		return true;
 	}
 
 }

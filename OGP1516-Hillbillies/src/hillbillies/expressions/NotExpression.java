@@ -1,22 +1,20 @@
 package hillbillies.expressions;
 
-import hillbillies.model.MyExpression;
 import hillbillies.model.Unit;
 import hillbillies.model.World;
-import hillbillies.part3.programs.SourceLocation;
+import hillbillies.scheduler.MyExpression;
+import hillbillies.scheduler.TaskComponents;
 
 public class NotExpression extends BooleanExpression{
 
 	private MyExpression expressionExpression;
-	private SourceLocation sourceLocation;
 
-	public NotExpression(MyExpression expression, SourceLocation sourceLocation){
+	public NotExpression(MyExpression expression){
 		this.expressionExpression = expression;
-		this.sourceLocation = sourceLocation;
 	}
 	
 	@Override
-	public Boolean evaluate(World world, Unit unit, int[] selectedCube, SourceLocation sourceLocation) {
+	public Boolean evaluate(TaskComponents taskComponents) {
 		System.out.println("NOT EXP");
 		// TODO Auto-generated method stub
 		if (!(this.expressionExpression instanceof BooleanExpression)){
@@ -24,7 +22,13 @@ public class NotExpression extends BooleanExpression{
 		}
 		BooleanExpression exp = (BooleanExpression) this.expressionExpression;
 		
-		return !exp.evaluate(world, unit, selectedCube, sourceLocation);
+		return !exp.evaluate(taskComponents);
+	}
+
+	@Override
+	public Boolean containSelectedCube() {
+		// TODO Auto-generated method stub
+		return this.expressionExpression.containSelectedCube();
 	}
 
 }

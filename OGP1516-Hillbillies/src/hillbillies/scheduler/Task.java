@@ -3,9 +3,7 @@ package hillbillies.scheduler;
 import java.util.HashSet;
 import java.util.Set;
 
-import be.kuleuven.cs.som.annotate.*;
 import hillbillies.model.Faction;
-import hillbillies.model.MyStatement;
 import hillbillies.model.Unit;
 
 public class Task {
@@ -27,12 +25,8 @@ public class Task {
 	public void executeStatement(){
 		System.out.println("execute statement");
 		Unit unit = this.getAssignedUnit();
-		this.statementactivity.execute(unit.getWorld(), unit, this.selectedCube);
-	}
-	
-	//TODO wordt nergens gebruikt
-	public int[] getSelectedCube(){
-		return this.selectedCube;
+		TaskComponents taskComponents = new TaskComponents(unit.getWorld(), unit, this.selectedCube);
+		this.statementactivity.execute(taskComponents);
 	}
 	
 	//TODO fix it
@@ -54,7 +48,7 @@ public class Task {
 	
 	
 	public Unit getAssignedUnit(){
-		System.out.println("task getassignedunit");
+		//System.out.println("task getassignedunit");
 		return this.assignedUnit;
 	}
 	
@@ -66,12 +60,12 @@ public class Task {
 	
 	
 	public String getName(){
-		System.out.println("getname task");
+		//System.out.println("getname task");
 		return this.nameTask;
 	}
 	
 	public int getPriority(){
-		System.out.println("getpriority task");
+		//System.out.println("getpriority task");
 		return this.priority;
 	}
 	

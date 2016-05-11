@@ -196,9 +196,11 @@ public class PathFinding {
 	 */
 	private ArrayList<Cube> makePath(Cube current, Cube startCube){
 		ArrayList<Cube> path = new ArrayList<Cube>();
-		while (current.getParent()!=startCube){
-			path.add(current);
-			current = current.getParent();
+		if (current != startCube){
+			while (current.getParent()!=startCube){
+				path.add(current);
+				current = current.getParent();
+			}
 		}
 		path.add(current);
 		path.add(startCube);

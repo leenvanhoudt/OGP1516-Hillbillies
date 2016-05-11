@@ -1,25 +1,29 @@
 package hillbillies.expressions;
 
-import hillbillies.model.MyExpression;
 import hillbillies.model.Unit;
 import hillbillies.model.World;
-import hillbillies.part3.programs.SourceLocation;
+import hillbillies.scheduler.MyExpression;
+import hillbillies.scheduler.TaskComponents;
 
 public class ReadVariableExpression extends MyExpression {
 
-	private SourceLocation sourceLocation;
 	private String varName;
 
-	public ReadVariableExpression(String variableName, SourceLocation sourceLocation){
+	public ReadVariableExpression(String variableName){
 		this.varName = variableName;
-		this.sourceLocation = sourceLocation;
 	}
 
 	@Override
-	public Object evaluate(World world, Unit unit,int[] selectedCube, SourceLocation sourceLocation) {
+	public Object evaluate(TaskComponents taskComponents) {
 		System.out.println("READVARIABLE EXP");
 		// TODO Auto-generated method stub
-		return null;
+		return taskComponents.getValue(this.varName);
+	}
+
+	@Override
+	public Boolean containSelectedCube() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 

@@ -1617,6 +1617,7 @@ public class Unit {
 	 * 		| (this.isFallingPosition)
 	 */
 	public void moveTo(int[] cube) throws IllegalArgumentException {
+		System.out.println("move to");
 		this.cubeEndPosition = cube;
 		if (!this.getWorld().isPassable(this.cubeEndPosition[0], this.cubeEndPosition[1], this.cubeEndPosition[2])
 				|| this.isFallingPosition(this.cubeEndPosition[0], this.cubeEndPosition[1], this.cubeEndPosition[2])){
@@ -1629,8 +1630,10 @@ public class Unit {
 			if (!this.isMovingTo){
 				pathFinding.setUnit(this);
 				try{
+					System.out.println("find path");
 					this.path = pathFinding.findPath(this.cubeEndPosition);
 				}catch(IndexOutOfBoundsException e){
+					System.out.println("no path found");
 					throw new IllegalArgumentException();
 				}
 				this.isMovingTo = true;
@@ -1638,11 +1641,13 @@ public class Unit {
 			if (this.getCubeCoordinate()[0] == this.cubeEndPosition[0] 
 					&& this.getCubeCoordinate()[1] == this.cubeEndPosition[1]
 					&& this.getCubeCoordinate()[2] == this.cubeEndPosition[2]){
+				System.out.println("arrived move to");
 				this.isMovingTo = false;
 				this.defaultBehaviorCase3 = false;
 				this.setCurrentSpeed(0);
 			}
 			if (this.isMovingTo){
+				System.out.println("moving");
 				int dx = 0;
 				int dy = 0;
 				int dz = 0;
@@ -1985,16 +1990,19 @@ public class Unit {
 	 */
 	private void defaultBehavior() throws IllegalArgumentException, IndexOutOfBoundsException {
 		//TODO if finished verwijder taak en reset manneke
+		//TODO check of andere unit nog niet aan het uitvoeren is
 		if (!this.getFaction().getScheduler().getScheduledTasks().isEmpty()
 				&& this.getAssignedTask()==null){
 			System.out.println("default behavior assign task");
-			Task task = this.getFaction().getScheduler().getScheduledTasks().get(0);
+			Task task = this.getFaction().getScheduler().getTaskHighestPriority();
 			this.setAssignedTask(task);
 			task.setAssignedUnit(this);
 			task.executeStatement();
+			System.out.println("after execute statement");
 		}
 		Random random = new Random();
-		int i=random.nextInt(5);
+		//TODO zet random back
+		int i=2;//random.nextInt(5);
 		int[] randomPosition = new int[] { random.nextInt(this.getWorld().getNbCubesX()), 
 				random.nextInt(this.getWorld().getNbCubesY()), random.nextInt(this.getWorld().getNbCubesZ()) };
 		double[] randomPosition2 = new double[] {randomPosition[0]+ LC/2, randomPosition[1]+LC/2, randomPosition[2]+LC/2};
@@ -2063,7 +2071,7 @@ public class Unit {
 	private int[] oldPositionFollowedUnit;
 	
 	public Task getAssignedTask(){
-		System.out.println("unit get assigned task");
+		//System.out.println("unit get assigned task");
 		return this.assignedTask;
 	}
 	

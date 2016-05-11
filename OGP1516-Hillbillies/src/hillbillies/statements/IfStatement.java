@@ -2,30 +2,27 @@ package hillbillies.statements;
 
 
 import hillbillies.expressions.BooleanExpression;
-import hillbillies.model.MyExpression;
-import hillbillies.model.MyStatement;
 import hillbillies.model.Unit;
 import hillbillies.model.World;
-import hillbillies.part3.programs.SourceLocation;
+import hillbillies.scheduler.MyExpression;
+import hillbillies.scheduler.MyStatement;
+import hillbillies.scheduler.TaskComponents;
 
 public class IfStatement extends MyStatement {
 
 	private MyExpression expressionCondition;
 	private MyStatement statementIfBody;
 	private MyStatement statementElseBody;
-	private SourceLocation sourceLocation;
 
-	public IfStatement(MyExpression condition, MyStatement ifBody, MyStatement elseBody, 
-			SourceLocation sourceLocation){
+	public IfStatement(MyExpression condition, MyStatement ifBody, MyStatement elseBody){
 		this.expressionCondition = condition;
 		this.statementIfBody = ifBody;
 		this.statementElseBody = elseBody;
-		this.sourceLocation = sourceLocation;
 	}
 	
 	
 	@Override
-	public void execute(World world, Unit unit,int[] selectedCube) {
+	public void execute(TaskComponents taskComponents) {
 		System.out.println("IF STATEMENT");
 		// TODO Auto-generated method stub
 		if (!(this.expressionCondition instanceof BooleanExpression)){
@@ -33,12 +30,21 @@ public class IfStatement extends MyStatement {
 		}
 		BooleanExpression con = (BooleanExpression) this.expressionCondition;
 		
-		if (con.evaluate(world, unit, selectedCube, this.sourceLocation)){
-			this.statementIfBody.execute(world, unit, selectedCube);
+		if (con.evaluate(taskComponents)){
+			this.statementIfBody.execute(taskComponents);
 		}else if(this.statementElseBody != null){
 			System.out.println("ELSE BODY STATEMENT");
-			this.statementElseBody.execute(world, unit, selectedCube);
+			this.statementElseBody.execute(taskComponents);
 		}
+	}
+
+
+	@Override
+	public Boolean containSelectedCube() {
+		// TODO Auto-generated method stub
+		return this.expressionCondition.containSelectedCube() ||
+				this.statementIfBody.containSelectedCube() ||
+				(this.statementElseBody != null && this.statementElseBody.containSelectedCube());
 	}
 
 }

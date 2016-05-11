@@ -2,31 +2,31 @@ package hillbillies.expressions;
 
 import java.util.Set;
 
-import hillbillies.model.MyExpression;
 import hillbillies.model.Unit;
 import hillbillies.model.World;
-import hillbillies.part3.programs.SourceLocation;
+import hillbillies.scheduler.TaskComponents;
 
 public class EnemyExpression extends UnitExpression {
 
-	private SourceLocation sourceLocation;
-
-	public EnemyExpression(SourceLocation sourceLocation){
-		this.sourceLocation = sourceLocation;
-	}
 	
 	@Override
-	public Unit evaluate(World world, Unit unit, int[] selectedCube, SourceLocation sourceLocation) {
+	public Unit evaluate(TaskComponents taskComponents) {
 		System.out.println("ENEMY EXP");
 		// TODO Auto-generated method stub
-		Set<Unit> allUnits = world.getUnits();
+		Set<Unit> allUnits = taskComponents.getWorld().getUnits();
 		for (Unit randomUnit: allUnits){
-			if (randomUnit.getFaction() != unit.getFaction()){
+			if (randomUnit.getFaction() != taskComponents.getUnit().getFaction()){
 				return randomUnit;
 			}
 		}
 		//TODO check exception
 		throw new IndexOutOfBoundsException();
+	}
+
+	@Override
+	public Boolean containSelectedCube() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

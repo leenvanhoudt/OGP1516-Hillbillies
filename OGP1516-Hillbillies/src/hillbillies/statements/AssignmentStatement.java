@@ -1,30 +1,36 @@
 package hillbillies.statements;
 
 
-import hillbillies.model.MyExpression;
-import hillbillies.model.MyStatement;
 import hillbillies.model.Unit;
 import hillbillies.model.World;
-import hillbillies.part3.programs.SourceLocation;
+import hillbillies.scheduler.MyExpression;
+import hillbillies.scheduler.MyStatement;
+import hillbillies.scheduler.TaskComponents;
 
 public class AssignmentStatement extends MyStatement {
 	
 	private String variableName;
 	private MyExpression expressionValue;
-	private SourceLocation sourceLocation;
 
-	public AssignmentStatement(String variableName, MyExpression value, SourceLocation sourceLocation){
+	public AssignmentStatement(String variableName, MyExpression value){
 		this.variableName = variableName;
 		this.expressionValue = value;
-		this.sourceLocation = sourceLocation;
 	}
 
 
 	@Override
-	public void execute(World world, Unit unit, int[] selectedCube) {
+	public void execute(TaskComponents taskComponents) {
 		System.out.println("ASSIGN STATEMENT");
 		// TODO Auto-generated method stub
-		
+		Object value = this.expressionValue.evaluate(taskComponents);
+		taskComponents.addVariable(this.variableName, value);
+	}
+
+
+	@Override
+	public Boolean containSelectedCube() {
+		// TODO Auto-generated method stub
+		return this.expressionValue.containSelectedCube();
 	}
 
 }

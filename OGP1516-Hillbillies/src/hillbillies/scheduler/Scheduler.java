@@ -2,17 +2,15 @@ package hillbillies.scheduler;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
 import hillbillies.model.Unit;
 import ogp.framework.util.ModelException;
 
 public class Scheduler {
 
-	
-	public Scheduler(){
-		
-	}
 	
 	public List<Task> getScheduledTasks(){
 		System.out.println("get scheduled tasks" + this.scheduledList.size());
@@ -28,17 +26,20 @@ public class Scheduler {
 		this.scheduledList.remove(task);
 	}
 	
-	private List<Task> scheduledList = new ArrayList<Task>();
+	private ArrayList<Task> scheduledList = new ArrayList<Task>();
 	
 	public void replace(Task original, Task replacement){
-		int index = this.getScheduledTasks().indexOf(original);
 		this.removeTask(original);
-		this.scheduledList.add(index,replacement);
+		this.schedule(replacement);
 	}
 	
 	
 	public boolean areTasksPartOf(Collection<Task> tasks){
-		return this.scheduledList.containsAll(tasks);
+		for (Task task : tasks){
+			if (!this.getScheduledTasks().contains(task))
+				return false;
+		}
+		return true;
 	}
 	
 	public Task getTaskHighestPriority(){
@@ -83,8 +84,12 @@ public class Scheduler {
 	 *             A precondition was violated or an exception was thrown.
 	 */
 	public Iterator<Task> getAllTasksIterator(){
-		System.out.println("iterator");
-		return null;
+		//TODO is scheduledlist gesorteerd? zo niet verander gethighestpriority
+		//System.out.println("iterator");
+		ArrayList<Task> tasksToSort = this.scheduledList;
+		Collections.sort(tasksToSort, new TaskComparator());
+		Iterator<Task> taskIterator = this.scheduledList.iterator();
+		return taskIterator;
 	}
 	
 }

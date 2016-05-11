@@ -1,13 +1,15 @@
 package hillbillies.expressions;
 
 
-import hillbillies.model.MyExpression;
 import hillbillies.model.Unit;
 import hillbillies.model.World;
-import hillbillies.part3.programs.SourceLocation;
+import hillbillies.scheduler.MyExpression;
+import hillbillies.scheduler.TaskComponents;
 
 public abstract class BooleanExpression extends MyExpression{
 
-	public abstract Boolean evaluate(World world, Unit unit, int[] selectedCube,SourceLocation sourceLocation);
+	public abstract Boolean evaluate(TaskComponents taskComponents);
+	
+	public abstract Boolean containSelectedCube();
 
 }

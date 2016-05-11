@@ -2,35 +2,37 @@ package hillbillies.statements;
 
 
 import hillbillies.expressions.EnemyExpression;
-import hillbillies.model.MyExpression;
-import hillbillies.model.MyStatement;
 import hillbillies.model.Unit;
 import hillbillies.model.World;
-import hillbillies.part3.programs.SourceLocation;
+import hillbillies.scheduler.MyExpression;
+import hillbillies.scheduler.MyStatement;
+import hillbillies.scheduler.TaskComponents;
 
 public class AttackStatement extends MyStatement {
 	
 	private MyExpression expressionUnit;
-	private SourceLocation sourceLocation;
 
-	public AttackStatement(MyExpression unit, SourceLocation sourceLocation){
+	public AttackStatement(MyExpression unit){
 		this.expressionUnit = unit;
-		this.sourceLocation = sourceLocation;
 	}
 
 	@Override
-	public void execute(World world, Unit unit,int[] selectedCube) {
+	public void execute(TaskComponents taskComponents) {
 		System.out.println("ATTACK STATAMENT");
 		// TODO Auto-generated method stub
 		if (this.expressionUnit instanceof EnemyExpression ){
 			EnemyExpression hillbilly = (EnemyExpression) this.expressionUnit;
-			Unit enemy = hillbilly.evaluate(world, unit, selectedCube, sourceLocation);
-			unit.fight(enemy);
+			Unit enemy = hillbilly.evaluate(taskComponents);
+			taskComponents.getUnit().fight(enemy);
 		} else{
 			throw new IllegalArgumentException();
 		}
-		
-		
+	}
+
+	@Override
+	public Boolean containSelectedCube() {
+		// TODO Auto-generated method stub
+		return this.expressionUnit.containSelectedCube();
 	}
 
 }

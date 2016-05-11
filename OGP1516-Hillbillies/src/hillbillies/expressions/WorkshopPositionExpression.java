@@ -3,23 +3,24 @@ package hillbillies.expressions;
 import hillbillies.model.PathFinding;
 import hillbillies.model.Unit;
 import hillbillies.model.World;
-import hillbillies.part3.programs.SourceLocation;
+import hillbillies.scheduler.TaskComponents;
 
 public class WorkshopPositionExpression extends CubePositionExpression{
 
-	private SourceLocation sourceLocation;
 	private PathFinding pathfinding;
 
-	public WorkshopPositionExpression(SourceLocation sourceLocation){
-		this.sourceLocation = sourceLocation;
+	@Override
+	public int[] evaluate(TaskComponents taskComponents) {
+		System.out.println("WORKSHOP EXP");
+		// TODO Auto-generated method stub
+		this.pathfinding.setUnit(taskComponents.getUnit());
+		return this.pathfinding.Dijkstra(3);
 	}
 
 	@Override
-	public int[] evaluate(World world, Unit unit,int[] selectedCube, SourceLocation sourceLocation) {
-		System.out.println("WORKSHOP EXP");
+	public Boolean containSelectedCube() {
 		// TODO Auto-generated method stub
-		this.pathfinding.setUnit(unit);
-		return this.pathfinding.Dijkstra(3);
+		return false;
 	}
 
 }

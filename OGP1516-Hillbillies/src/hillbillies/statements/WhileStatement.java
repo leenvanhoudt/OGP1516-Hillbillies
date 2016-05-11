@@ -1,27 +1,24 @@
 package hillbillies.statements;
 
 import hillbillies.expressions.BooleanExpression;
-import hillbillies.model.MyExpression;
-import hillbillies.model.MyStatement;
 import hillbillies.model.Unit;
 import hillbillies.model.World;
-import hillbillies.part3.programs.SourceLocation;
+import hillbillies.scheduler.MyExpression;
+import hillbillies.scheduler.MyStatement;
+import hillbillies.scheduler.TaskComponents;
 
 public class WhileStatement extends MyStatement {
 
 	private MyExpression expressionCondition;
 	private MyStatement statementBody;
-	private SourceLocation sourceLocation;
 
-	public WhileStatement(MyExpression condition, MyStatement body,
-			SourceLocation sourceLocation){
+	public WhileStatement(MyExpression condition, MyStatement body){
 		this.expressionCondition = condition;
 		this.statementBody = body;
-		this.sourceLocation = sourceLocation;
 	}
 	
 	@Override
-	public void execute(World world, Unit unit,int[] selectedCube) {
+	public void execute(TaskComponents taskComponents) {
 		System.out.println("WHILE STATEMENT");
 		// TODO Auto-generated method stub
 		if (!(this.expressionCondition instanceof BooleanExpression)){
@@ -29,9 +26,16 @@ public class WhileStatement extends MyStatement {
 		}
 		BooleanExpression condition = (BooleanExpression) this.expressionCondition;
 		
-		while(condition.evaluate(world, unit, selectedCube, this.sourceLocation)){
-			this.statementBody.execute(world, unit, selectedCube);
+		while(condition.evaluate(taskComponents)){
+			this.statementBody.execute(taskComponents);
 		}
+	}
+
+	@Override
+	public Boolean containSelectedCube() {
+		// TODO Auto-generated method stub
+		return this.statementBody.containSelectedCube() ||
+				this.expressionCondition.containSelectedCube();
 	}
 
 }

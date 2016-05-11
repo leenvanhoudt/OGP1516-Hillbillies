@@ -1,31 +1,35 @@
 package hillbillies.expressions;
 
-import hillbillies.model.MyExpression;
 import hillbillies.model.Unit;
 import hillbillies.model.World;
-import hillbillies.part3.programs.SourceLocation;
+import hillbillies.scheduler.MyExpression;
+import hillbillies.scheduler.TaskComponents;
 
 public class IsSolidExpression extends BooleanExpression {
 	
 	private MyExpression expressionPosition;
-	private SourceLocation sourceLocation;
 
-	public IsSolidExpression(MyExpression position, SourceLocation sourceLocation){
+	public IsSolidExpression(MyExpression position){
 		this.expressionPosition = position;
-		this.sourceLocation = sourceLocation;
 	}
 
 	@Override
-	public Boolean evaluate(World world, Unit unit, int[] selectedCube, SourceLocation sourceLocation) throws ClassCastException {
+	public Boolean evaluate(TaskComponents taskComponents) throws ClassCastException {
 		System.out.println("ISSOLID EXP");
 		// TODO Auto-generated method stub
 		if (this.expressionPosition instanceof CubePositionExpression){
 			CubePositionExpression pos = (CubePositionExpression) this.expressionPosition;
-			int[] position = pos.evaluate(world, unit, selectedCube, sourceLocation);
-			return !world.isPassable(position[0], position[1], position[2]);
+			int[] position = pos.evaluate(taskComponents);
+			return !taskComponents.getWorld().isPassable(position[0], position[1], position[2]);
 		}else{
 			throw new ClassCastException();
 		}
+	}
+
+	@Override
+	public Boolean containSelectedCube() {
+		// TODO Auto-generated method stub
+		return this.expressionPosition.containSelectedCube();
 	}
 
 

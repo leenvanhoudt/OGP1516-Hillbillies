@@ -1,28 +1,31 @@
 package hillbillies.statements;
 
 
-import hillbillies.expressions.BooleanExpression;
-import hillbillies.model.MyExpression;
-import hillbillies.model.MyStatement;
 import hillbillies.model.Unit;
 import hillbillies.model.World;
-import hillbillies.part3.programs.SourceLocation;
+import hillbillies.scheduler.MyExpression;
+import hillbillies.scheduler.MyStatement;
+import hillbillies.scheduler.TaskComponents;
 
 public class PrintStatement extends MyStatement{
 	
 	private MyExpression expressionValue;
-	private SourceLocation sourceLocation;
 
-	public PrintStatement(MyExpression value, SourceLocation sourceLocation){
+	public PrintStatement(MyExpression value){
 		this.expressionValue = value;
-		this.sourceLocation = sourceLocation;
 	}
 
 	@Override
-	public void execute(World world, Unit unit, int[] selectedCube) {
+	public void execute(TaskComponents taskComponents) {
 		System.out.println("PRINT STATEMENT");
 		// TODO Auto-generated method stub
-		System.out.println(this.expressionValue.evaluate(world, unit, selectedCube, this.sourceLocation));
+		System.out.println(this.expressionValue.evaluate(taskComponents));
+	}
+
+	@Override
+	public Boolean containSelectedCube() {
+		// TODO Auto-generated method stub
+		return this.expressionValue.containSelectedCube();
 	}
 
 }

@@ -1,33 +1,37 @@
 package hillbillies.expressions;
 
-import hillbillies.model.MyExpression;
 import hillbillies.model.Unit;
 import hillbillies.model.World;
-import hillbillies.part3.programs.SourceLocation;
+import hillbillies.scheduler.MyExpression;
+import hillbillies.scheduler.TaskComponents;
 
 public class IsEnemyExpression extends BooleanExpression{
 
 	private MyExpression expressionUnit;
-	private SourceLocation sourceLocation;
 
-	public IsEnemyExpression(MyExpression unit, SourceLocation sourceLocation){
+	public IsEnemyExpression(MyExpression unit){
 		this.expressionUnit = unit;
-		this.sourceLocation = sourceLocation;
 	}
 	
 	@Override
-	public Boolean evaluate(World world, Unit unit, int[] selectedCube, SourceLocation sourceLocation) {
+	public Boolean evaluate(TaskComponents taskComponents) {
 		System.out.println("ISENEMY EXP");
 		// TODO Auto-generated method stub
 		if (this.expressionUnit instanceof UnitExpression){
 			UnitExpression hillbilly = (UnitExpression) this.expressionUnit;
-			Unit hilly = hillbilly.evaluate(world, unit, selectedCube, sourceLocation);
-			return hilly.getFaction() != unit.getFaction();
+			Unit hilly = hillbilly.evaluate(taskComponents);
+			return hilly.getFaction() != taskComponents.getUnit().getFaction();
 		}
 		else{
 			throw new Error("No UnitExpression");
 		}
 		
+	}
+
+	@Override
+	public Boolean containSelectedCube() {
+		// TODO Auto-generated method stub
+		return this.expressionUnit.containSelectedCube();
 	}
 
 }

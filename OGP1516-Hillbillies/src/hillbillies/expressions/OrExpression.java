@@ -1,24 +1,22 @@
 package hillbillies.expressions;
 
-import hillbillies.model.MyExpression;
 import hillbillies.model.Unit;
 import hillbillies.model.World;
-import hillbillies.part3.programs.SourceLocation;
+import hillbillies.scheduler.MyExpression;
+import hillbillies.scheduler.TaskComponents;
 
 public class OrExpression extends BooleanExpression{
 
 	private MyExpression expressionLeft;
 	private MyExpression expressionRight;
-	private SourceLocation sourceLocation;
 
-	public OrExpression(MyExpression left, MyExpression right, SourceLocation sourceLocation){
+	public OrExpression(MyExpression left, MyExpression right){
 		this.expressionLeft = left;
 		this.expressionRight = right;
-		this.sourceLocation = sourceLocation;
 	}
 	
 	@Override
-	public Boolean evaluate(World world, Unit unit, int[] selectedCube, SourceLocation sourceLocation) {
+	public Boolean evaluate(TaskComponents taskComponents) {
 		System.out.println("OR EXP");
 		// TODO Auto-generated method stub
 		if (!(this.expressionLeft instanceof BooleanExpression) || !(this.expressionRight instanceof
@@ -28,8 +26,14 @@ public class OrExpression extends BooleanExpression{
 		BooleanExpression left = (BooleanExpression) this.expressionLeft;
 		BooleanExpression right = (BooleanExpression) this.expressionRight;
 		
-		return left.evaluate(world, unit, selectedCube, sourceLocation) || 
-				right.evaluate(world, unit, selectedCube, sourceLocation);
+		return left.evaluate(taskComponents) || 
+				right.evaluate(taskComponents);
+	}
+
+	@Override
+	public Boolean containSelectedCube() {
+		// TODO Auto-generated method stub
+		return this.expressionLeft.containSelectedCube() || this.expressionRight.containSelectedCube();
 	}
 
 }
