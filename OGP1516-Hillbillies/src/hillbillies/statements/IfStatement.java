@@ -31,13 +31,14 @@ public class IfStatement extends MyStatement {
 		BooleanExpression con = (BooleanExpression) this.expressionCondition;
 		
 		if (con.evaluate(taskComponents)){
+			this.statementIfBody.setParent(this);
 			this.statementIfBody.execute(taskComponents);
 		}else if(this.statementElseBody != null){
 			System.out.println("ELSE BODY STATEMENT");
+			this.statementElseBody.setParent(this);
 			this.statementElseBody.execute(taskComponents);
 		}
 	}
-
 
 	@Override
 	public Boolean containSelectedCube() {
@@ -46,5 +47,14 @@ public class IfStatement extends MyStatement {
 				this.statementIfBody.containSelectedCube() ||
 				(this.statementElseBody != null && this.statementElseBody.containSelectedCube());
 	}
+	
+	public MyStatement getParent(){
+		return this.parent;
+	}
+	
+	public void setParent(MyStatement parent){
+		this.parent = parent;
+	}
 
+	private MyStatement parent;
 }

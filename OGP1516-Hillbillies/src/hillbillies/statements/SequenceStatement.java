@@ -19,6 +19,7 @@ public class SequenceStatement extends MyStatement {
 	public void execute(TaskComponents taskComponents) {
 		System.out.println("SEQUENCE");
 		for (MyStatement statement: this.statementList){
+			statement.setParent(this);
 			statement.execute(taskComponents);
 		}
 	}
@@ -33,5 +34,15 @@ public class SequenceStatement extends MyStatement {
 		}
 		return false;
 	}
+	
+	public MyStatement getParent(){
+		return this.parent;
+	}
+	
+	public void setParent(MyStatement parent){
+		this.parent = parent;
+	}
+
+	private MyStatement parent;
 
 }

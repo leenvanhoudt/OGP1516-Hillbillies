@@ -25,11 +25,33 @@ public class WhileStatement extends MyStatement {
 			throw new Error("no boolean expression");
 		}
 		BooleanExpression condition = (BooleanExpression) this.expressionCondition;
-		
-		while(condition.evaluate(taskComponents)){
+		this.setExecutionState(true);
+		this.statementBody.setParent(this);
+		while(condition.evaluate(taskComponents) && this.getExecutionState() == true){
 			this.statementBody.execute(taskComponents);
 		}
+		this.setExecutionState(false);
 	}
+	
+	public Boolean getExecutionState(){
+		return this.executing;
+	}
+	
+	public void setExecutionState(Boolean executing){
+		this.executing = executing;
+	}
+	
+	private Boolean executing;
+	
+	public MyStatement getParent(){
+		return this.parent;
+	}
+	
+	public void setParent(MyStatement parent){
+		this.parent = parent;
+	}
+
+	private MyStatement parent;
 
 	@Override
 	public Boolean containSelectedCube() {
