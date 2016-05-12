@@ -7,7 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import hillbillies.model.Unit;
-import hillbillies.statements.SequenceStatement;
 import ogp.framework.util.ModelException;
 
 public class Scheduler {

@@ -4,8 +4,10 @@ import java.util.List;
 
 import hillbillies.expressions.AndExpression;
 import hillbillies.expressions.AnyExpression;
+import hillbillies.expressions.BooleanExpression;
 import hillbillies.expressions.BoulderPositionExpression;
 import hillbillies.expressions.CarriesItemExpression;
+import hillbillies.expressions.CubePositionExpression;
 import hillbillies.expressions.EnemyExpression;
 import hillbillies.expressions.FalseExpression;
 import hillbillies.expressions.FriendExpression;
@@ -25,6 +27,7 @@ import hillbillies.expressions.ReadVariableExpression;
 import hillbillies.expressions.SelectedPositionExpression;
 import hillbillies.expressions.ThisExpression;
 import hillbillies.expressions.TrueExpression;
+import hillbillies.expressions.UnitExpression;
 import hillbillies.expressions.WorkshopPositionExpression;
 import hillbillies.part3.programs.ITaskFactory;
 import hillbillies.part3.programs.SourceLocation;
@@ -57,13 +60,13 @@ public class TaskFactory implements ITaskFactory<MyExpression,MyStatement,Task>{
 
 	@Override
 	public MyStatement createWhile(MyExpression condition, MyStatement body, SourceLocation sourceLocation) {
-		return new WhileStatement(condition, body);
+		return new WhileStatement<BooleanExpression>((BooleanExpression)condition, body);
 	}
 
 	@Override
 	public MyStatement createIf(MyExpression condition, MyStatement ifBody, MyStatement elseBody,
 			SourceLocation sourceLocation) {
-		return new IfStatement(condition, ifBody, elseBody);
+		return new IfStatement<BooleanExpression>((BooleanExpression)condition, ifBody, elseBody);
 	}
 
 	@Override
@@ -83,22 +86,22 @@ public class TaskFactory implements ITaskFactory<MyExpression,MyStatement,Task>{
 
 	@Override
 	public MyStatement createMoveTo(MyExpression position, SourceLocation sourceLocation){
-		return new MoveToStatement(position);
+		return new MoveToStatement<CubePositionExpression>((CubePositionExpression)position);
 	}
 
 	@Override
 	public MyStatement createWork(MyExpression position, SourceLocation sourceLocation) {
-		return new WorkStatement(position);
+		return new WorkStatement<CubePositionExpression>((CubePositionExpression)position);
 	}
 
 	@Override
 	public MyStatement createFollow(MyExpression unit, SourceLocation sourceLocation) {
-		return new FollowStatement(unit);
+		return new FollowStatement<UnitExpression>((UnitExpression)unit);
 	}
 
 	@Override
 	public MyStatement createAttack(MyExpression unit, SourceLocation sourceLocation) {
-		return new AttackStatement(unit);
+		return new AttackStatement<UnitExpression>((UnitExpression)unit);
 	}
 
 	@Override
@@ -108,47 +111,47 @@ public class TaskFactory implements ITaskFactory<MyExpression,MyStatement,Task>{
 
 	@Override
 	public MyExpression createIsSolid(MyExpression position, SourceLocation sourceLocation) {
-		return new IsSolidExpression(position);
+		return new IsSolidExpression<CubePositionExpression>((CubePositionExpression)position);
 	}
 
 	@Override
 	public MyExpression createIsPassable(MyExpression position, SourceLocation sourceLocation) {
-		return new IsPassableExpression(position);
+		return new IsPassableExpression<CubePositionExpression>((CubePositionExpression)position);
 	}
 
 	@Override
 	public MyExpression createIsFriend(MyExpression unit, SourceLocation sourceLocation) {
-		return new IsFriendExpression(unit);
+		return new IsFriendExpression<UnitExpression>((UnitExpression)unit);
 	}
 
 	@Override
 	public MyExpression createIsEnemy(MyExpression unit, SourceLocation sourceLocation) {
-		return new IsEnemyExpression(unit);
+		return new IsEnemyExpression<UnitExpression>((UnitExpression)unit);
 	}
 
 	@Override
 	public MyExpression createIsAlive(MyExpression unit, SourceLocation sourceLocation) {
-		return new IsAliveExpression(unit);
+		return new IsAliveExpression<UnitExpression>((UnitExpression)unit);
 	}
 
 	@Override
 	public MyExpression createCarriesItem(MyExpression unit, SourceLocation sourceLocation) {
-		return new CarriesItemExpression(unit);
+		return new CarriesItemExpression<UnitExpression>((UnitExpression)unit);
 	}
 
 	@Override
 	public MyExpression createNot(MyExpression expression, SourceLocation sourceLocation) {
-		return new NotExpression(expression);
+		return new NotExpression<BooleanExpression>((BooleanExpression)expression);
 	}
 
 	@Override
 	public MyExpression createAnd(MyExpression left, MyExpression right, SourceLocation sourceLocation) {
-		return new AndExpression(left, right);
+		return new AndExpression<BooleanExpression>((BooleanExpression)left, (BooleanExpression)right);
 	}
 
 	@Override
 	public MyExpression createOr(MyExpression left, MyExpression right, SourceLocation sourceLocation) {
-		return new OrExpression(left, right);
+		return new OrExpression<BooleanExpression>((BooleanExpression)left, (BooleanExpression)right);
 	}
 
 	@Override
@@ -178,12 +181,12 @@ public class TaskFactory implements ITaskFactory<MyExpression,MyStatement,Task>{
 
 	@Override
 	public MyExpression createNextToPosition(MyExpression position, SourceLocation sourceLocation) {
-		return new NextToPositionExpression(position);
+		return new NextToPositionExpression<CubePositionExpression>((CubePositionExpression)position);
 	}
 
 	@Override
 	public MyExpression createPositionOf(MyExpression unit, SourceLocation sourceLocation) {
-		return new PositionOfExpression(unit);
+		return new PositionOfExpression<UnitExpression>((UnitExpression)unit);
 	}
 
 	@Override

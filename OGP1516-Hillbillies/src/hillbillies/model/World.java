@@ -218,9 +218,9 @@ public class World {
 			if (!this.getCubesChanged().isEmpty()){
 				this.updateCubes();
 			}
-		}else if (dt >= MAX_DURATION) {
-			throw new IllegalArgumentException();
-		}
+		}//else if (dt >= MAX_DURATION) {
+			//throw new IllegalArgumentException();
+		//}
 	}
 	
 	/**
@@ -256,7 +256,7 @@ public class World {
 	 * @throws IllegalArgumentException ...
 	 * 		| If there are already 100 units in the world.
 	 */
-	public Unit spawnUnit(boolean enableDefaultBehavior) throws IllegalArgumentException{
+	public Unit spawnUnit(boolean enableDefaultBehavior){
 		if (this.getUnits().size() < MAX_NB_UNITS_WORLD){
 			if (this.getActiveFactions().size()<MAX_NB_FACTIONS){
 				Faction newFaction = new Faction();
@@ -277,7 +277,7 @@ public class World {
 			newUnit.setWorld(this);
 			return newUnit;
 		}
-		throw new IllegalArgumentException();
+		return null;
 	}
 	
 	/**
@@ -359,7 +359,7 @@ public class World {
 	 * @post ...
 	 * 		| The unit is added to the world.
 	 */
-	public void addUnit(Unit unit) throws IllegalArgumentException{
+	public void addUnit(Unit unit){
 		if (this.getUnits().size() < MAX_NB_UNITS_WORLD){
 			if (this.getActiveFactions().size()<MAX_NB_FACTIONS){
 				Faction newFaction = new Faction();
@@ -373,7 +373,6 @@ public class World {
 			unit.setFaction(this.activeFactionList.get(0));
 			unit.setWorld(this);
 		}
-		throw new IllegalArgumentException();
 	}
 	
 	/**

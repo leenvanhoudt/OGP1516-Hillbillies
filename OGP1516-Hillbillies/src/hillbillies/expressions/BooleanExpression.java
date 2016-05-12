@@ -7,6 +7,6 @@ public abstract class BooleanExpression extends MyExpression{
 
 	public abstract Boolean evaluate(TaskComponents taskComponents);
 	
-	public abstract Boolean containSelectedCube();
+	public abstract boolean containSelectedCube();
 
 }

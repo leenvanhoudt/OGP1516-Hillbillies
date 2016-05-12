@@ -1,16 +1,14 @@
 package hillbillies.expressions;
 
 import hillbillies.model.Unit;
-import hillbillies.model.World;
-import hillbillies.scheduler.MyExpression;
 import hillbillies.scheduler.TaskComponents;
 
-public class IsFriendExpression extends BooleanExpression{
+public class IsFriendExpression<E extends UnitExpression> extends BooleanExpression{
 
 
-	private MyExpression expressionUnit;
+	private UnitExpression expressionUnit;
 
-	public IsFriendExpression(MyExpression unit){
+	public IsFriendExpression(UnitExpression unit){
 		this.expressionUnit = unit;
 	}
 	
@@ -18,19 +16,12 @@ public class IsFriendExpression extends BooleanExpression{
 	public Boolean evaluate(TaskComponents taskComponents) {
 		System.out.println("ISFRIEND EXP");
 		// TODO Auto-generated method stub
-		if (this.expressionUnit instanceof UnitExpression){
-			UnitExpression hillbilly = (UnitExpression) this.expressionUnit;
-			Unit hilly = hillbilly.evaluate(taskComponents);
-			return hilly.getFaction() == taskComponents.getUnit().getFaction();
-		}
-		else{
-			throw new Error("No UnitExpression");
-		}
-		
+		Unit hilly = this.expressionUnit.evaluate(taskComponents);
+		return hilly.getFaction() == taskComponents.getUnit().getFaction();		
 	}
 
 	@Override
-	public Boolean containSelectedCube() {
+	public boolean containSelectedCube() {
 		// TODO Auto-generated method stub
 		return this.expressionUnit.containSelectedCube();
 	}

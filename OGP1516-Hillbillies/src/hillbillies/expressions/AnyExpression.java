@@ -5,10 +5,10 @@ import java.util.Set;
 import hillbillies.model.Unit;
 import hillbillies.scheduler.TaskComponents;
 
-public class AnyExpression extends UnitExpression {
+public class AnyExpression extends UnitExpression{
 	
 	@Override
-	public Unit evaluate(TaskComponents taskComponents) {
+	public Unit evaluate(TaskComponents taskComponents) throws Error {
 		System.out.println("ANY EXP");
 		// TODO Auto-generated method stub
 		Set<Unit> allUnits = taskComponents.getWorld().getUnits();
@@ -17,12 +17,11 @@ public class AnyExpression extends UnitExpression {
 				return randomUnit;
 			}
 		}
-		//TODO check exception
-		throw new IndexOutOfBoundsException();
+		throw new Error("No other unit found");
 	}
 
 	@Override
-	public Boolean containSelectedCube() {
+	public boolean containSelectedCube() {
 		// TODO Auto-generated method stub
 		return false;
 	}

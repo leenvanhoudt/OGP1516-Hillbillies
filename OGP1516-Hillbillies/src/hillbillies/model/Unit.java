@@ -880,9 +880,9 @@ public class Unit {
 				this.resting3MinutesTime = 0;
 				this.rest();
 			}
-		} else if (dt >= World.MAX_DURATION) {
-			throw new IllegalArgumentException();
-		}
+		} //else if (dt >= World.MAX_DURATION) {
+			//throw new IllegalArgumentException();
+		//}
 	}
 	
 	/**
@@ -2003,6 +2003,7 @@ public class Unit {
 		if (!this.getFaction().getScheduler().getScheduledTasks().isEmpty()
 				&& this.getAssignedTask()==null && 
 				this.getFaction().getScheduler().getTaskHighestPriority() != null){
+			System.out.println("default assign task");
 			Task task = this.getFaction().getScheduler().getTaskHighestPriority();
 			this.setAssignedTask(task);
 			task.setAssignedUnit(this);
@@ -2010,6 +2011,9 @@ public class Unit {
 		}
 		if (this.getAssignedTask()!= null && !this.getAssignedTask().getActivity().isExecuted()){
 			MyStatement current = this.getAssignedTask().getActivity().getNext(taskComponents);
+			System.out.println("default execute task");
+			if (current == null)
+				this.getAssignedTask().getActivity().execute(taskComponents);
 			while (!this.getAssignedTask().getActivity().isExecuted() && dt>0){
 				if (current.getNext(taskComponents)==null || current.getNext(taskComponents).isExecuted()){
 					try{
@@ -2028,6 +2032,8 @@ public class Unit {
 			}
 		} 
 		else if (this.getAssignedTask()!= null && this.getAssignedTask().getActivity().isExecuted()){
+			System.out.println("default end task");
+			this.getAssignedTask().getActivity().setExecutedState(false);
 			this.getFaction().getScheduler().removeTask(this.getAssignedTask());
 			this.getFaction().getScheduler().reset(this.getAssignedTask(), this);
 		}
@@ -2076,8 +2082,8 @@ public class Unit {
 	
 	public void interruptTask(){
 		if (this.getAssignedTask() != null){
-			this.getFaction().getScheduler().reset(this.getAssignedTask(), this);
 			this.getAssignedTask().setPriority(this.getAssignedTask().getPriority() - 100);
+			this.getFaction().getScheduler().reset(this.getAssignedTask(), this);
 		}
 	}
 

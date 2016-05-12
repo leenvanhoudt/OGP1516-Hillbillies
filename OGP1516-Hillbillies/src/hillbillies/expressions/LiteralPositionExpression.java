@@ -1,7 +1,5 @@
 package hillbillies.expressions;
 
-import hillbillies.model.Unit;
-import hillbillies.model.World;
 import hillbillies.scheduler.TaskComponents;
 
 public class LiteralPositionExpression extends CubePositionExpression {
@@ -25,7 +23,7 @@ public class LiteralPositionExpression extends CubePositionExpression {
 	}
 
 	@Override
-	public Boolean containSelectedCube() {
+	public boolean containSelectedCube() {
 		// TODO Auto-generated method stub
 		return false;
 	}

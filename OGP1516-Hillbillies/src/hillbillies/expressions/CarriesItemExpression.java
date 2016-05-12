@@ -2,14 +2,13 @@ package hillbillies.expressions;
 
 
 import hillbillies.model.Unit;
-import hillbillies.scheduler.MyExpression;
 import hillbillies.scheduler.TaskComponents;
 
-public class CarriesItemExpression extends BooleanExpression {
+public class CarriesItemExpression<E extends UnitExpression> extends BooleanExpression {
 
-	private MyExpression expressionUnit;
+	private UnitExpression expressionUnit;
 
-	public CarriesItemExpression(MyExpression unit){
+	public CarriesItemExpression(UnitExpression unit){
 		this.expressionUnit = unit;
 	}
 	
@@ -17,19 +16,12 @@ public class CarriesItemExpression extends BooleanExpression {
 	public Boolean evaluate(TaskComponents taskComponents ) {
 		System.out.println("Carriesitem EXP");
 		// TODO Auto-generated method stub
-		if (this.expressionUnit instanceof UnitExpression){
-			UnitExpression hillbilly = (UnitExpression) this.expressionUnit;
-			Unit hilly = hillbilly.evaluate(taskComponents);
-			return hilly.isCarryingBoulder() || hilly.isCarryingLog();
-		}
-		else{
-			throw new Error("No UnitExpression");
-		}
-		
+		Unit hilly = this.expressionUnit.evaluate(taskComponents);
+		return hilly.isCarryingBoulder() || hilly.isCarryingLog();
 	}
 
 	@Override
-	public Boolean containSelectedCube() {
+	public boolean containSelectedCube() {
 		// TODO Auto-generated method stub
 		return this.expressionUnit.containSelectedCube();
 	}

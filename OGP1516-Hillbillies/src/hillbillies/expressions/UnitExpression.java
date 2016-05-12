@@ -8,5 +8,5 @@ public abstract class UnitExpression extends MyExpression{
 	
 	public abstract Unit evaluate(TaskComponents taskComponents);
 	
-	public abstract Boolean containSelectedCube();
+	public abstract boolean containSelectedCube();
 }

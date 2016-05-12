@@ -7,6 +7,6 @@ public abstract class CubePositionExpression extends MyExpression {
 
 	public abstract int[] evaluate(TaskComponents taskComponents);
 	
-	public abstract Boolean containSelectedCube();
+	public abstract boolean containSelectedCube();
 
 }

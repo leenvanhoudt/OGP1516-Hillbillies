@@ -2,28 +2,23 @@ package hillbillies.expressions;
 
 
 import java.util.NoSuchElementException;
-
-import hillbillies.scheduler.MyExpression;
 import hillbillies.scheduler.TaskComponents;
 
-public class NextToPositionExpression extends CubePositionExpression{
+public class NextToPositionExpression<E extends CubePositionExpression> 
+	extends CubePositionExpression{
 
 	
-	private MyExpression expressionPosition;
+	private CubePositionExpression expressionPosition;
 
-	public NextToPositionExpression(MyExpression position){
+	public NextToPositionExpression(CubePositionExpression position){
 		this.expressionPosition = position;
 	}
 
 	@Override
-	public int[] evaluate(TaskComponents taskComponents) {
+	public int[] evaluate(TaskComponents taskComponents) throws NoSuchElementException {
 		System.out.println("NEXTO EXP");
 		// TODO Auto-generated method stub
-		if (!(this.expressionPosition instanceof CubePositionExpression)){
-			throw new Error("no position expression");
-		}
-		CubePositionExpression position = (CubePositionExpression) this.expressionPosition;
-		int[] unitPosition = position.evaluate(taskComponents);
+		int[] unitPosition = this.expressionPosition.evaluate(taskComponents);
 		for (int i=-1;i<2;i+=2){
 			if ((taskComponents.getWorld().isPassable(unitPosition[0]+i, unitPosition[1], unitPosition[2]) &&
 					!(taskComponents.getUnit().isFallingPosition(unitPosition[0]+i, unitPosition[1], unitPosition[2])))&&
@@ -55,7 +50,7 @@ public class NextToPositionExpression extends CubePositionExpression{
 	}
 
 	@Override
-	public Boolean containSelectedCube() {
+	public boolean containSelectedCube() {
 		// TODO Auto-generated method stub
 		return this.expressionPosition.containSelectedCube();
 	}

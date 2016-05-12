@@ -3,14 +3,13 @@ package hillbillies.expressions;
 import java.util.Set;
 
 import hillbillies.model.Unit;
-import hillbillies.model.World;
 import hillbillies.scheduler.TaskComponents;
 
 public class EnemyExpression extends UnitExpression {
 
 	
 	@Override
-	public Unit evaluate(TaskComponents taskComponents) {
+	public Unit evaluate(TaskComponents taskComponents) throws Error{
 		System.out.println("ENEMY EXP");
 		// TODO Auto-generated method stub
 		Set<Unit> allUnits = taskComponents.getWorld().getUnits();
@@ -20,11 +19,11 @@ public class EnemyExpression extends UnitExpression {
 			}
 		}
 		//TODO check exception
-		throw new IndexOutOfBoundsException();
+		throw new Error("no enemy found");
 	}
 
 	@Override
-	public Boolean containSelectedCube() {
+	public boolean containSelectedCube() {
 		// TODO Auto-generated method stub
 		return false;
 	}

@@ -1,16 +1,13 @@
 package hillbillies.expressions;
 
-import hillbillies.model.Unit;
-import hillbillies.model.World;
-import hillbillies.scheduler.MyExpression;
 import hillbillies.scheduler.TaskComponents;
 
-public class OrExpression extends BooleanExpression{
+public class OrExpression<E extends BooleanExpression> extends BooleanExpression{
 
-	private MyExpression expressionLeft;
-	private MyExpression expressionRight;
+	private BooleanExpression expressionLeft;
+	private BooleanExpression expressionRight;
 
-	public OrExpression(MyExpression left, MyExpression right){
+	public OrExpression(BooleanExpression left, BooleanExpression right){
 		this.expressionLeft = left;
 		this.expressionRight = right;
 	}
@@ -18,20 +15,13 @@ public class OrExpression extends BooleanExpression{
 	@Override
 	public Boolean evaluate(TaskComponents taskComponents) {
 		System.out.println("OR EXP");
-		// TODO Auto-generated method stub
-		if (!(this.expressionLeft instanceof BooleanExpression) || !(this.expressionRight instanceof
-				BooleanExpression)){
-			throw new IllegalStateException();
-		}
-		BooleanExpression left = (BooleanExpression) this.expressionLeft;
-		BooleanExpression right = (BooleanExpression) this.expressionRight;
-		
-		return left.evaluate(taskComponents) || 
-				right.evaluate(taskComponents);
+		// TODO Auto-generated method stub		
+		return this.expressionLeft.evaluate(taskComponents) || 
+				this.expressionRight.evaluate(taskComponents);
 	}
 
 	@Override
-	public Boolean containSelectedCube() {
+	public boolean containSelectedCube() {
 		// TODO Auto-generated method stub
 		return this.expressionLeft.containSelectedCube() || this.expressionRight.containSelectedCube();
 	}

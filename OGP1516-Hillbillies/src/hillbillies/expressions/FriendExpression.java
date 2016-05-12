@@ -3,13 +3,12 @@ package hillbillies.expressions;
 import java.util.Set;
 
 import hillbillies.model.Unit;
-import hillbillies.model.World;
 import hillbillies.scheduler.TaskComponents;
 
 public class FriendExpression extends UnitExpression {
 	
 	@Override
-	public Unit evaluate(TaskComponents taskComponents) {
+	public Unit evaluate(TaskComponents taskComponents) throws Error{
 		System.out.println("FRIEND EXP");
 		// TODO Auto-generated method stub
 		Set<Unit> allUnits = taskComponents.getWorld().getUnits();
@@ -18,12 +17,11 @@ public class FriendExpression extends UnitExpression {
 				return randomUnit;
 			}
 		}
-		//TODO check exception
-		throw new IndexOutOfBoundsException();
+		throw new Error("no friend found");
 	}
 
 	@Override
-	public Boolean containSelectedCube() {
+	public boolean containSelectedCube() {
 		// TODO Auto-generated method stub
 		return false;
 	}

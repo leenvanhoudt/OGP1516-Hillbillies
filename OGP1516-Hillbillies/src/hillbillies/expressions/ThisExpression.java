@@ -14,7 +14,7 @@ public class ThisExpression extends UnitExpression {
 	}
 
 	@Override
-	public Boolean containSelectedCube() {
+	public boolean containSelectedCube() {
 		// TODO Auto-generated method stub
 		return false;
 	}

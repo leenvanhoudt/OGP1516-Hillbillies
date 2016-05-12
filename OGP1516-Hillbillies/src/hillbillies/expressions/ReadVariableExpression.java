@@ -1,7 +1,5 @@
 package hillbillies.expressions;
 
-import hillbillies.model.Unit;
-import hillbillies.model.World;
 import hillbillies.scheduler.MyExpression;
 import hillbillies.scheduler.TaskComponents;
 
@@ -21,7 +19,7 @@ public class ReadVariableExpression extends MyExpression {
 	}
 
 	@Override
-	public Boolean containSelectedCube() {
+	public boolean containSelectedCube() {
 		// TODO Auto-generated method stub
 		return false;
 	}

@@ -8,7 +8,6 @@ public class BoulderPositionExpression extends CubePositionExpression {
 
 	private PathFinding pathFinding;
 
-	
 	@Override
 	public int[] evaluate(TaskComponents taskComponents) {
 		System.out.println("BOULDER EXP");
@@ -19,7 +18,7 @@ public class BoulderPositionExpression extends CubePositionExpression {
 
 
 	@Override
-	public Boolean containSelectedCube() {
+	public boolean containSelectedCube() {
 		// TODO Auto-generated method stub
 		return false;
 	}

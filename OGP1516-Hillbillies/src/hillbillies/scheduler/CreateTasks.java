@@ -18,7 +18,7 @@ public class CreateTasks {
 	}
 	
 	public List<Task> tasks(){
-		System.out.println("create task");
+		System.out.println("create task" + this.selectedCubes.size());
 		List<Task> taskOnMoreCubes = new ArrayList<Task>();
 		if (!this.selectedCubes.isEmpty()){
 			for (int[] cube: this.selectedCubes){

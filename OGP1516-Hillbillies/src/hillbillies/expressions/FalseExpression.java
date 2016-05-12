@@ -12,7 +12,7 @@ public class FalseExpression extends BooleanExpression{
 	}
 
 	@Override
-	public Boolean containSelectedCube() {
+	public boolean containSelectedCube() {
 		// TODO Auto-generated method stub
 		return false;
 	}

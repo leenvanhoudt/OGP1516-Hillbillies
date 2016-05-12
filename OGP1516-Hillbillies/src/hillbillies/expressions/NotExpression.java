@@ -1,15 +1,12 @@
 package hillbillies.expressions;
 
-import hillbillies.model.Unit;
-import hillbillies.model.World;
-import hillbillies.scheduler.MyExpression;
 import hillbillies.scheduler.TaskComponents;
 
-public class NotExpression extends BooleanExpression{
+public class NotExpression<E extends BooleanExpression> extends BooleanExpression{
 
-	private MyExpression expressionExpression;
+	private BooleanExpression expressionExpression;
 
-	public NotExpression(MyExpression expression){
+	public NotExpression(BooleanExpression expression){
 		this.expressionExpression = expression;
 	}
 	
@@ -17,16 +14,11 @@ public class NotExpression extends BooleanExpression{
 	public Boolean evaluate(TaskComponents taskComponents) {
 		System.out.println("NOT EXP");
 		// TODO Auto-generated method stub
-		if (!(this.expressionExpression instanceof BooleanExpression)){
-			throw new IllegalStateException();
-		}
-		BooleanExpression exp = (BooleanExpression) this.expressionExpression;
-		
-		return !exp.evaluate(taskComponents);
+		return !this.expressionExpression.evaluate(taskComponents);
 	}
 
 	@Override
-	public Boolean containSelectedCube() {
+	public boolean containSelectedCube() {
 		// TODO Auto-generated method stub
 		return this.expressionExpression.containSelectedCube();
 	}

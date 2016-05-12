@@ -1,16 +1,13 @@
 package hillbillies.expressions;
 
-import hillbillies.model.Unit;
-import hillbillies.model.World;
-import hillbillies.scheduler.MyExpression;
 import hillbillies.scheduler.TaskComponents;
 
-public class IsPassableExpression extends BooleanExpression{
+public class IsPassableExpression<E extends CubePositionExpression> extends BooleanExpression{
 
 
-	private MyExpression expressionPosition;
+	private CubePositionExpression expressionPosition;
 
-	public IsPassableExpression(MyExpression position){
+	public IsPassableExpression(CubePositionExpression position){
 		this.expressionPosition = position;		
 	}
 	
@@ -18,18 +15,12 @@ public class IsPassableExpression extends BooleanExpression{
 	public Boolean evaluate(TaskComponents taskComponents) {
 		System.out.println("ISPASSABLE EXP");
 		// TODO Auto-generated method stub
-		if(this.expressionPosition instanceof CubePositionExpression){
-			CubePositionExpression pos = (CubePositionExpression) this.expressionPosition;
-			int[] cube = pos.evaluate(taskComponents);
-			return taskComponents.getWorld().isPassable(cube[0], cube[1], cube[2]);
-		}
-		else{
-			throw new Error("No CubePositionExpression");
-		}
+		int[] cube = this.expressionPosition.evaluate(taskComponents);
+		return taskComponents.getWorld().isPassable(cube[0], cube[1], cube[2]);
 	}
 
 	@Override
-	public Boolean containSelectedCube() {
+	public boolean containSelectedCube() {
 		// TODO Auto-generated method stub
 		return this.expressionPosition.containSelectedCube();
 	}

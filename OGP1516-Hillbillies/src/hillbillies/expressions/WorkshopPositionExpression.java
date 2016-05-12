@@ -16,7 +16,7 @@ public class WorkshopPositionExpression extends CubePositionExpression{
 	}
 
 	@Override
-	public Boolean containSelectedCube() {
+	public boolean containSelectedCube() {
 		// TODO Auto-generated method stub
 		return false;
 	}

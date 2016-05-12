@@ -1,14 +1,13 @@
 package hillbillies.expressions;
 
-import hillbillies.scheduler.MyExpression;
 import hillbillies.scheduler.TaskComponents;
 
-public class AndExpression extends BooleanExpression {
+public class AndExpression<E extends BooleanExpression> extends BooleanExpression {
 
-	private MyExpression expressionLeft;
-	private MyExpression expressionRight;
+	private BooleanExpression expressionLeft;
+	private BooleanExpression expressionRight;
 
-	public AndExpression(MyExpression left, MyExpression right){
+	public AndExpression(BooleanExpression left, BooleanExpression right){
 		this.expressionLeft = left;
 		this.expressionRight = right;
 	}
@@ -16,22 +15,16 @@ public class AndExpression extends BooleanExpression {
 	@Override
 	public Boolean evaluate(TaskComponents taskComponents) {
 		System.out.println("AND EXP");
-		// TODO Auto-generated method stub
-		if (!(this.expressionLeft instanceof BooleanExpression) || !(this.expressionRight instanceof
-				BooleanExpression)){
-			throw new IllegalStateException();
-		}
-		BooleanExpression left = (BooleanExpression) this.expressionLeft;
-		BooleanExpression right = (BooleanExpression) this.expressionRight;
-		
-		return left.evaluate(taskComponents) && 
-				right.evaluate(taskComponents);
+		// TODO Auto-generated method stub		
+		return this.expressionLeft.evaluate(taskComponents) && 
+				this.expressionRight.evaluate(taskComponents);
 	}
 
 	@Override
-	public Boolean containSelectedCube() {
+	public boolean containSelectedCube() {
 		// TODO Auto-generated method stub
-		return this.expressionLeft.containSelectedCube() || this.expressionRight.containSelectedCube();
+		return this.expressionLeft.containSelectedCube() || 
+				this.expressionRight.containSelectedCube();
 	}
 
 }

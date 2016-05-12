@@ -1,6 +1,5 @@
 package hillbillies.scheduler;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import hillbillies.model.Unit;
