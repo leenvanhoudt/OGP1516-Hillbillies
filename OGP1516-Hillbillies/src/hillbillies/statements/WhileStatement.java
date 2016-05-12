@@ -25,39 +25,50 @@ public class WhileStatement extends MyStatement {
 			throw new Error("no boolean expression");
 		}
 		BooleanExpression condition = (BooleanExpression) this.expressionCondition;
-		this.setExecutionState(true);
 		this.statementBody.setParent(this);
-		while(condition.evaluate(taskComponents) && this.getExecutionState() == true){
-			this.statementBody.execute(taskComponents);
+		if(condition.evaluate(taskComponents)){
+			this.statementBody.setExecutedState(false);
+		}else{
+			this.setExecutedState(true);
 		}
-		this.setExecutionState(false);
 	}
 	
-	public Boolean getExecutionState(){
-		return this.executing;
-	}
-	
-	public void setExecutionState(Boolean executing){
-		this.executing = executing;
-	}
-	
-	private Boolean executing;
-	
-	public MyStatement getParent(){
-		return this.parent;
-	}
-	
-	public void setParent(MyStatement parent){
-		this.parent = parent;
-	}
-
-	private MyStatement parent;
 
 	@Override
-	public Boolean containSelectedCube() {
+	public boolean containSelectedCube() {
 		// TODO Auto-generated method stub
 		return this.statementBody.containSelectedCube() ||
 				this.expressionCondition.containSelectedCube();
 	}
 
+	@Override
+	public MyStatement getNext(TaskComponents taskComponents) {
+//		MyStatement parent = this.getParent();
+//		if (parent instanceof SequenceStatement && 
+//			((SequenceStatement) parent).getListSequence().size()-1 >
+//				((SequenceStatement) parent).getListSequence().indexOf(this)){
+//			SequenceStatement parentSeq = (SequenceStatement) parent;
+//			return parentSeq.getListSequence().get(parentSeq.getListSequence().indexOf(this)+1);
+//		}else if(parent != null){
+//			return parent.getNext();
+//		}else{
+//			return null;
+//		}
+		
+		return this.statementBody;
+	}
+
+	@Override
+	public boolean isExecuted() {
+		// TODO Auto-generated method stub
+		return this.finished;
+	}
+
+	private boolean finished = false;
+
+	@Override
+	public void setExecutedState(boolean state) {
+		// TODO Auto-generated method stub
+		this.finished = state;
+	}
 }

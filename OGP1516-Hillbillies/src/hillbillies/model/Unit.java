@@ -4,7 +4,9 @@ import java.util.*;
 
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Raw;
+import hillbillies.scheduler.MyStatement;
 import hillbillies.scheduler.Task;
+import hillbillies.scheduler.TaskComponents;
 import ogp.framework.util.Util;
 
 /**
@@ -860,8 +862,9 @@ public class Unit {
 			this.sprintingAdvanceTime(dt);
 			if (this.isFollowing)
 				this.followAdvanceTime();
-			if (this.isMoving())
-				this.isMovingAdvanceTime(dt);
+			if (this.isMoving()){
+				System.out.println("moving advance time");
+				this.isMovingAdvanceTime(dt);}
 			if (this.isMovingTo && this.getPosition() == this.getNextPosition())
 				this.isMovingToAdvanceTime(dt);
 			if (this.isResting())
@@ -992,6 +995,7 @@ public class Unit {
 	 */
 	private void falling() throws IllegalArgumentException{
 		if (this.isFallingPosition(this.getCubeCoordinate()[0], this.getCubeCoordinate()[1], this.getCubeCoordinate()[2])){
+			this.interruptTask();
 			this.setCurrentSpeed(0);
 			this.isFalling = true;
 			this.isWorking = false;
@@ -1330,7 +1334,8 @@ public class Unit {
 	private void defaultBehaviorEnabledAdvanceTime(double dt) throws IllegalArgumentException,
 			IndexOutOfBoundsException {
 		if (!this.isAttacking() && !this.isMoving() && !this.isWorking() && !this.isResting() && !this.isFalling) {
-			this.defaultBehavior();
+			System.out.println("NOPE");
+			this.defaultBehavior(dt);
 		}
 	}
 
@@ -1745,6 +1750,7 @@ public class Unit {
 	 *      | 		defender.defend(this)
 	 */
 	public void fight(Unit defender) throws IllegalArgumentException{
+		this.interruptTask();
 		if (!this.isFalling && this.getFaction()!=defender.getFaction() 
 				&& defender != this){
 			this.attack(defender);
@@ -1882,6 +1888,7 @@ public class Unit {
 	 * 		| new.getCurrentSpeed() == 0
 	 */
 	public void rest() {
+		this.interruptTask();
 		if (!this.isFalling){
 			this.isResting = true;
 			if (this.isWorking()) {
@@ -1966,6 +1973,8 @@ public class Unit {
 	public boolean isDefaultBehaviorEnabled() {
 		return this.defaultBehaviorEnabled;
 	}
+	
+	private TaskComponents taskComponents;
 
 	/**
 	 * Execute default behaviour by choosing random task: move to a position, work, rest, sprint to a
@@ -1988,51 +1997,75 @@ public class Unit {
 	 * 		| The unit will attack an adjacent rival unit.
 	 * 		| this.fight(unit)
 	 */
-	private void defaultBehavior() throws IllegalArgumentException, IndexOutOfBoundsException {
-		//TODO if finished verwijder taak en reset manneke
-		//TODO check of andere unit nog niet aan het uitvoeren is
+	private void defaultBehavior(double dt) throws IllegalArgumentException, IndexOutOfBoundsException {
+		//TODO interrupted -> unassing manneke en trek priority af.
+		//TODO check of andere unit highest nog niet aan het uitvoeren is
 		if (!this.getFaction().getScheduler().getScheduledTasks().isEmpty()
-				&& this.getAssignedTask()==null){
-			System.out.println("default behavior assign task");
+				&& this.getAssignedTask()==null && 
+				this.getFaction().getScheduler().getTaskHighestPriority() != null){
 			Task task = this.getFaction().getScheduler().getTaskHighestPriority();
 			this.setAssignedTask(task);
 			task.setAssignedUnit(this);
-			task.executeStatement();
-			System.out.println("after execute statement");
+			taskComponents = new TaskComponents(this.getWorld(), this, this.getAssignedTask().getSelectedCube(),dt);
 		}
-		Random random = new Random();
-		//TODO zet random back
-		int i=2;//random.nextInt(5);
-		int[] randomPosition = new int[] { random.nextInt(this.getWorld().getNbCubesX()), 
-				random.nextInt(this.getWorld().getNbCubesY()), random.nextInt(this.getWorld().getNbCubesZ()) };
-		double[] randomPosition2 = new double[] {randomPosition[0]+ LC/2, randomPosition[1]+LC/2, randomPosition[2]+LC/2};
-		switch (i) {
-		case 0:
-			this.moveTo(randomPosition);
-			break;
-		case 1:
-			if(this.getCubeCoordinate()[0] != this.getWorld().getNbCubesX()-1)
-				this.workAt(this.getCubeCoordinate()[0]+1,this.getCubeCoordinate()[1],this.getCubeCoordinate()[2]);
-			break;
-		case 2:
-			this.rest();
-			break;
-		case 3:
-			this.defaultBehaviorCase3 = true;
-			this.calculateSpeed(randomPosition2);
-			this.moveTo(randomPosition);
-			break;
-		case 4:
-			for (Unit unit:this.getWorld().getUnits()){
-				double d = Math.sqrt(Math.pow(unit.getPosition()[0] - this.getPosition()[0],2) + 
-						Math.pow(unit.getPosition()[1] - this.getPosition()[1],2) +
-						Math.pow(unit.getPosition()[2] - this.getPosition()[2],2));
-				if (d <= MAX_DISTANCE_ADJACENT_CUBE){
-					this.fight(unit);
-					break;
+		if (this.getAssignedTask()!= null && !this.getAssignedTask().getActivity().isExecuted()){
+			MyStatement current = this.getAssignedTask().getActivity().getNext(taskComponents);
+			while (!this.getAssignedTask().getActivity().isExecuted() && dt>0){
+				if (current.getNext(taskComponents)==null || current.getNext(taskComponents).isExecuted()){
+					try{
+					current.execute(taskComponents);
+					current = this.getAssignedTask().getActivity().getNext(taskComponents);
+					dt = dt - 0.001;
+					if (this.isMovingTo || this.isAttacking() || this.isWorking()){
+						break;
+					}} catch(Throwable e){
+						System.out.println("catch exception");
+						this.interruptTask();
+					}
+				}else{
+					current = current.getNext(taskComponents);
 				}
 			}
-			break;
+		} 
+		else if (this.getAssignedTask()!= null && this.getAssignedTask().getActivity().isExecuted()){
+			this.getFaction().getScheduler().removeTask(this.getAssignedTask());
+			this.getFaction().getScheduler().reset(this.getAssignedTask(), this);
+		}
+		else{
+			Random random = new Random();
+			//TODO zet random back
+			int i=2;//random.nextInt(5);
+			int[] randomPosition = new int[] { random.nextInt(this.getWorld().getNbCubesX()), 
+					random.nextInt(this.getWorld().getNbCubesY()), random.nextInt(this.getWorld().getNbCubesZ()) };
+			double[] randomPosition2 = new double[] {randomPosition[0]+ LC/2, randomPosition[1]+LC/2, randomPosition[2]+LC/2};
+			switch (i) {
+			case 0:
+				this.moveTo(randomPosition);
+				break;
+			case 1:
+				if(this.getCubeCoordinate()[0] != this.getWorld().getNbCubesX()-1)
+					this.workAt(this.getCubeCoordinate()[0]+1,this.getCubeCoordinate()[1],this.getCubeCoordinate()[2]);
+				break;
+			case 2:
+				this.rest();
+				break;
+			case 3:
+				this.defaultBehaviorCase3 = true;
+				this.calculateSpeed(randomPosition2);
+				this.moveTo(randomPosition);
+				break;
+			case 4:
+				for (Unit unit:this.getWorld().getUnits()){
+					double d = Math.sqrt(Math.pow(unit.getPosition()[0] - this.getPosition()[0],2) + 
+							Math.pow(unit.getPosition()[1] - this.getPosition()[1],2) +
+							Math.pow(unit.getPosition()[2] - this.getPosition()[2],2));
+					if (d <= MAX_DISTANCE_ADJACENT_CUBE){
+						this.fight(unit);
+						break;
+					}
+				}
+				break;
+			}
 		}
 	}
 	
@@ -2040,6 +2073,13 @@ public class Unit {
 	 * Variable registering when the unit must start sprinting if he must execute defaultBehavior case 3.
 	 */
 	public boolean defaultBehaviorCase3 = false;
+	
+	public void interruptTask(){
+		if (this.getAssignedTask() != null){
+			this.getFaction().getScheduler().reset(this.getAssignedTask(), this);
+			this.getAssignedTask().setPriority(this.getAssignedTask().getPriority() - 100);
+		}
+	}
 
 	/**
 	 * Boolean saving if the default behaviour is enabled.
@@ -2069,6 +2109,7 @@ public class Unit {
 	private boolean isFollowing = false;
 	private Unit followedUnit;
 	private int[] oldPositionFollowedUnit;
+	
 	
 	public Task getAssignedTask(){
 		//System.out.println("unit get assigned task");

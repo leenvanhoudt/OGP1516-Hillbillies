@@ -82,7 +82,7 @@ public class TaskFactory implements ITaskFactory<MyExpression,MyStatement,Task>{
 	}
 
 	@Override
-	public MyStatement createMoveTo(MyExpression position, SourceLocation sourceLocation) {
+	public MyStatement createMoveTo(MyExpression position, SourceLocation sourceLocation){
 		return new MoveToStatement(position);
 	}
 

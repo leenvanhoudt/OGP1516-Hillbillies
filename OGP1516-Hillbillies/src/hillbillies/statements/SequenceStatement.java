@@ -2,8 +2,6 @@ package hillbillies.statements;
 
 import java.util.List;
 
-import hillbillies.model.Unit;
-import hillbillies.model.World;
 import hillbillies.scheduler.MyStatement;
 import hillbillies.scheduler.TaskComponents;
 
@@ -18,14 +16,11 @@ public class SequenceStatement extends MyStatement {
 	@Override
 	public void execute(TaskComponents taskComponents) {
 		System.out.println("SEQUENCE");
-		for (MyStatement statement: this.statementList){
-			statement.setParent(this);
-			statement.execute(taskComponents);
-		}
+		this.setExecutedState(true);
 	}
 
 	@Override
-	public Boolean containSelectedCube() {
+	public boolean containSelectedCube() {
 		// TODO Auto-generated method stub
 		for (MyStatement statement: this.statementList){
 			if (statement.containSelectedCube()){
@@ -34,15 +29,50 @@ public class SequenceStatement extends MyStatement {
 		}
 		return false;
 	}
-	
-	public MyStatement getParent(){
-		return this.parent;
+
+	public List<MyStatement> getListSequence(){
+		return this.statementList;
 	}
 	
-	public void setParent(MyStatement parent){
-		this.parent = parent;
+	@Override
+	public MyStatement getNext(TaskComponents taskComponents) {
+//		MyStatement parent = this.getParent();
+//		if (parent instanceof SequenceStatement && 
+//			((SequenceStatement) parent).getListSequence().size()-1 >
+//				((SequenceStatement) parent).getListSequence().indexOf(this)){
+//			SequenceStatement parentSeq = (SequenceStatement) parent;
+//			return parentSeq.getListSequence().get(parentSeq.getListSequence().indexOf(this)+1);
+//		}else if(parent != null){
+//			return parent.getNext();
+//		}else{
+//			return null;
+//		}
+		
+		for (MyStatement statement: this.statementList){
+			if (statement.isExecuted()== false){
+				return statement;
+			}
+		}
+		this.setExecutedState(true);
+		return null;
 	}
 
-	private MyStatement parent;
+	@Override
+	public boolean isExecuted() {
+		// TODO Auto-generated method stub
+		return this.finished;
+	}
 
+	private boolean finished;
+
+	@Override
+	public void setExecutedState(boolean state) {
+		// TODO Auto-generated method stub
+		this.finished = state;
+		if (state == false){
+			for (MyStatement statement: this.statementList){
+				statement.setExecutedState(false);
+			}
+		}
+	}
 }

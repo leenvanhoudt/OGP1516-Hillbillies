@@ -1,9 +1,5 @@
 package hillbillies.model;
 
-import java.util.Random;
-
-import be.kuleuven.cs.som.annotate.Basic;
-import be.kuleuven.cs.som.annotate.Raw;
 
 /**
  * A class of logs with their weight and position. A log can fall and be picked up.

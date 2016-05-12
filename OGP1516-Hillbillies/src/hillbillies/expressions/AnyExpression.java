@@ -3,7 +3,6 @@ package hillbillies.expressions;
 import java.util.Set;
 
 import hillbillies.model.Unit;
-import hillbillies.model.World;
 import hillbillies.scheduler.TaskComponents;
 
 public class AnyExpression extends UnitExpression {

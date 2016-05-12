@@ -11,11 +11,13 @@ public class TaskComponents {
 	private World world;
 	private Unit unit;
 	private int[] selectedCube;
+	private double dt;
 
-	public TaskComponents(World world, Unit unit, int[] selectedCube){
+	public TaskComponents(World world, Unit unit, int[] selectedCube, double dt){
 		this.world = world;
 		this.unit = unit;
 		this.selectedCube = selectedCube;
+		this.dt = dt;
 	}
 	
 	public Unit getUnit(){
@@ -30,18 +32,12 @@ public class TaskComponents {
 		return this.selectedCube;
 	}
 	
-	private ArrayList<MyStatement> parentList = new ArrayList<MyStatement>();
-	
-	public ArrayList<MyStatement> getParentList(){
-		return this.parentList;
+	public double getDeltaT(){
+		return this.dt;
 	}
 	
-	public void addStatement(MyStatement statement){
-		this.parentList.add(statement);
-	}
-	
-	public void removeStatement(MyStatement statement){
-		this.parentList.remove(statement);
+	public void setDeltaT(double dt){
+		this.dt = dt;
 	}
 	
 	private HashMap<String,Object> assignedVariableList = new HashMap<String, Object>();

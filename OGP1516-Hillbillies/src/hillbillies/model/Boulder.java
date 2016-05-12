@@ -1,8 +1,5 @@
 package hillbillies.model;
 
-import java.util.Random;
-import be.kuleuven.cs.som.annotate.Basic;
-import be.kuleuven.cs.som.annotate.Raw;
 
 /**
  * A class of boulders with their weight and position. Boulders can fall and be picked up.

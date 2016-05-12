@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import hillbillies.model.Unit;
+import hillbillies.statements.SequenceStatement;
 import ogp.framework.util.ModelException;
 
 public class Scheduler {
@@ -23,18 +24,20 @@ public class Scheduler {
 	}
 	
 	public void removeTask(Task task){
+		System.out.println("remove");
 		this.scheduledList.remove(task);
 	}
 	
 	private ArrayList<Task> scheduledList = new ArrayList<Task>();
 	
 	public void replace(Task original, Task replacement){
+		System.out.println("replace");
 		this.removeTask(original);
 		this.schedule(replacement);
 	}
 	
-	
 	public boolean areTasksPartOf(Collection<Task> tasks){
+		System.out.println("tasks are part of");
 		for (Task task : tasks){
 			if (!this.getScheduledTasks().contains(task))
 				return false;
@@ -43,7 +46,12 @@ public class Scheduler {
 	}
 	
 	public Task getTaskHighestPriority(){
-		return this.getScheduledTasks().get(0);
+		System.out.println("get highest priority");
+		for (Task task: this.getScheduledTasks()){
+			if (task.getAssignedUnit() == null)
+				return task;
+		}
+		return null;
 	}
 	
 	public List<Task> getAllTasksCondition(Boolean condition){

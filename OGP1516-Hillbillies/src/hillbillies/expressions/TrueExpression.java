@@ -1,7 +1,5 @@
 package hillbillies.expressions;
 
-import hillbillies.model.Unit;
-import hillbillies.model.World;
 import hillbillies.scheduler.TaskComponents;
 
 public class TrueExpression extends BooleanExpression {

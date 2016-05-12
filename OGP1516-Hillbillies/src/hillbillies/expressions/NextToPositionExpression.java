@@ -3,8 +3,6 @@ package hillbillies.expressions;
 
 import java.util.NoSuchElementException;
 
-import hillbillies.model.Unit;
-import hillbillies.model.World;
 import hillbillies.scheduler.MyExpression;
 import hillbillies.scheduler.TaskComponents;
 

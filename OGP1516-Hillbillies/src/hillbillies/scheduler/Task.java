@@ -20,13 +20,7 @@ public class Task {
 		this.priority = priority;
 		this.statementactivity = activity;
 		this.selectedCube = selectedCube;
-	}
-	
-	public void executeStatement(){
-		System.out.println("execute statement");
-		Unit unit = this.getAssignedUnit();
-		TaskComponents taskComponents = new TaskComponents(unit.getWorld(), unit, this.selectedCube);
-		this.statementactivity.execute(taskComponents);
+		
 	}
 	
 	//TODO fix it
@@ -69,5 +63,20 @@ public class Task {
 		return this.priority;
 	}
 	
+	public void setPriority(int priority){
+		if (priority > Integer.MIN_VALUE+100)
+			this.priority = priority; 
+		else{
+			this.priority = Integer.MIN_VALUE;
+		}
+	}
+	
+	public MyStatement getActivity(){
+		return this.statementactivity;
+	}
+	
+	public int[] getSelectedCube(){
+		return this.selectedCube;
+	}
 	
 }
