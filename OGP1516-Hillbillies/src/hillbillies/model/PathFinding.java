@@ -265,7 +265,7 @@ public class PathFinding {
 			if(value == 0 && this.getUnit().getWorld().cubeContainsBoulder(pos[0], pos[1], pos[2]) ||
 				(value == 1 && this.getUnit().getWorld().cubeContainsLog(pos[0], pos[1], pos[2])) ||
 				(value == 2 && this.getUnit().getWorld().cubeContainsUnit(pos[0], pos[1], pos[2]) &&
-				this.getUnit().getWorld().getCubeOtherUnit(pos[0], pos[1], pos[2], this.getUnit())) ||
+				this.getUnit().getWorld().CubeContainOtherUnit(pos[0], pos[1], pos[2], this.getUnit())) ||
 				(value == 3 && (this.getUnit().getWorld().getCubeType(pos[0], pos[1], pos[2]) == 3))){
 				break;
 			}			

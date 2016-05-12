@@ -679,7 +679,7 @@ public class World {
 	 * @throws IllegalArgumentException ...
 	 * 		| If there is no other unit located at that cube.
 	 */
-	public Boolean getCubeOtherUnit(int x, int y, int z, Unit givenUnit){
+	public Boolean CubeContainOtherUnit(int x, int y, int z, Unit givenUnit){
 		for (Unit unit:this.getUnits()){
 			if (unit.getCubeCoordinate()[0]==x && unit.getCubeCoordinate()[1]==y
 					&& unit.getCubeCoordinate()[2]==z && unit != givenUnit){
@@ -688,4 +688,16 @@ public class World {
 		}
 		return false;
 	}
+	
+	public Unit getCubeOtherUnit(int x, int y, int z, Unit givenUnit){
+		for (Unit unit:this.getUnits()){
+			if (unit.getCubeCoordinate()[0]==x && unit.getCubeCoordinate()[1]==y
+					&& unit.getCubeCoordinate()[2]==z && unit != givenUnit){
+				return unit;
+			}
+		}
+		return null;
+	}
+	
+	
 }

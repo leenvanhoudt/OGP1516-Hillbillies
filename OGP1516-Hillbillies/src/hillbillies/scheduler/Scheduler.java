@@ -2,7 +2,6 @@ package hillbillies.scheduler;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -46,11 +45,14 @@ public class Scheduler {
 	
 	public Task getTaskHighestPriority(){
 		System.out.println("get highest priority");
-		for (Task task: this.getScheduledTasks()){
-			if (task.getAssignedUnit() == null)
-				return task;
+		Task currentHighest = null;
+		for (int i = 0; i<scheduledList.size(); i++){
+			if ((scheduledList.get(i).getAssignedUnit() == null) && (currentHighest == null || 
+					currentHighest.getPriority() < scheduledList.get(i).getPriority())){
+				currentHighest = scheduledList.get(i);
+			}
 		}
-		return null;
+		return currentHighest;
 	}
 	
 	public List<Task> getAllTasksCondition(Boolean condition){
@@ -91,12 +93,35 @@ public class Scheduler {
 	 *             A precondition was violated or an exception was thrown.
 	 */
 	public Iterator<Task> getAllTasksIterator(){
-		//TODO is scheduledlist gesorteerd? zo niet verander gethighestpriority
-		//System.out.println("iterator");
-		ArrayList<Task> tasksToSort = this.scheduledList;
-		Collections.sort(tasksToSort, new TaskComparator());
-		Iterator<Task> taskIterator = this.scheduledList.iterator();
-		return taskIterator;
+		return new Iterator<Task>(){
+			
+			private int nbHandeld;
+			private boolean[] handelingItems = new boolean[scheduledList.size()];
+			
+			@Override
+			public boolean hasNext() {
+				return nbHandeld < scheduledList.size();
+			}
+
+			@Override
+			public Task next() {
+				Task currentHighest = null;
+				for (int i = 0; i<scheduledList.size(); i++){
+					if (!handelingItems[i]){
+						if (currentHighest == null || 
+								currentHighest.getPriority() < scheduledList.get(i).getPriority()){
+							currentHighest = scheduledList.get(i);
+						}
+					}
+				}
+				if (currentHighest != null){
+					handelingItems[scheduledList.indexOf(currentHighest)] = true;
+					nbHandeld+=1;
+				}
+				return currentHighest;
+			}
+			
+		};
 	}
 	
 }

@@ -1,30 +1,26 @@
 package hillbillies.expressions;
 
-import java.util.Set;
 
+import hillbillies.model.PathFinding;
 import hillbillies.model.Unit;
 import hillbillies.scheduler.TaskComponents;
 
 public class EnemyExpression extends UnitExpression {
 
+	private PathFinding pathFinding;
 	
 	@Override
 	public Unit evaluate(TaskComponents taskComponents) throws Error{
 		System.out.println("ENEMY EXP");
-		// TODO Auto-generated method stub
-		Set<Unit> allUnits = taskComponents.getWorld().getUnits();
-		for (Unit randomUnit: allUnits){
-			if (randomUnit.getFaction() != taskComponents.getUnit().getFaction()){
-				return randomUnit;
-			}
-		}
-		//TODO check exception
-		throw new Error("no enemy found");
+		//TODO dit zoekt dichtstbijzijnde any unit, not enemy
+		pathFinding.setUnit(taskComponents.getUnit());
+		int[] cube = pathFinding.Dijkstra(2);
+		return taskComponents.getWorld().getCubeOtherUnit(cube[0], cube[1], cube[2],
+				taskComponents.getUnit());
 	}
 
 	@Override
 	public boolean containSelectedCube() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
