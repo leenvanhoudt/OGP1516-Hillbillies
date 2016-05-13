@@ -11,6 +11,9 @@ public class SequenceStatement extends MyStatement {
 
 	public SequenceStatement(List<MyStatement> statements){
 		this.statementList = statements;
+		for (MyStatement statement: statements){
+			statement.setParent(this);
+		}
 	}
 	
 	@Override

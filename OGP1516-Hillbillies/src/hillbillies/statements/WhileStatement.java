@@ -12,12 +12,12 @@ public class WhileStatement<E extends BooleanExpression> extends MyStatement {
 	public WhileStatement(BooleanExpression condition, MyStatement body){
 		this.expressionCondition = condition;
 		this.statementBody = body;
+		this.statementBody.setParent(this);
 	}
 	
 	@Override
 	public void execute(TaskComponents taskComponents) {
 		System.out.println("WHILE STATEMENT");
-		this.statementBody.setParent(this);
 		if(this.expressionCondition.evaluate(taskComponents)){
 			this.statementBody.setExecutedState(false);
 		}else{

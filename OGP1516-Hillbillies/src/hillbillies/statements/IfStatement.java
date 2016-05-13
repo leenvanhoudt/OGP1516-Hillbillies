@@ -15,6 +15,9 @@ public class IfStatement<E extends BooleanExpression> extends MyStatement {
 		this.expressionCondition = condition;
 		this.statementIfBody = ifBody;
 		this.statementElseBody = elseBody;
+		this.statementIfBody.setParent(this);
+		if (this.statementElseBody != null)
+			this.statementElseBody.setParent(this);
 	}
 	
 	
@@ -35,11 +38,9 @@ public class IfStatement<E extends BooleanExpression> extends MyStatement {
 	@Override
 	public MyStatement getNext(TaskComponents taskComponents) {		
 		if (this.expressionCondition.evaluate(taskComponents)){
-			this.statementIfBody.setParent(this);
 			return this.statementIfBody;
 		}else if(this.statementElseBody != null){
 			System.out.println("ELSE BODY STATEMENT");
-			this.statementElseBody.setParent(this);
 			return this.statementElseBody;
 		}
 		return null;
