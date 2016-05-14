@@ -185,6 +185,7 @@ public class World {
 	 * 		| Return true if the duration is valid.
 	 */
 	public boolean isValidDuration(double dt) {
+		//TODO als we <= 0.2 nemen, geen null exception;
 		return dt >= 0 && dt < MAX_DURATION;
 	}
 
@@ -205,7 +206,7 @@ public class World {
 	 * 		The given duration is not a valid duration for any unit.
 	 */
 	public void advanceTime(double dt) throws IllegalArgumentException, IndexOutOfBoundsException{
-		if (isValidDuration(dt)) {
+		if (this.isValidDuration(dt)) {
 			for (Unit unit: this.getUnits()){
 				unit.advanceTime(dt);				
 			}
@@ -218,9 +219,9 @@ public class World {
 			if (!this.getCubesChanged().isEmpty()){
 				this.updateCubes();
 			}
-		}//else if (dt >= MAX_DURATION) {
-			//throw new IllegalArgumentException();
-		//}
+		}else{
+			throw new IllegalArgumentException();
+		}
 	}
 	
 	/**

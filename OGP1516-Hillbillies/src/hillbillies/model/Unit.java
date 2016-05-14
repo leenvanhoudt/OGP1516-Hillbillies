@@ -862,9 +862,8 @@ public class Unit {
 			this.sprintingAdvanceTime(dt);
 			if (this.isFollowing)
 				this.followAdvanceTime();
-			if (this.isMoving()){
-				System.out.println("moving advance time");
-				this.isMovingAdvanceTime(dt);}
+			if (this.isMoving())
+				this.isMovingAdvanceTime(dt);
 			if (this.isMovingTo && this.getPosition() == this.getNextPosition())
 				this.isMovingToAdvanceTime(dt);
 			if (this.isResting())
@@ -880,9 +879,9 @@ public class Unit {
 				this.resting3MinutesTime = 0;
 				this.rest();
 			}
-		} //else if (dt >= World.MAX_DURATION) {
-			//throw new IllegalArgumentException();
-		//}
+		} else{
+			throw new IllegalArgumentException();
+		}
 	}
 	
 	/**

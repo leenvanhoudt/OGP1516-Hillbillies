@@ -19,8 +19,7 @@ public class Task {
 		this.nameTask = name;
 		this.priority = priority;
 		this.statementactivity = activity;
-		this.selectedCube = selectedCube;
-		
+		this.selectedCube = selectedCube;		
 	}
 	
 	//TODO fix it
@@ -42,7 +41,6 @@ public class Task {
 	
 	
 	public Unit getAssignedUnit(){
-		//System.out.println("task getassignedunit");
 		return this.assignedUnit;
 	}
 	
@@ -54,12 +52,10 @@ public class Task {
 	
 	
 	public String getName(){
-		//System.out.println("getname task");
 		return this.nameTask;
 	}
 	
 	public int getPriority(){
-		//System.out.println("getpriority task");
 		return this.priority;
 	}
 	

@@ -10,6 +10,7 @@ public class WhileStatement<E extends BooleanExpression> extends MyStatement {
 	private MyStatement statementBody;
 
 	public WhileStatement(BooleanExpression condition, MyStatement body){
+		System.out.println("WHILE CONSTRUCTOR");
 		this.expressionCondition = condition;
 		this.statementBody = body;
 		this.statementBody.setParent(this);

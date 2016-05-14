@@ -12,6 +12,7 @@ public class IfStatement<E extends BooleanExpression> extends MyStatement {
 	private MyStatement statementElseBody;
 
 	public IfStatement(BooleanExpression condition, MyStatement ifBody, MyStatement elseBody){
+		System.out.println("IF CONSTRUCTOR");
 		this.expressionCondition = condition;
 		this.statementIfBody = ifBody;
 		this.statementElseBody = elseBody;
