@@ -7,13 +7,11 @@ public class FalseExpression extends BooleanExpression{
 	@Override
 	public Boolean evaluate(TaskComponents taskComponents) {
 		System.out.println("FALSE EXP");
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean containSelectedCube() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

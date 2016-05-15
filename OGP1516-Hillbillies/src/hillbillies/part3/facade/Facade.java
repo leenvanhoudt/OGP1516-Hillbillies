@@ -354,13 +354,11 @@ public class Facade implements IFacade {
 
 	@Override
 	public boolean isDefaultBehaviorEnabled(Unit unit) throws ModelException {
-		// TODO Auto-generated method stub
 		return unit.isDefaultBehaviorEnabled();
 	}
 
 	@Override
 	public ITaskFactory<?, ?, Task> createTaskFactory() {
-		// TODO Auto-generated method stub
 		return new TaskFactory();
 	}
 

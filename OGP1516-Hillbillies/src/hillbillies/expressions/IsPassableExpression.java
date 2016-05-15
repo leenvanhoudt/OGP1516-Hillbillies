@@ -14,14 +14,12 @@ public class IsPassableExpression<E extends CubePositionExpression> extends Bool
 	@Override
 	public Boolean evaluate(TaskComponents taskComponents) {
 		System.out.println("ISPASSABLE EXP");
-		// TODO Auto-generated method stub
 		int[] cube = this.expressionPosition.evaluate(taskComponents);
 		return taskComponents.getWorld().isPassable(cube[0], cube[1], cube[2]);
 	}
 
 	@Override
 	public boolean containSelectedCube() {
-		// TODO Auto-generated method stub
 		return this.expressionPosition.containSelectedCube();
 	}
 

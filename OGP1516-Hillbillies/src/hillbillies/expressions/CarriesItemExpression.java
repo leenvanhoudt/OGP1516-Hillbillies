@@ -15,14 +15,12 @@ public class CarriesItemExpression<E extends UnitExpression> extends BooleanExpr
 	@Override
 	public Boolean evaluate(TaskComponents taskComponents ) {
 		System.out.println("Carriesitem EXP");
-		// TODO Auto-generated method stub
 		Unit hilly = this.expressionUnit.evaluate(taskComponents);
 		return hilly.isCarryingBoulder() || hilly.isCarryingLog();
 	}
 
 	@Override
 	public boolean containSelectedCube() {
-		// TODO Auto-generated method stub
 		return this.expressionUnit.containSelectedCube();
 	}
 

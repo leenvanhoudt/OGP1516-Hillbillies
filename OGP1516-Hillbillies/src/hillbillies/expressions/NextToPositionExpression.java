@@ -17,7 +17,6 @@ public class NextToPositionExpression<E extends CubePositionExpression>
 	@Override
 	public int[] evaluate(TaskComponents taskComponents) throws NoSuchElementException {
 		System.out.println("NEXTO EXP");
-		// TODO Auto-generated method stub
 		int[] unitPosition = this.expressionPosition.evaluate(taskComponents);
 		for (int i=-1;i<2;i+=2){
 			if ((taskComponents.getWorld().isPassable(unitPosition[0]+i, unitPosition[1], unitPosition[2]) &&
@@ -51,7 +50,6 @@ public class NextToPositionExpression<E extends CubePositionExpression>
 
 	@Override
 	public boolean containSelectedCube() {
-		// TODO Auto-generated method stub
 		return this.expressionPosition.containSelectedCube();
 	}
 

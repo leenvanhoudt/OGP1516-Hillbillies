@@ -10,7 +10,7 @@ public class AnyExpression extends UnitExpression{
 	
 	@Override
 	public Unit evaluate(TaskComponents taskComponents) throws Error {
-		System.out.println("ANY EXP");
+		//TODO return positie of unit zelf? zoek uit voor alle dijksta
 		pathFinding.setUnit(taskComponents.getUnit());
 		int[] cube = pathFinding.Dijkstra(2);
 		return taskComponents.getWorld().getCubeOtherUnit(cube[0], cube[1], cube[2],

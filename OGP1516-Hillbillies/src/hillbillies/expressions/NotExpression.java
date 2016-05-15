@@ -13,13 +13,11 @@ public class NotExpression<E extends BooleanExpression> extends BooleanExpressio
 	@Override
 	public Boolean evaluate(TaskComponents taskComponents) {
 		System.out.println("NOT EXP");
-		// TODO Auto-generated method stub
 		return !this.expressionExpression.evaluate(taskComponents);
 	}
 
 	@Override
 	public boolean containSelectedCube() {
-		// TODO Auto-generated method stub
 		return this.expressionExpression.containSelectedCube();
 	}
 

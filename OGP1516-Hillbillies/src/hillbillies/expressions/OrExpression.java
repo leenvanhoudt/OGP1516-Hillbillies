@@ -15,14 +15,12 @@ public class OrExpression<E extends BooleanExpression> extends BooleanExpression
 	@Override
 	public Boolean evaluate(TaskComponents taskComponents) {
 		System.out.println("OR EXP");
-		// TODO Auto-generated method stub		
 		return this.expressionLeft.evaluate(taskComponents) || 
 				this.expressionRight.evaluate(taskComponents);
 	}
 
 	@Override
 	public boolean containSelectedCube() {
-		// TODO Auto-generated method stub
 		return this.expressionLeft.containSelectedCube() || this.expressionRight.containSelectedCube();
 	}
 

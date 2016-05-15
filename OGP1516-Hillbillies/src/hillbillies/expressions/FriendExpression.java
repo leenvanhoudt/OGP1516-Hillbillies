@@ -10,7 +10,7 @@ public class FriendExpression extends UnitExpression {
 	@Override
 	public Unit evaluate(TaskComponents taskComponents) throws Error{
 		System.out.println("FRIEND EXP");
-		// TODO Auto-generated method stub
+		// TODO zoek dichtst bijzijnde
 		Set<Unit> allUnits = taskComponents.getWorld().getUnits();
 		for (Unit randomUnit: allUnits){
 			if (randomUnit.getFaction() == taskComponents.getUnit().getFaction()){
@@ -22,7 +22,6 @@ public class FriendExpression extends UnitExpression {
 
 	@Override
 	public boolean containSelectedCube() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

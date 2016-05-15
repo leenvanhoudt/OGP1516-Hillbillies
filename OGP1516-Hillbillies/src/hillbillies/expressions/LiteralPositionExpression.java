@@ -17,14 +17,12 @@ public class LiteralPositionExpression extends CubePositionExpression {
 	@Override
 	public int[] evaluate(TaskComponents taskComponents) {
 		System.out.println("LITERALPOSITION EXP");
-		// TODO Auto-generated method stub
 		int [] position = new int[] {this.xcoordinate, this.ycoordinate, this.zcoordinate};
 		return position;
 	}
 
 	@Override
 	public boolean containSelectedCube() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

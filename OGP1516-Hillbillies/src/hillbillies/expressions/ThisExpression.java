@@ -9,13 +9,11 @@ public class ThisExpression extends UnitExpression {
 	@Override
 	public Unit evaluate(TaskComponents taskComponents) {
 		System.out.println("THIS EXP");
-		// TODO Auto-generated method stub
 		return taskComponents.getUnit();
 	}
 
 	@Override
 	public boolean containSelectedCube() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

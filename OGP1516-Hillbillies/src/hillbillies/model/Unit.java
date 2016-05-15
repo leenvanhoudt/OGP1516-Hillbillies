@@ -2006,18 +2006,18 @@ public class Unit {
 			Task task = this.getFaction().getScheduler().getTaskHighestPriority();
 			this.setAssignedTask(task);
 			task.setAssignedUnit(this);
-			taskComponents = new TaskComponents(this.getWorld(), this, this.getAssignedTask().getSelectedCube(),dt);
+			this.taskComponents = new TaskComponents(this.getWorld(), this, this.getAssignedTask().getSelectedCube());
 		}
 		if (this.getAssignedTask()!= null && !this.getAssignedTask().getActivity().isExecuted()){
-			MyStatement current = this.getAssignedTask().getActivity().getNext(taskComponents);
+			MyStatement current = this.getAssignedTask().getActivity().getNext(this.taskComponents);
 			System.out.println("default execute task");
 			if (current == null)
-				this.getAssignedTask().getActivity().execute(taskComponents);
+				this.getAssignedTask().getActivity().execute(this.taskComponents);
 			while (!this.getAssignedTask().getActivity().isExecuted() && dt>0){
-				if (current.getNext(taskComponents)==null || current.getNext(taskComponents).isExecuted()){
+				if (current.getNext(this.taskComponents)==null || current.getNext(this.taskComponents).isExecuted()){
 					try{
-					current.execute(taskComponents);
-					current = this.getAssignedTask().getActivity().getNext(taskComponents);
+					current.execute(this.taskComponents);
+					current = this.getAssignedTask().getActivity().getNext(this.taskComponents);
 					dt = dt - 0.001;
 					if (this.isMovingTo || this.isAttacking() || this.isWorking()){
 						break;
@@ -2026,7 +2026,7 @@ public class Unit {
 						this.interruptTask();
 					}
 				}else{
-					current = current.getNext(taskComponents);
+					current = current.getNext(this.taskComponents);
 				}
 			}
 		} 

@@ -14,13 +14,11 @@ public class ReadVariableExpression extends MyExpression {
 	@Override
 	public Object evaluate(TaskComponents taskComponents) {
 		System.out.println("READVARIABLE EXP");
-		// TODO Auto-generated method stub
 		return taskComponents.getValue(this.varName);
 	}
 
 	@Override
 	public boolean containSelectedCube() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

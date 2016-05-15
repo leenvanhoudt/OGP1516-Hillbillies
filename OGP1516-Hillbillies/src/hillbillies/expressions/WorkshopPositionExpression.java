@@ -10,14 +10,12 @@ public class WorkshopPositionExpression extends CubePositionExpression{
 	@Override
 	public int[] evaluate(TaskComponents taskComponents) {
 		System.out.println("WORKSHOP EXP");
-		// TODO Auto-generated method stub
 		this.pathfinding.setUnit(taskComponents.getUnit());
 		return this.pathfinding.Dijkstra(3);
 	}
 
 	@Override
 	public boolean containSelectedCube() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

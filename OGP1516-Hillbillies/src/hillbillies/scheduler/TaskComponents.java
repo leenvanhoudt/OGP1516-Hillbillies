@@ -10,13 +10,11 @@ public class TaskComponents {
 	private World world;
 	private Unit unit;
 	private int[] selectedCube;
-	private double dt;
 
-	public TaskComponents(World world, Unit unit, int[] selectedCube, double dt){
+	public TaskComponents(World world, Unit unit, int[] selectedCube){
 		this.world = world;
 		this.unit = unit;
 		this.selectedCube = selectedCube;
-		this.dt = dt;
 	}
 	
 	public Unit getUnit(){
@@ -29,14 +27,6 @@ public class TaskComponents {
 	
 	public int[] getSelectedCube(){
 		return this.selectedCube;
-	}
-	
-	public double getDeltaT(){
-		return this.dt;
-	}
-	
-	public void setDeltaT(double dt){
-		this.dt = dt;
 	}
 	
 	private HashMap<String,Object> assignedVariableList = new HashMap<String, Object>();

@@ -15,7 +15,6 @@ public class PositionOfExpression<E extends UnitExpression> extends CubePosition
 	@Override
 	public int[] evaluate(TaskComponents taskComponents) {
 		System.out.println("POSITIONOF EXP");
-		// TODO Auto-generated method stub
 		Unit hilly = this.expressionUnit.evaluate(taskComponents);
 		return new int[]{hilly.getCubeCoordinate()[0], hilly.getCubeCoordinate()[1],
 				hilly.getCubeCoordinate()[2]};
@@ -23,7 +22,6 @@ public class PositionOfExpression<E extends UnitExpression> extends CubePosition
 
 	@Override
 	public boolean containSelectedCube() {
-		// TODO Auto-generated method stub
 		return this.expressionUnit.containSelectedCube();
 	}
 

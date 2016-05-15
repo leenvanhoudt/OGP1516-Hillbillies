@@ -15,14 +15,12 @@ public class IsAliveExpression<E extends UnitExpression> extends BooleanExpressi
 	@Override
 	public Boolean evaluate(TaskComponents taskComponents) {
 		System.out.println("ISALIVE EXP");
-		// TODO Auto-generated method stub
 		Unit hilly = this.expressionUnit.evaluate(taskComponents);
 		return hilly.isAlive();
 	}
 
 	@Override
 	public boolean containSelectedCube() {
-		// TODO Auto-generated method stub
 		return this.expressionUnit.containSelectedCube();
 	}
 

@@ -14,14 +14,12 @@ public class IsEnemyExpression<E extends UnitExpression> extends BooleanExpressi
 	@Override
 	public Boolean evaluate(TaskComponents taskComponents) {
 		System.out.println("ISENEMY EXP");
-		// TODO Auto-generated method stub
 		Unit hilly = this.expressionUnit.evaluate(taskComponents);
 		return hilly.getFaction() != taskComponents.getUnit().getFaction();		
 	}
 
 	@Override
 	public boolean containSelectedCube() {
-		// TODO Auto-generated method stub
 		return this.expressionUnit.containSelectedCube();
 	}
 
