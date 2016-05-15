@@ -35,7 +35,6 @@ public class AssignmentStatement extends MyStatement {
 		return null;
 	}
 
-
 	@Override
 	public boolean isExecuted() {
 		return this.finished;

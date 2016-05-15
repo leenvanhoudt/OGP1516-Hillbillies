@@ -48,8 +48,6 @@ public class WhileStatement<E extends BooleanExpression> extends MyStatement {
 	@Override
 	public void setExecutedState(boolean state) {
 		this.finished = state;
-		if (state == false){
-			this.statementBody.setExecutedState(false);
-		}
+		this.statementBody.setExecutedState(state);
 	}
 }

@@ -33,6 +33,7 @@ public class SequenceStatement extends MyStatement {
 		return false;
 	}
 
+	//TODO wordt deze ergens gebruikt?
 	public List<MyStatement> getListSequence(){
 		return this.statementList;
 	}
@@ -40,7 +41,7 @@ public class SequenceStatement extends MyStatement {
 	@Override
 	public MyStatement getNext(TaskComponents taskComponents) {		
 		for (MyStatement statement: this.statementList){
-			if (statement.isExecuted()== false){
+			if (!statement.isExecuted()){
 				return statement;
 			}
 		}
@@ -58,10 +59,8 @@ public class SequenceStatement extends MyStatement {
 	@Override
 	public void setExecutedState(boolean state) {
 		this.finished = state;
-		if (state == false){
-			for (MyStatement statement: this.statementList){
-				statement.setExecutedState(false);
-			}
+		for (MyStatement statement: this.statementList){
+			statement.setExecutedState(state);
 		}
 	}
 }

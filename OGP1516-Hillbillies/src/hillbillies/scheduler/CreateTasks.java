@@ -11,6 +11,7 @@ public class CreateTasks {
 	private List<int[]> selectedCubes;
 
 	public CreateTasks(String name, int priority, MyStatement activity, List<int[]> selectedCubes){
+		System.out.println("create tasks constructor");
 		this.name = name;
 		this.priority = priority;
 		this.statementActivity = activity;
@@ -18,7 +19,7 @@ public class CreateTasks {
 	}
 	
 	public List<Task> tasks(){
-		System.out.println("create task" + this.selectedCubes.size());
+		System.out.println("create task");
 		List<Task> taskOnMoreCubes = new ArrayList<Task>();
 		if (!this.selectedCubes.isEmpty()){
 			for (int[] cube: this.selectedCubes){

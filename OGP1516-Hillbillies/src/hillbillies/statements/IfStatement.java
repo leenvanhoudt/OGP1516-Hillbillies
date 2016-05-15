@@ -59,11 +59,9 @@ public class IfStatement<E extends BooleanExpression> extends MyStatement {
 	@Override
 	public void setExecutedState(boolean state) {
 		this.finished = state;
-		if (state == false){
-			this.statementIfBody.setExecutedState(false);
-			if (this.statementElseBody != null)
-				this.statementElseBody.setExecutedState(false);
-		}
+		this.statementIfBody.setExecutedState(state);
+		if (this.statementElseBody != null)
+			this.statementElseBody.setExecutedState(state);
 	}
 	
 }
