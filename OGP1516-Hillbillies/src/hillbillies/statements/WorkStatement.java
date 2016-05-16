@@ -20,6 +20,7 @@ public class WorkStatement<E extends CubePositionExpression,ReadVariableExpressi
 		this.expressionVariablePosition = position;
 	}
 	
+	
 	@Override
 	public void execute(TaskComponents taskComponents) throws Error {
 		System.out.println("WORK STATEMENT");
@@ -52,6 +53,11 @@ public class WorkStatement<E extends CubePositionExpression,ReadVariableExpressi
 	public MyStatement getNext(TaskComponents taskComponents) {
 		return null;
 	}
+	
+	@Override
+	public MyStatement getNextWellFormed() {
+		return null;
+	}
 
 	@Override
 	public boolean isExecuted() {
@@ -63,6 +69,18 @@ public class WorkStatement<E extends CubePositionExpression,ReadVariableExpressi
 	@Override
 	public void setExecutedState(boolean state) {
 		this.finished = state;
+	}
+
+	@Override
+	public boolean containReadVariableExpression() {
+		// TODO Auto-generated method stub
+		return this.expressionVariablePosition != null;
+	}
+
+	@Override
+	public hillbillies.expressions.ReadVariableExpression getReadVariableExpression() {
+		// TODO Auto-generated method stub
+		return (hillbillies.expressions.ReadVariableExpression) this.expressionVariablePosition;
 	}
 
 }

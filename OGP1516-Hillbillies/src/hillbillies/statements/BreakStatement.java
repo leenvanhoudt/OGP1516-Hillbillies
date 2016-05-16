@@ -1,5 +1,6 @@
 package hillbillies.statements;
 
+import hillbillies.expressions.ReadVariableExpression;
 import hillbillies.scheduler.MyStatement;
 import hillbillies.scheduler.TaskComponents;
 
@@ -30,6 +31,11 @@ public class BreakStatement extends MyStatement{
 	public MyStatement getNext(TaskComponents taskComponents) {
 		return null;
 	}
+	
+	@Override
+	public MyStatement getNextWellFormed() {
+		return null;
+	}
 
 	@Override
 	public boolean isExecuted() {
@@ -41,6 +47,18 @@ public class BreakStatement extends MyStatement{
 	@Override
 	public void setExecutedState(boolean state) {
 		this.finished = state;
+	}
+
+	@Override
+	public boolean containReadVariableExpression() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public ReadVariableExpression getReadVariableExpression() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

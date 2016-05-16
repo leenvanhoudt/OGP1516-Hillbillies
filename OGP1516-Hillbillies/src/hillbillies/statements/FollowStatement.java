@@ -49,6 +49,11 @@ public class FollowStatement<E extends UnitExpression,ReadVariableExpression> ex
 	public MyStatement getNext(TaskComponents taskComponents) {
 		return null;
 	}
+	
+	@Override
+	public MyStatement getNextWellFormed() {
+		return null;
+	}
 
 	@Override
 	public boolean isExecuted() {
@@ -60,6 +65,17 @@ public class FollowStatement<E extends UnitExpression,ReadVariableExpression> ex
 	@Override
 	public void setExecutedState(boolean state) {
 		this.finished = state;
+	}
+
+	@Override
+	public boolean containReadVariableExpression() {
+		return this.expressionVariableUnit != null;
+	}
+
+	@Override
+	public hillbillies.expressions.ReadVariableExpression getReadVariableExpression() {
+		// TODO Auto-generated method stub
+		return (hillbillies.expressions.ReadVariableExpression) this.expressionVariableUnit;
 	}
 
 }

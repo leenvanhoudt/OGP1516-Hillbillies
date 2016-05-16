@@ -2,6 +2,7 @@ package hillbillies.statements;
 
 import java.util.List;
 
+import hillbillies.expressions.ReadVariableExpression;
 import hillbillies.scheduler.MyStatement;
 import hillbillies.scheduler.TaskComponents;
 
@@ -44,7 +45,16 @@ public class SequenceStatement extends MyStatement {
 				return statement;
 			}
 		}
-		this.setExecutedState(true);
+		return null;
+	}
+	
+	@Override
+	public MyStatement getNextWellFormed() {
+		for (MyStatement statement: this.getListSequence()){
+			if (!statement.isExecuted()){
+				return statement;
+			}
+		}
 		return null;
 	}
 
@@ -62,4 +72,15 @@ public class SequenceStatement extends MyStatement {
 			statement.setExecutedState(state);
 		}
 	}
+
+	@Override
+	public boolean containReadVariableExpression() {
+		return false;
+	}
+
+	@Override
+	public ReadVariableExpression getReadVariableExpression() {
+		return null;
+	}
+
 }

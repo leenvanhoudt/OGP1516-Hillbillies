@@ -54,6 +54,11 @@ public class MoveToStatement<E extends CubePositionExpression,ReadVariableExpres
 	}
 
 	@Override
+	public MyStatement getNextWellFormed() {
+		return null;
+	}
+	
+	@Override
 	public boolean isExecuted() {
 		return this.finished;
 	}
@@ -63,6 +68,18 @@ public class MoveToStatement<E extends CubePositionExpression,ReadVariableExpres
 	@Override
 	public void setExecutedState(boolean state) {
 		this.finished = state;
+	}
+
+	@Override
+	public boolean containReadVariableExpression() {
+		// TODO Auto-generated method stub
+		return this.expressionVariablePosition != null;
+	}
+
+	@Override
+	public hillbillies.expressions.ReadVariableExpression getReadVariableExpression() {
+		// TODO Auto-generated method stub
+		return (hillbillies.expressions.ReadVariableExpression) this.expressionVariablePosition;
 	}
 
 }

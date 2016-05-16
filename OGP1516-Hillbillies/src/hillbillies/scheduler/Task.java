@@ -1,10 +1,15 @@
 package hillbillies.scheduler;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 import hillbillies.model.Faction;
 import hillbillies.model.Unit;
+import hillbillies.statements.AssignmentStatement;
+import hillbillies.statements.BreakStatement;
+import hillbillies.statements.SequenceStatement;
+import hillbillies.statements.WhileStatement;
 
 public class Task {
 
@@ -24,26 +29,70 @@ public class Task {
 	
 	//TODO fix it
 	public boolean isWellFormed(){
-//		System.out.println("task iswellformed");
-//		return true;
-//		MyStatement current = this.getActivity().getNext();
-//		System.out.println("default execute task");
-//		if (current == null)
-//			this.getActivity().setExecutedState(true);
-//		while (!this.getActivity().isExecuted()){
-//			if (current.getNext(this.taskComponents)==null || current.getNext(this.taskComponents).isExecuted()){
-//				try{
-//				current.setExecutedState(true);
-//				current = this.getActivity().getNext(this.taskComponents);
-//				} catch(Throwable e){
-//					System.out.println("catch exception");
-//				}
-//			}else{
-//				current = current.getNext(this.taskComponents);
-//			}
-//		}
-//		
-//		this.getActivity().setExecutedState(false);
+		ArrayList<MyStatement> breakList = new ArrayList<MyStatement>();
+		ArrayList<MyStatement> readVariableStatementList = new ArrayList<MyStatement>();
+		System.out.println("task iswellformed");
+		MyStatement current = this.getActivity().getNextWellFormed();
+		System.out.println("default execute task");
+		if (current == null){
+			if (this.getActivity() instanceof BreakStatement)
+				breakList.add(this.getActivity());
+			if (this.getActivity().containReadVariableExpression())
+				readVariableStatementList.add(this.getActivity());
+			this.getActivity().setExecutedState(true);
+		}
+		while (!this.getActivity().isExecuted()){
+			if (current.getNextWellFormed()==null || current.getNextWellFormed().isExecuted()){
+				try{
+					if (current instanceof BreakStatement)
+						breakList.add(current);
+					if (current.containReadVariableExpression())
+						readVariableStatementList.add(current);
+					current.setExecutedState(true);
+					current = this.getActivity().getNextWellFormed();
+				} catch(Throwable e){
+					System.out.println("catch exception");
+				}
+			}else{
+				current = current.getNextWellFormed();
+			}
+		}
+		this.getActivity().setExecutedState(false);
+		
+		for (MyStatement breakStatement : breakList){
+			MyStatement parent = breakStatement.getParent();
+			while(parent !=null && !(parent instanceof WhileStatement)){
+				parent = parent.getParent();
+			}
+			if (parent == null){
+				return false;
+			}
+		}
+		
+		for (MyStatement variableStatement: readVariableStatementList){
+			MyStatement parent = variableStatement.getParent();
+			MyStatement checking = variableStatement;
+			while (parent != null && !(parent instanceof AssignmentStatement) &&
+					variableStatement.getReadVariableExpression().getVariableName() ==
+					((AssignmentStatement)parent).getVarName()){
+				if (parent instanceof SequenceStatement){
+					for (int i = ((SequenceStatement) parent).getListSequence().indexOf(checking);
+							i>=0; i--){
+						if (((SequenceStatement) parent).getListSequence().get(i) instanceof AssignmentStatement &&
+								variableStatement.getReadVariableExpression().getVariableName() ==
+								((AssignmentStatement)((SequenceStatement) parent).getListSequence().get(i)).getVarName()){
+							parent = ((SequenceStatement) parent).getListSequence().get(i);
+							break;
+						}
+					}
+				}
+				parent = parent.getParent();
+			}
+			if (parent == null){
+				return false;
+			}
+			
+		}
 		return true;
 	}
 	

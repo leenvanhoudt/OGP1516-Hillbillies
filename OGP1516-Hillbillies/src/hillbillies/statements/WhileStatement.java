@@ -57,6 +57,11 @@ public class WhileStatement<E extends BooleanExpression,ReadVariableExpression> 
 	public MyStatement getNext(TaskComponents taskComponents) {		
 		return this.statementBody;
 	}
+	
+	@Override
+	public MyStatement getNextWellFormed() {
+		return this.statementBody;
+	}
 
 	@Override
 	public boolean isExecuted() {
@@ -70,4 +75,17 @@ public class WhileStatement<E extends BooleanExpression,ReadVariableExpression> 
 		this.finished = state;
 		this.statementBody.setExecutedState(state);
 	}
+
+	@Override
+	public boolean containReadVariableExpression() {
+		// TODO Auto-generated method stub
+		return this.expressionVariableCondition != null;
+	}
+
+	@Override
+	public hillbillies.expressions.ReadVariableExpression getReadVariableExpression() {
+		// TODO Auto-generated method stub
+		return (hillbillies.expressions.ReadVariableExpression) this.expressionVariableCondition;
+	}
+
 }

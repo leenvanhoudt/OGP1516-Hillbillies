@@ -45,5 +45,8 @@ public class ReadVariableExpression extends MyExpression implements IBooleanExpr
 		return false;
 	}
 
+	public String getVariableName(){
+		return this.varName;
+	}
 
 }

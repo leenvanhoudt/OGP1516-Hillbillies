@@ -2,6 +2,7 @@ package hillbillies.statements;
 
 import hillbillies.expressions.BooleanExpression;
 import hillbillies.expressions.CubePositionExpression;
+import hillbillies.expressions.ReadVariableExpression;
 import hillbillies.expressions.UnitExpression;
 import hillbillies.scheduler.MyExpression;
 import hillbillies.scheduler.MyStatement;
@@ -42,6 +43,11 @@ public class PrintStatement extends MyStatement{
 	public MyStatement getNext(TaskComponents taskComponents) {
 		return null;
 	}
+	
+	@Override
+	public MyStatement getNextWellFormed() {
+		return null;
+	}
 
 	@Override
 	public boolean isExecuted() {
@@ -53,6 +59,16 @@ public class PrintStatement extends MyStatement{
 	@Override
 	public void setExecutedState(boolean state) {
 		this.finished = state;
+	}
+
+	@Override
+	public boolean containReadVariableExpression() {
+		return false;
+	}
+
+	@Override
+	public ReadVariableExpression getReadVariableExpression() {
+		return null;
 	}
 
 }

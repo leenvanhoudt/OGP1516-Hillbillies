@@ -2,6 +2,7 @@ package hillbillies.statements;
 
 import hillbillies.expressions.BooleanExpression;
 import hillbillies.expressions.CubePositionExpression;
+import hillbillies.expressions.ReadVariableExpression;
 import hillbillies.expressions.UnitExpression;
 import hillbillies.model.Unit;
 import hillbillies.scheduler.MyExpression;
@@ -18,7 +19,6 @@ public class AssignmentStatement extends MyStatement {
 		this.variableName = variableName;
 		this.expressionValue = value;
 	}
-
 
 	@Override
 	public void execute(TaskComponents taskComponents) throws Error {
@@ -48,15 +48,18 @@ public class AssignmentStatement extends MyStatement {
 		this.setExecutedState(true);
 	}
 
-
 	@Override
 	public boolean containSelectedCube() {
 		return this.expressionValue.containSelectedCube();
 	}
 
-
 	@Override
 	public MyStatement getNext(TaskComponents taskComponents) {
+		return null;
+	}
+	
+	@Override
+	public MyStatement getNextWellFormed() {
 		return null;
 	}
 
@@ -72,4 +75,17 @@ public class AssignmentStatement extends MyStatement {
 		this.finished = state;
 	}
 
+	@Override
+	public boolean containReadVariableExpression() {
+		return false;
+	}
+
+	@Override
+	public ReadVariableExpression getReadVariableExpression() {
+		return null;
+	}
+
+	public String getVarName(){
+		return this.variableName;
+	}
 }

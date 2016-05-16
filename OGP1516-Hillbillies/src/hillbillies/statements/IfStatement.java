@@ -70,6 +70,16 @@ public class IfStatement<E extends BooleanExpression,ReadVariableExpression> ext
 		return null;
 		
 	}
+	
+	@Override
+	public MyStatement getNextWellFormed() {
+		if (!this.statementIfBody.isExecuted())
+			return this.statementIfBody;
+		else if (this.statementElseBody != null && !this.statementElseBody.isExecuted()){
+			return this.statementElseBody;
+		}
+		return null;
+	}
 
 
 	@Override
@@ -85,6 +95,18 @@ public class IfStatement<E extends BooleanExpression,ReadVariableExpression> ext
 		this.statementIfBody.setExecutedState(state);
 		if (this.statementElseBody != null)
 			this.statementElseBody.setExecutedState(state);
+	}
+
+	@Override
+	public boolean containReadVariableExpression() {
+		// TODO Auto-generated method stub
+		return this.expressionVariableCondition != null;
+	}
+
+	@Override
+	public hillbillies.expressions.ReadVariableExpression getReadVariableExpression() {
+		// TODO Auto-generated method stub
+		return (hillbillies.expressions.ReadVariableExpression) this.expressionVariableCondition;
 	}
 	
 }
