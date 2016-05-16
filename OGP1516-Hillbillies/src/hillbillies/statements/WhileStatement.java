@@ -19,7 +19,7 @@ public class WhileStatement<E extends BooleanExpression> extends MyStatement {
 	@Override
 	public void execute(TaskComponents taskComponents) {
 		System.out.println("WHILE STATEMENT");
-		if(this.expressionCondition.evaluate(taskComponents)){
+		if(this.expressionCondition.evaluateBoolean(taskComponents)){
 			this.statementBody.setExecutedState(false);
 		}else{
 			this.setExecutedState(true);

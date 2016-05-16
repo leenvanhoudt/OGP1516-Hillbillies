@@ -1,5 +1,8 @@
 package hillbillies.statements;
 
+import hillbillies.expressions.BooleanExpression;
+import hillbillies.expressions.CubePositionExpression;
+import hillbillies.expressions.UnitExpression;
 import hillbillies.scheduler.MyExpression;
 import hillbillies.scheduler.MyStatement;
 import hillbillies.scheduler.TaskComponents;
@@ -15,12 +18,19 @@ public class PrintStatement extends MyStatement{
 	@Override
 	public void execute(TaskComponents taskComponents) throws Error {
 		System.out.println("PRINT STATEMENT");
-		try{
-			System.out.println(this.expressionValue.evaluate(taskComponents));
-			this.setExecutedState(true);
-		} catch(Throwable e){
-			throw new Error("Can not print");
+		if (this.expressionValue instanceof BooleanExpression){
+			BooleanExpression exp = (BooleanExpression) this.expressionValue;
+			System.out.println(exp.evaluateBoolean(taskComponents));
 		}
+		else if (this.expressionValue instanceof UnitExpression){
+			UnitExpression exp = (UnitExpression) this.expressionValue;
+			System.out.println(exp.evaluateUnit(taskComponents));
+		}
+		else if (this.expressionValue instanceof CubePositionExpression){
+			CubePositionExpression exp = (CubePositionExpression) this.expressionValue;
+			System.out.println(exp.evaluatePosition(taskComponents));
+		}
+		this.setExecutedState(true);
 	}
 
 	@Override

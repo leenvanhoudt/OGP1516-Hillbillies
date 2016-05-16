@@ -16,7 +16,7 @@ public class FollowStatement<E extends UnitExpression> extends MyStatement {
 	@Override
 	public void execute(TaskComponents taskComponents) throws Error{
 		System.out.println("FOLLOW STATEMENT");
-		Unit followed = this.expressionUnit.evaluate(taskComponents);
+		Unit followed = this.expressionUnit.evaluateUnit(taskComponents);
 		try{
 			taskComponents.getUnit().follow(followed);
 			this.setExecutedState(true);

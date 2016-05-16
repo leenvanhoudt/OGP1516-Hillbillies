@@ -5,7 +5,7 @@ import hillbillies.scheduler.TaskComponents;
 public class FalseExpression extends BooleanExpression{
 	
 	@Override
-	public Boolean evaluate(TaskComponents taskComponents) {
+	public Boolean evaluateBoolean(TaskComponents taskComponents) {
 		System.out.println("FALSE EXP");
 		return false;
 	}

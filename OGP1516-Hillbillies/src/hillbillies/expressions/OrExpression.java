@@ -13,10 +13,10 @@ public class OrExpression<E extends BooleanExpression> extends BooleanExpression
 	}
 	
 	@Override
-	public Boolean evaluate(TaskComponents taskComponents) {
+	public Boolean evaluateBoolean(TaskComponents taskComponents) {
 		System.out.println("OR EXP");
-		return this.expressionLeft.evaluate(taskComponents) || 
-				this.expressionRight.evaluate(taskComponents);
+		return this.expressionLeft.evaluateBoolean(taskComponents) || 
+				this.expressionRight.evaluateBoolean(taskComponents);
 	}
 
 	@Override

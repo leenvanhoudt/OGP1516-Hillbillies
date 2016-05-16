@@ -2081,6 +2081,7 @@ public class Unit {
 	
 	public void interruptTask(){
 		if (this.getAssignedTask() != null){
+			this.getAssignedTask().getActivity().setExecutedState(false);
 			this.getAssignedTask().setPriority(this.getAssignedTask().getPriority() - 100);
 			this.getFaction().getScheduler().reset(this.getAssignedTask(), this);
 		}
@@ -2117,7 +2118,6 @@ public class Unit {
 	
 	
 	public Task getAssignedTask(){
-		//System.out.println("unit get assigned task");
 		return this.assignedTask;
 	}
 	

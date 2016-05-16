@@ -13,9 +13,9 @@ public class CarriesItemExpression<E extends UnitExpression> extends BooleanExpr
 	}
 	
 	@Override
-	public Boolean evaluate(TaskComponents taskComponents ) {
+	public Boolean evaluateBoolean(TaskComponents taskComponents ) {
 		System.out.println("Carriesitem EXP");
-		Unit hilly = this.expressionUnit.evaluate(taskComponents);
+		Unit hilly = this.expressionUnit.evaluateUnit(taskComponents);
 		return hilly.isCarryingBoulder() || hilly.isCarryingLog();
 	}
 

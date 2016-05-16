@@ -15,7 +15,7 @@ public class MoveToStatement<E extends CubePositionExpression> extends MyStateme
 	@Override
 	public void execute(TaskComponents taskComponents) throws Error{
 		System.out.println("MOVE TO STATEMENT");
-		int[] cube = this.expressionPosition.evaluate(taskComponents);
+		int[] cube = this.expressionPosition.evaluatePosition(taskComponents);
 		try{
 			taskComponents.getUnit().moveTo(cube);
 			this.setExecutedState(true);

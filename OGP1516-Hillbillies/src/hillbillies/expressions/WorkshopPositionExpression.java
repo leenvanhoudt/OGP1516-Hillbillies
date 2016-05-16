@@ -1,17 +1,17 @@
 package hillbillies.expressions;
 
-import hillbillies.model.PathFinding;
+import hillbillies.model.DijkstraPathFinding;
 import hillbillies.scheduler.TaskComponents;
 
 public class WorkshopPositionExpression extends CubePositionExpression{
 
-	private PathFinding pathfinding;
+	private DijkstraPathFinding dijkstra;
 
 	@Override
-	public int[] evaluate(TaskComponents taskComponents) {
+	public int[] evaluatePosition(TaskComponents taskComponents) {
 		System.out.println("WORKSHOP EXP");
-		this.pathfinding.setUnit(taskComponents.getUnit());
-		return this.pathfinding.Dijkstra(3);
+		this.dijkstra.setUnit(taskComponents.getUnit());
+		return this.dijkstra.Dijkstra(3);
 	}
 
 	@Override

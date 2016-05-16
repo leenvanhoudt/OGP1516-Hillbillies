@@ -11,9 +11,9 @@ public class IsSolidExpression<E extends CubePositionExpression> extends Boolean
 	}
 
 	@Override
-	public Boolean evaluate(TaskComponents taskComponents) throws ClassCastException {
+	public Boolean evaluateBoolean(TaskComponents taskComponents) throws ClassCastException {
 		System.out.println("ISSOLID EXP");
-		int[] position = this.expressionPosition.evaluate(taskComponents);
+		int[] position = this.expressionPosition.evaluatePosition(taskComponents);
 		return !taskComponents.getWorld().isPassable(position[0], position[1], position[2]);
 	}
 

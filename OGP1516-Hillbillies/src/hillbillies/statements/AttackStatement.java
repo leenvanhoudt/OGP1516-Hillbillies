@@ -16,7 +16,7 @@ public class AttackStatement<E extends UnitExpression> extends MyStatement {
 	@Override
 	public void execute(TaskComponents taskComponents) throws Error {
 		System.out.println("ATTACK STATAMENT");
-		Unit enemy = this.expressionUnit.evaluate(taskComponents);
+		Unit enemy = this.expressionUnit.evaluateUnit(taskComponents);
 		try{
 			taskComponents.getUnit().fight(enemy);
 			this.setExecutedState(true);

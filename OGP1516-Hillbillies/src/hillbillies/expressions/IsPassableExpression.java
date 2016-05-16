@@ -12,9 +12,9 @@ public class IsPassableExpression<E extends CubePositionExpression> extends Bool
 	}
 	
 	@Override
-	public Boolean evaluate(TaskComponents taskComponents) {
+	public Boolean evaluateBoolean(TaskComponents taskComponents) {
 		System.out.println("ISPASSABLE EXP");
-		int[] cube = this.expressionPosition.evaluate(taskComponents);
+		int[] cube = this.expressionPosition.evaluatePosition(taskComponents);
 		return taskComponents.getWorld().isPassable(cube[0], cube[1], cube[2]);
 	}
 

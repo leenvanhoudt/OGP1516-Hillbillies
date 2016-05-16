@@ -2,7 +2,8 @@ package hillbillies.expressions;
 
 import hillbillies.scheduler.TaskComponents;
 
-public class AndExpression<E extends BooleanExpression> extends BooleanExpression {
+public class AndExpression<E extends BooleanExpression> extends BooleanExpression implements
+	IBooleanExpression{
 
 	private BooleanExpression expressionLeft;
 	private BooleanExpression expressionRight;
@@ -13,10 +14,10 @@ public class AndExpression<E extends BooleanExpression> extends BooleanExpressio
 	}
 
 	@Override
-	public Boolean evaluate(TaskComponents taskComponents) {
+	public Boolean evaluateBoolean(TaskComponents taskComponents) {
 		System.out.println("AND EXP");
-		return this.expressionLeft.evaluate(taskComponents) && 
-				this.expressionRight.evaluate(taskComponents);
+		return this.expressionLeft.evaluateBoolean(taskComponents) && 
+				this.expressionRight.evaluateBoolean(taskComponents);
 	}
 
 	@Override

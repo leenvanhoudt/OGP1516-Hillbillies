@@ -13,9 +13,9 @@ public class IsAliveExpression<E extends UnitExpression> extends BooleanExpressi
 	}
 
 	@Override
-	public Boolean evaluate(TaskComponents taskComponents) {
+	public Boolean evaluateBoolean(TaskComponents taskComponents) {
 		System.out.println("ISALIVE EXP");
-		Unit hilly = this.expressionUnit.evaluate(taskComponents);
+		Unit hilly = this.expressionUnit.evaluateUnit(taskComponents);
 		return hilly.isAlive();
 	}
 

@@ -38,7 +38,7 @@ public class IfStatement<E extends BooleanExpression> extends MyStatement {
 
 	@Override
 	public MyStatement getNext(TaskComponents taskComponents) {		
-		if (this.expressionCondition.evaluate(taskComponents)){
+		if (this.expressionCondition.evaluateBoolean(taskComponents)){
 			return this.statementIfBody;
 		}else if(this.statementElseBody != null){
 			System.out.println("ELSE BODY STATEMENT");

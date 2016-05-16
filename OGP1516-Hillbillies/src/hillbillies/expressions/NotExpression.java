@@ -11,9 +11,9 @@ public class NotExpression<E extends BooleanExpression> extends BooleanExpressio
 	}
 	
 	@Override
-	public Boolean evaluate(TaskComponents taskComponents) {
+	public Boolean evaluateBoolean(TaskComponents taskComponents) {
 		System.out.println("NOT EXP");
-		return !this.expressionExpression.evaluate(taskComponents);
+		return !this.expressionExpression.evaluateBoolean(taskComponents);
 	}
 
 	@Override

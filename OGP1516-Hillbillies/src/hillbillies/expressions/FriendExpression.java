@@ -8,7 +8,7 @@ import hillbillies.scheduler.TaskComponents;
 public class FriendExpression extends UnitExpression {
 	
 	@Override
-	public Unit evaluate(TaskComponents taskComponents) throws Error{
+	public Unit evaluateUnit(TaskComponents taskComponents) throws Error{
 		System.out.println("FRIEND EXP");
 		// TODO zoek dichtst bijzijnde
 		Set<Unit> allUnits = taskComponents.getWorld().getUnits();

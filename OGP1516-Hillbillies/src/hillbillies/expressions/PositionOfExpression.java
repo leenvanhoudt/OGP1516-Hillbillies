@@ -13,9 +13,9 @@ public class PositionOfExpression<E extends UnitExpression> extends CubePosition
 	}
 	
 	@Override
-	public int[] evaluate(TaskComponents taskComponents) {
+	public int[] evaluatePosition(TaskComponents taskComponents) {
 		System.out.println("POSITIONOF EXP");
-		Unit hilly = this.expressionUnit.evaluate(taskComponents);
+		Unit hilly = this.expressionUnit.evaluateUnit(taskComponents);
 		return new int[]{hilly.getCubeCoordinate()[0], hilly.getCubeCoordinate()[1],
 				hilly.getCubeCoordinate()[2]};
 	}

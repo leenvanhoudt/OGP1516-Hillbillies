@@ -15,7 +15,7 @@ public class WorkStatement<E extends CubePositionExpression> extends MyStatement
 	@Override
 	public void execute(TaskComponents taskComponents) throws Error {
 		System.out.println("WORK STATEMENT");
-		int[] position = this.expressionPosition.evaluate(taskComponents);
+		int[] position = this.expressionPosition.evaluatePosition(taskComponents);
 		try{
 			taskComponents.getUnit().workAt(position[0], position[1], position[2]);
 			this.setExecutedState(true);

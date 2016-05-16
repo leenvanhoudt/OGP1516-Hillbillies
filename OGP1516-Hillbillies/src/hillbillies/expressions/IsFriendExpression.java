@@ -13,9 +13,9 @@ public class IsFriendExpression<E extends UnitExpression> extends BooleanExpress
 	}
 	
 	@Override
-	public Boolean evaluate(TaskComponents taskComponents) {
+	public Boolean evaluateBoolean(TaskComponents taskComponents) {
 		System.out.println("ISFRIEND EXP");
-		Unit hilly = this.expressionUnit.evaluate(taskComponents);
+		Unit hilly = this.expressionUnit.evaluateUnit(taskComponents);
 		return hilly.getFaction() == taskComponents.getUnit().getFaction();		
 	}
 
