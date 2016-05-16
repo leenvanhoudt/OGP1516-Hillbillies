@@ -1,12 +1,14 @@
 package hillbillies.statements;
 
 import hillbillies.expressions.BooleanExpression;
+import hillbillies.expressions.IBooleanExpression;
 import hillbillies.scheduler.MyStatement;
 import hillbillies.scheduler.TaskComponents;
 
-public class WhileStatement<E extends BooleanExpression> extends MyStatement {
+public class WhileStatement<E extends BooleanExpression,ReadVariableExpression> extends MyStatement {
 
 	private BooleanExpression expressionCondition;
+	private ReadVariableExpression expressionVariableCondition;
 	private MyStatement statementBody;
 
 	public WhileStatement(BooleanExpression condition, MyStatement body){
@@ -16,10 +18,24 @@ public class WhileStatement<E extends BooleanExpression> extends MyStatement {
 		this.statementBody.setParent(this);
 	}
 	
+	public WhileStatement(ReadVariableExpression condition, MyStatement body){
+		System.out.println("WHILE CONSTRUCTOR");
+		this.expressionVariableCondition = condition;
+		this.statementBody = body;
+		this.statementBody.setParent(this);
+	}
+	
 	@Override
 	public void execute(TaskComponents taskComponents) {
 		System.out.println("WHILE STATEMENT");
-		if(this.expressionCondition.evaluateBoolean(taskComponents)){
+		boolean con;
+		if (this.expressionVariableCondition != null){
+			con = ((IBooleanExpression) this.expressionVariableCondition).evaluateBoolean(taskComponents);
+		}else{
+			con = this.expressionCondition.evaluateBoolean(taskComponents);
+		}
+		
+		if (con){
 			this.statementBody.setExecutedState(false);
 		}else{
 			this.setExecutedState(true);
@@ -29,6 +45,10 @@ public class WhileStatement<E extends BooleanExpression> extends MyStatement {
 
 	@Override
 	public boolean containSelectedCube() {
+		if (this.expressionVariableCondition != null){
+			return  this.statementBody.containSelectedCube() ||
+					((IBooleanExpression) this.expressionVariableCondition).containSelectedCube();
+		}
 		return this.statementBody.containSelectedCube() ||
 				this.expressionCondition.containSelectedCube();
 	}

@@ -7,7 +7,7 @@ import hillbillies.scheduler.TaskComponents;
 
 public class LogPositionExpression extends CubePositionExpression {
 
-	private DijkstraPathFinding dijkstra;
+	private DijkstraPathFinding dijkstra = new DijkstraPathFinding();
 
 	@Override
 	public int[] evaluatePosition(TaskComponents taskComponents) {

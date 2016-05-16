@@ -11,6 +11,7 @@ public class NextToPositionExpression<E extends CubePositionExpression>
 	private CubePositionExpression expressionPosition;
 
 	public NextToPositionExpression(CubePositionExpression position){
+		System.out.println("constructor next to");
 		this.expressionPosition = position;
 	}
 

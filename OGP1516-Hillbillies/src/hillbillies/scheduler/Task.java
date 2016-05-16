@@ -24,7 +24,26 @@ public class Task {
 	
 	//TODO fix it
 	public boolean isWellFormed(){
-		System.out.println("task iswellformed");
+//		System.out.println("task iswellformed");
+//		return true;
+//		MyStatement current = this.getActivity().getNext();
+//		System.out.println("default execute task");
+//		if (current == null)
+//			this.getActivity().setExecutedState(true);
+//		while (!this.getActivity().isExecuted()){
+//			if (current.getNext(this.taskComponents)==null || current.getNext(this.taskComponents).isExecuted()){
+//				try{
+//				current.setExecutedState(true);
+//				current = this.getActivity().getNext(this.taskComponents);
+//				} catch(Throwable e){
+//					System.out.println("catch exception");
+//				}
+//			}else{
+//				current = current.getNext(this.taskComponents);
+//			}
+//		}
+//		
+//		this.getActivity().setExecutedState(false);
 		return true;
 	}
 	

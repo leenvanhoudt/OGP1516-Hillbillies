@@ -8,7 +8,7 @@ import hillbillies.scheduler.TaskComponents;
 
 public class EnemyExpression extends UnitExpression {
 
-	private DijkstraPathFinding dijkstra;
+	private DijkstraPathFinding dijkstra = new DijkstraPathFinding();
 	
 	@Override
 	public Unit evaluateUnit(TaskComponents taskComponents) throws Error{

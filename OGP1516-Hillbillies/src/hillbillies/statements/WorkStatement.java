@@ -1,21 +1,34 @@
 package hillbillies.statements;
 
 import hillbillies.expressions.CubePositionExpression;
+import hillbillies.expressions.ICubePositionExpression;
 import hillbillies.scheduler.MyStatement;
 import hillbillies.scheduler.TaskComponents;
 
-public class WorkStatement<E extends CubePositionExpression> extends MyStatement{
+public class WorkStatement<E extends CubePositionExpression,ReadVariableExpression> extends MyStatement{
 
 	private CubePositionExpression expressionPosition;
+	private ReadVariableExpression expressionVariablePosition;
 
 	public WorkStatement(CubePositionExpression position){
+		System.out.println("work consturctor");
 		this.expressionPosition = position;
+	}
+	
+	public WorkStatement(ReadVariableExpression position){
+		System.out.println("work consturctor");
+		this.expressionVariablePosition = position;
 	}
 	
 	@Override
 	public void execute(TaskComponents taskComponents) throws Error {
 		System.out.println("WORK STATEMENT");
-		int[] position = this.expressionPosition.evaluatePosition(taskComponents);
+		int[] position = new int[]{};
+		if (this.expressionVariablePosition != null){
+			position = ((ICubePositionExpression) this.expressionVariablePosition).evaluatePosition(taskComponents);
+		}else{
+			position = this.expressionPosition.evaluatePosition(taskComponents);
+		}
 		try{
 			taskComponents.getUnit().workAt(position[0], position[1], position[2]);
 			this.setExecutedState(true);
@@ -27,7 +40,11 @@ public class WorkStatement<E extends CubePositionExpression> extends MyStatement
 
 	@Override
 	public boolean containSelectedCube() {
-		return this.expressionPosition.containSelectedCube();
+		if (this.expressionVariablePosition != null){
+			return ((ICubePositionExpression) this.expressionVariablePosition).containSelectedCube();
+		}else{
+			return this.expressionPosition.containSelectedCube();
+		}
 	}
 	
 

@@ -7,8 +7,9 @@ import be.kuleuven.cs.som.annotate.Basic;
 public class DijkstraPathFinding {
 
 	public int[] Dijkstra(int value) throws IndexOutOfBoundsException{
-		Cube[][][] grid = new Cube[this.getUnit().getWorld().getNbCubesX()][this.getUnit().getWorld().getNbCubesY()][this.getUnit().getWorld().getNbCubesZ()];
+		System.out.println("dijkstra");
 		ArrayList<Cube> unchecked = new ArrayList<Cube>();
+		Cube[][][] grid = new Cube[this.getUnit().getWorld().getNbCubesX()][this.getUnit().getWorld().getNbCubesY()][this.getUnit().getWorld().getNbCubesZ()];
 		for (int i=0; i<this.getUnit().getWorld().getNbCubesX(); i++){
 			for (int j=0; j<this.getUnit().getWorld().getNbCubesY(); j++){
 				for (int k=0; k<this.getUnit().getWorld().getNbCubesZ(); k++){
@@ -75,6 +76,23 @@ public class DijkstraPathFinding {
 
 	}
 	
+//	private Cube[][][] makegrid(ArrayList<Cube> unchecked){
+//		Cube[][][] grid = new Cube[this.getUnit().getWorld().getNbCubesX()][this.getUnit().getWorld().getNbCubesY()][this.getUnit().getWorld().getNbCubesZ()];
+//		for (int i=0; i<this.getUnit().getWorld().getNbCubesX(); i++){
+//			for (int j=0; j<this.getUnit().getWorld().getNbCubesY(); j++){
+//				for (int k=0; k<this.getUnit().getWorld().getNbCubesZ(); k++){
+//					grid[i][j][k] = new Cube(i,j,k);
+//					grid[i][j][k].setDijkstraCost(Integer.MAX_VALUE);
+//					if (this.getUnit().getWorld().isPassable(grid[i][j][k].getX(), grid[i][j][k].getY(), grid[i][j][k].getZ())
+//							&& !this.getUnit().isFallingPosition(grid[i][j][k].getX(), grid[i][j][k].getY(), grid[i][j][k].getZ())){
+//					unchecked.add(grid[i][j][k]);
+//					}
+//				}
+//			}
+//		}
+//		return grid;
+//	}
+	
 	/**
 	 * Return the unit that wants to find the path.
 	 */
@@ -91,6 +109,7 @@ public class DijkstraPathFinding {
 	 * 		| The unit is set to the given unit.
 	 */
 	public void setUnit(Unit unit){
+		System.out.println("set unit");
 		this.unit = unit;
 	}
 	

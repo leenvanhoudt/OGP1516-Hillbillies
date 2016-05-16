@@ -25,7 +25,7 @@ public class SequenceStatement extends MyStatement {
 
 	@Override
 	public boolean containSelectedCube() {
-		for (MyStatement statement: this.statementList){
+		for (MyStatement statement: this.getListSequence()){
 			if (statement.containSelectedCube()){
 				return true;
 			}
@@ -33,14 +33,13 @@ public class SequenceStatement extends MyStatement {
 		return false;
 	}
 
-	//TODO wordt deze ergens gebruikt?
 	public List<MyStatement> getListSequence(){
 		return this.statementList;
 	}
 	
 	@Override
 	public MyStatement getNext(TaskComponents taskComponents) {		
-		for (MyStatement statement: this.statementList){
+		for (MyStatement statement: this.getListSequence()){
 			if (!statement.isExecuted()){
 				return statement;
 			}
@@ -59,7 +58,7 @@ public class SequenceStatement extends MyStatement {
 	@Override
 	public void setExecutedState(boolean state) {
 		this.finished = state;
-		for (MyStatement statement: this.statementList){
+		for (MyStatement statement: this.getListSequence()){
 			statement.setExecutedState(state);
 		}
 	}

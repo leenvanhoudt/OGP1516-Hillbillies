@@ -9,6 +9,7 @@ public class CarriesItemExpression<E extends UnitExpression> extends BooleanExpr
 	private UnitExpression expressionUnit;
 
 	public CarriesItemExpression(UnitExpression unit){
+		System.out.println("carries item constructor");
 		this.expressionUnit = unit;
 	}
 	

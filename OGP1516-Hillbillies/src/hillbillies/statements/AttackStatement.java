@@ -1,22 +1,33 @@
 package hillbillies.statements;
 
+import hillbillies.expressions.IUnitExpression;
 import hillbillies.expressions.UnitExpression;
 import hillbillies.model.Unit;
 import hillbillies.scheduler.MyStatement;
 import hillbillies.scheduler.TaskComponents;
 
-public class AttackStatement<E extends UnitExpression> extends MyStatement {
+public class AttackStatement<E extends UnitExpression,ReadVariableExpression> extends MyStatement {
 	
 	private UnitExpression expressionUnit;
+	private ReadVariableExpression expressionVariableUnit;
 
 	public AttackStatement(UnitExpression unit){
 		this.expressionUnit = unit;
+	}
+	
+	public AttackStatement(ReadVariableExpression unit){
+		this.expressionVariableUnit = unit;
 	}
 
 	@Override
 	public void execute(TaskComponents taskComponents) throws Error {
 		System.out.println("ATTACK STATAMENT");
-		Unit enemy = this.expressionUnit.evaluateUnit(taskComponents);
+		Unit enemy;
+		if (this.expressionVariableUnit != null){
+			enemy = ((IUnitExpression) this.expressionVariableUnit).evaluateUnit(taskComponents);
+		}else{
+			enemy = this.expressionUnit.evaluateUnit(taskComponents);
+		}
 		try{
 			taskComponents.getUnit().fight(enemy);
 			this.setExecutedState(true);
@@ -28,6 +39,9 @@ public class AttackStatement<E extends UnitExpression> extends MyStatement {
 
 	@Override
 	public boolean containSelectedCube() {
+		if (this.expressionVariableUnit != null){
+			return ((IUnitExpression) this.expressionVariableUnit).containSelectedCube();
+		}
 		return this.expressionUnit.containSelectedCube();
 	}
 

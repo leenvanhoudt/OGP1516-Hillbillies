@@ -7,13 +7,14 @@ import hillbillies.scheduler.TaskComponents;
 
 public class BoulderPositionExpression extends CubePositionExpression {
 
-	private DijkstraPathFinding dijkstra;
+	private DijkstraPathFinding dijkstra = new DijkstraPathFinding();
 
 	@Override
 	public int[] evaluatePosition(TaskComponents taskComponents) {
 		System.out.println("BOULDER EXP");
 		this.dijkstra.setUnit(taskComponents.getUnit());
-		return this.dijkstra.Dijkstra(0);
+		int[] pos = this.dijkstra.Dijkstra(0);
+		return pos;
 	}
 
 

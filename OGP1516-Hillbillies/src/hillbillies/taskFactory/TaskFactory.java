@@ -60,13 +60,19 @@ public class TaskFactory implements ITaskFactory<MyExpression,MyStatement,Task>{
 
 	@Override
 	public MyStatement createWhile(MyExpression condition, MyStatement body, SourceLocation sourceLocation) {
-		return new WhileStatement<BooleanExpression>((BooleanExpression)condition, body);
+		if (condition instanceof ReadVariableExpression){
+			return new WhileStatement<BooleanExpression, ReadVariableExpression>((ReadVariableExpression)condition,body);
+		}
+		return new WhileStatement<BooleanExpression,ReadVariableExpression>((BooleanExpression)condition, body);
 	}
 
 	@Override
 	public MyStatement createIf(MyExpression condition, MyStatement ifBody, MyStatement elseBody,
 			SourceLocation sourceLocation) {
-		return new IfStatement<BooleanExpression>((BooleanExpression)condition, ifBody, elseBody);
+		if (condition instanceof ReadVariableExpression){
+			return new IfStatement<BooleanExpression, ReadVariableExpression>((ReadVariableExpression)condition,ifBody,elseBody);
+		}
+		return new IfStatement<BooleanExpression,ReadVariableExpression>((BooleanExpression)condition, ifBody, elseBody);
 	}
 
 	@Override
@@ -86,22 +92,30 @@ public class TaskFactory implements ITaskFactory<MyExpression,MyStatement,Task>{
 
 	@Override
 	public MyStatement createMoveTo(MyExpression position, SourceLocation sourceLocation){
-		return new MoveToStatement<CubePositionExpression>((CubePositionExpression)position);
+		if (position instanceof ReadVariableExpression)
+			return new MoveToStatement<CubePositionExpression,ReadVariableExpression>((ReadVariableExpression)position);
+		return new MoveToStatement<CubePositionExpression,ReadVariableExpression>((CubePositionExpression)position);
 	}
 
 	@Override
 	public MyStatement createWork(MyExpression position, SourceLocation sourceLocation) {
-		return new WorkStatement<CubePositionExpression>((CubePositionExpression)position);
+		if (position instanceof ReadVariableExpression)
+			return new WorkStatement<CubePositionExpression,ReadVariableExpression>((ReadVariableExpression)position);
+		return new WorkStatement<CubePositionExpression,ReadVariableExpression>((CubePositionExpression)position);
 	}
 
 	@Override
 	public MyStatement createFollow(MyExpression unit, SourceLocation sourceLocation) {
-		return new FollowStatement<UnitExpression>((UnitExpression)unit);
+		if (unit instanceof ReadVariableExpression)
+			return new FollowStatement<UnitExpression,ReadVariableExpression>((ReadVariableExpression)unit);
+		return new FollowStatement<UnitExpression,ReadVariableExpression>((UnitExpression)unit);
 	}
 
 	@Override
 	public MyStatement createAttack(MyExpression unit, SourceLocation sourceLocation) {
-		return new AttackStatement<UnitExpression>((UnitExpression)unit);
+		if (unit instanceof ReadVariableExpression)
+			return new AttackStatement<UnitExpression,ReadVariableExpression>((ReadVariableExpression)unit);
+		return new AttackStatement<UnitExpression,ReadVariableExpression>((UnitExpression)unit);
 	}
 
 	@Override
