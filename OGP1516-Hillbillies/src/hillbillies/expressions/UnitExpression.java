@@ -1,12 +1,8 @@
 package hillbillies.expressions;
 
-import hillbillies.model.Unit;
 import hillbillies.scheduler.MyExpression;
-import hillbillies.scheduler.TaskComponents;
 
 public abstract class UnitExpression extends MyExpression implements IUnitExpression{
-	
-	//public abstract Unit evaluate(TaskComponents taskComponents);
-	
+		
 	public abstract boolean containSelectedCube();
 }

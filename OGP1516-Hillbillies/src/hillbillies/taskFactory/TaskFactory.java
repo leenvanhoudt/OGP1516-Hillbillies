@@ -125,27 +125,37 @@ public class TaskFactory implements ITaskFactory<MyExpression,MyStatement,Task>{
 
 	@Override
 	public MyExpression createIsSolid(MyExpression position, SourceLocation sourceLocation) {
-		return new IsSolidExpression<CubePositionExpression>((CubePositionExpression)position);
+		if (position instanceof ReadVariableExpression)
+			return new IsSolidExpression<CubePositionExpression,ReadVariableExpression>((ReadVariableExpression)position);
+		return new IsSolidExpression<CubePositionExpression,ReadVariableExpression>((CubePositionExpression)position);
 	}
 
 	@Override
 	public MyExpression createIsPassable(MyExpression position, SourceLocation sourceLocation) {
-		return new IsPassableExpression<CubePositionExpression>((CubePositionExpression)position);
+		if (position instanceof ReadVariableExpression)
+			return new IsPassableExpression<CubePositionExpression,ReadVariableExpression>((ReadVariableExpression)position);
+		return new IsPassableExpression<CubePositionExpression,ReadVariableExpression>((CubePositionExpression)position);
 	}
 
 	@Override
 	public MyExpression createIsFriend(MyExpression unit, SourceLocation sourceLocation) {
-		return new IsFriendExpression<UnitExpression>((UnitExpression)unit);
+		if (unit instanceof ReadVariableExpression)
+			return new IsFriendExpression<UnitExpression,ReadVariableExpression>((ReadVariableExpression)unit);
+		return new IsFriendExpression<UnitExpression,ReadVariableExpression>((UnitExpression)unit);
 	}
 
 	@Override
 	public MyExpression createIsEnemy(MyExpression unit, SourceLocation sourceLocation) {
-		return new IsEnemyExpression<UnitExpression>((UnitExpression)unit);
+		if (unit instanceof ReadVariableExpression)
+			return new IsEnemyExpression<UnitExpression,ReadVariableExpression>((ReadVariableExpression)unit);
+		return new IsEnemyExpression<UnitExpression,ReadVariableExpression>((UnitExpression)unit);
 	}
 
 	@Override
 	public MyExpression createIsAlive(MyExpression unit, SourceLocation sourceLocation) {
-		return new IsAliveExpression<UnitExpression>((UnitExpression)unit);
+		if (unit instanceof ReadVariableExpression)
+			return new IsAliveExpression<UnitExpression,ReadVariableExpression>((ReadVariableExpression)unit);
+		return new IsAliveExpression<UnitExpression,ReadVariableExpression>((UnitExpression)unit);
 	}
 
 	@Override
@@ -162,7 +172,16 @@ public class TaskFactory implements ITaskFactory<MyExpression,MyStatement,Task>{
 
 	@Override
 	public MyExpression createAnd(MyExpression left, MyExpression right, SourceLocation sourceLocation) {
-		return new AndExpression<BooleanExpression>((BooleanExpression)left, (BooleanExpression)right);
+		if (left instanceof BooleanExpression && right instanceof BooleanExpression){
+			return new AndExpression<BooleanExpression,ReadVariableExpression>((BooleanExpression)left, (BooleanExpression)right);
+		} else if (left instanceof ReadVariableExpression && right instanceof ReadVariableExpression){
+			return new AndExpression<BooleanExpression,ReadVariableExpression>((ReadVariableExpression)left, (ReadVariableExpression)right);
+		} else if (left instanceof ReadVariableExpression && right instanceof BooleanExpression){
+			return new AndExpression<BooleanExpression,ReadVariableExpression>((ReadVariableExpression)left, (BooleanExpression)right);
+		} else if (left instanceof BooleanExpression && right instanceof ReadVariableExpression){
+			return new AndExpression<BooleanExpression,ReadVariableExpression>((BooleanExpression)left, (ReadVariableExpression)right);
+		}
+		throw new Error();
 	}
 
 	@Override

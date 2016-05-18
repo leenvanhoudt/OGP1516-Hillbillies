@@ -2,7 +2,6 @@ package hillbillies.expressions;
 
 
 import hillbillies.model.DijkstraPathFinding;
-import hillbillies.model.PathFinding;
 import hillbillies.scheduler.TaskComponents;
 
 public class LogPositionExpression extends CubePositionExpression {

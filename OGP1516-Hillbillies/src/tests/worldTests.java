@@ -56,7 +56,7 @@ public class worldTests {
 		assertTrue("one unit in faction", world.getActiveFactions().size()==1);
 	}
 	
-	@Test (expected=IllegalArgumentException.class)
+	@Test
 	public void testSpawnUnitOver100() throws ModelException{
 		int[][][] types = new int[102][1][2];
 		for (int i=0;i<101;i++)
@@ -65,6 +65,7 @@ public class worldTests {
 		for (int i=0;i<100;i++)
 			world.spawnUnit(false);
 		world.spawnUnit(false);
+		assertTrue("100 units and not 101", world.getUnits().size()==100);
 	}
 	
 	@Test

@@ -9,7 +9,7 @@ public class OrExpression<E extends BooleanExpression,ReadVariableExpression> ex
 	private ReadVariableExpression expressionVariableLeft;
 	private ReadVariableExpression expressionVariableRight;
 
-	public OrExpression(E left, E right){
+	public OrExpression(BooleanExpression left, BooleanExpression right){
 		this.expressionLeft = left;
 		this.expressionRight = right;
 	}

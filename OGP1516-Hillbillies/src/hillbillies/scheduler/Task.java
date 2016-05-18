@@ -19,12 +19,14 @@ public class Task {
 	private int[] selectedCube;
 
 	
-	public Task(String name, int priority, MyStatement activity, int[] selectedCube){
+	public Task(String name, int priority, MyStatement activity, int[] selectedCube)throws IllegalArgumentException{
 		System.out.println("task class");
 		this.nameTask = name;
 		this.priority = priority;
 		this.statementactivity = activity;
-		this.selectedCube = selectedCube;		
+		this.selectedCube = selectedCube;	
+		if (!this.isWellFormed())
+			throw new IllegalArgumentException();
 	}
 	
 	//TODO fix it
