@@ -70,11 +70,10 @@ public class Task {
 		}
 		
 		for (MyStatement variableStatement: readVariableStatementList){
-			MyStatement parent = variableStatement.getParent();
+			MyStatement parent = variableStatement;
 			MyStatement checking = variableStatement;
-			while (parent != null && !(parent instanceof AssignmentStatement) &&
-					variableStatement.getReadVariableExpression().getVariableName() ==
-					((AssignmentStatement)parent).getVarName()){
+			while (parent != null && !this.checkParentRightAssignmentStatement(parent, variableStatement)){
+				parent = parent.getParent();
 				if (parent instanceof SequenceStatement){
 					for (int i = ((SequenceStatement) parent).getListSequence().indexOf(checking);
 							i>=0; i--){
@@ -86,7 +85,6 @@ public class Task {
 						}
 					}
 				}
-				parent = parent.getParent();
 			}
 			if (parent == null){
 				return false;
@@ -94,6 +92,16 @@ public class Task {
 			
 		}
 		return true;
+	}
+	
+	private boolean checkParentRightAssignmentStatement(MyStatement parent, MyStatement variableStatement){
+		if (!(parent instanceof AssignmentStatement)){
+			return false;
+		}else if (variableStatement.getReadVariableExpression().getVariableName() ==
+				((AssignmentStatement)parent).getVarName()){
+			return true;
+		}
+		return false;
 	}
 	
 	public Set<Scheduler> getSchedulersForTask(){

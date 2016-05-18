@@ -30,6 +30,8 @@ public class Scheduler {
 	
 	public void replace(Task original, Task replacement){
 		System.out.println("replace");
+		if (original.getAssignedUnit() != null)
+			original.getAssignedUnit().interruptTask();
 		this.removeTask(original);
 		this.schedule(replacement);
 	}

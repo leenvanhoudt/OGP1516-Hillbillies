@@ -74,7 +74,6 @@ public class FollowStatement<E extends UnitExpression,ReadVariableExpression> ex
 
 	@Override
 	public hillbillies.expressions.ReadVariableExpression getReadVariableExpression() {
-		// TODO Auto-generated method stub
 		return (hillbillies.expressions.ReadVariableExpression) this.expressionVariableUnit;
 	}
 

@@ -4,7 +4,6 @@ import hillbillies.model.Unit;
 import hillbillies.scheduler.MyExpression;
 import hillbillies.scheduler.TaskComponents;
 
-//TODO fout bij extends myexpression => te breed voor generisch
 public class ReadVariableExpression extends MyExpression implements IBooleanExpression,
 	ICubePositionExpression, IUnitExpression{
 
@@ -39,7 +38,6 @@ public class ReadVariableExpression extends MyExpression implements IBooleanExpr
 		return (Boolean) taskComponents.getValue(this.varName);
 	}
 	
-	//TODO als variabele selected is moet wel true geven :(
 	@Override
 	public boolean containSelectedCube() {
 		return false;

@@ -155,7 +155,9 @@ public class TaskFactory implements ITaskFactory<MyExpression,MyStatement,Task>{
 
 	@Override
 	public MyExpression createNot(MyExpression expression, SourceLocation sourceLocation) {
-		return new NotExpression<BooleanExpression>((BooleanExpression)expression);
+		if (expression instanceof ReadVariableExpression)
+			return new NotExpression<BooleanExpression,ReadVariableExpression>((ReadVariableExpression)expression);
+		return new NotExpression<BooleanExpression,ReadVariableExpression>((BooleanExpression)expression);
 	}
 
 	@Override
@@ -165,7 +167,16 @@ public class TaskFactory implements ITaskFactory<MyExpression,MyStatement,Task>{
 
 	@Override
 	public MyExpression createOr(MyExpression left, MyExpression right, SourceLocation sourceLocation) {
-		return new OrExpression<BooleanExpression>((BooleanExpression)left, (BooleanExpression)right);
+		if (left instanceof BooleanExpression && right instanceof BooleanExpression){
+			return new OrExpression<BooleanExpression,ReadVariableExpression>((BooleanExpression)left, (BooleanExpression)right);
+		} else if (left instanceof ReadVariableExpression && right instanceof ReadVariableExpression){
+			return new OrExpression<BooleanExpression,ReadVariableExpression>((ReadVariableExpression)left, (ReadVariableExpression)right);
+		} else if (left instanceof ReadVariableExpression && right instanceof BooleanExpression){
+			return new OrExpression<BooleanExpression,ReadVariableExpression>((ReadVariableExpression)left, (BooleanExpression)right);
+		} else if (left instanceof BooleanExpression && right instanceof ReadVariableExpression){
+			return new OrExpression<BooleanExpression,ReadVariableExpression>((BooleanExpression)left, (ReadVariableExpression)right);
+		}
+		throw new Error();
 	}
 
 	@Override
@@ -195,12 +206,16 @@ public class TaskFactory implements ITaskFactory<MyExpression,MyStatement,Task>{
 
 	@Override
 	public MyExpression createNextToPosition(MyExpression position, SourceLocation sourceLocation) {
-		return new NextToPositionExpression<CubePositionExpression>((CubePositionExpression)position);
+		if (position instanceof ReadVariableExpression)
+			return new NextToPositionExpression<CubePositionExpression,ReadVariableExpression>((ReadVariableExpression)position);
+		return new NextToPositionExpression<CubePositionExpression,ReadVariableExpression>((CubePositionExpression)position);
 	}
 
 	@Override
 	public MyExpression createPositionOf(MyExpression unit, SourceLocation sourceLocation) {
-		return new PositionOfExpression<UnitExpression>((UnitExpression)unit);
+		if (unit instanceof ReadVariableExpression)
+			return new PositionOfExpression<UnitExpression,ReadVariableExpression>((ReadVariableExpression)unit);
+		return new PositionOfExpression<UnitExpression,ReadVariableExpression>((UnitExpression)unit);
 	}
 
 	@Override

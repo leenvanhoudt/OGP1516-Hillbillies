@@ -2001,7 +2001,7 @@ public class Unit {
 		//TODO check of andere unit highest nog niet aan het uitvoeren is
 		if (!this.getFaction().getScheduler().getScheduledTasks().isEmpty()
 				&& this.getAssignedTask()==null && 
-				this.getFaction().getScheduler().getTaskHighestPriority() != null){
+				this.getFaction().getScheduler().getTaskHighestPriority().getAssignedUnit() == null){
 			System.out.println("default assign task");
 			Task task = this.getFaction().getScheduler().getTaskHighestPriority();
 			this.setAssignedTask(task);
@@ -2098,13 +2098,16 @@ public class Unit {
 	}
 	
 	public void followAdvanceTime(){
-		if ((this.oldPositionFollowedUnit == null || 
+		if ((this.followedUnit.getCubeCoordinate()[0] == this.getCubeCoordinate()[0] &&
+				this.followedUnit.getCubeCoordinate()[1] == this.getCubeCoordinate()[1] &&
+				this.followedUnit.getCubeCoordinate()[2] == this.getCubeCoordinate()[2]) || 
+				!this.followedUnit.isAlive()){
+			this.isFollowing = false;
+		}
+		else if ((this.oldPositionFollowedUnit == null || 
 				(this.oldPositionFollowedUnit[0] == this.getCubeCoordinate()[0] &&
 				this.oldPositionFollowedUnit[1] == this.getCubeCoordinate()[1] &&
-				this.oldPositionFollowedUnit[2] == this.getCubeCoordinate()[2])) &&
-				!(this.followedUnit.getCubeCoordinate()[0] == this.getCubeCoordinate()[0] &&
-				this.followedUnit.getCubeCoordinate()[1] == this.getCubeCoordinate()[1] &&
-				this.followedUnit.getCubeCoordinate()[2] == this.getCubeCoordinate()[2])){
+				this.oldPositionFollowedUnit[2] == this.getCubeCoordinate()[2]))){
 			int [] posFollowedUnit = {this.followedUnit.getCubeCoordinate()[0],
 					this.followedUnit.getCubeCoordinate()[1], this.followedUnit.getCubeCoordinate()[2]};
 			this.oldPositionFollowedUnit = posFollowedUnit;

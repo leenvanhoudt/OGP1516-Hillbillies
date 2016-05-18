@@ -10,7 +10,7 @@ public class MoveToStatement<E extends CubePositionExpression,ReadVariableExpres
 	private CubePositionExpression expressionPosition;
 	private ReadVariableExpression expressionVariablePosition;
 
-	public MoveToStatement(CubePositionExpression position){
+	public MoveToStatement(E position){
 		System.out.println("moveto constructor");
 		this.expressionPosition = position;
 	}
@@ -18,7 +18,6 @@ public class MoveToStatement<E extends CubePositionExpression,ReadVariableExpres
 	public MoveToStatement(ReadVariableExpression position){
 		System.out.println("moveto readvar constructor");
 		this.expressionVariablePosition = position;
-		System.out.println(position instanceof CubePositionExpression);
 	}
 	
 	@Override
@@ -72,13 +71,11 @@ public class MoveToStatement<E extends CubePositionExpression,ReadVariableExpres
 
 	@Override
 	public boolean containReadVariableExpression() {
-		// TODO Auto-generated method stub
 		return this.expressionVariablePosition != null;
 	}
 
 	@Override
 	public hillbillies.expressions.ReadVariableExpression getReadVariableExpression() {
-		// TODO Auto-generated method stub
 		return (hillbillies.expressions.ReadVariableExpression) this.expressionVariablePosition;
 	}
 

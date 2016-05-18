@@ -38,9 +38,10 @@ public class DijkstraPathFinding {
 			int[] pos = {minimum.getX(),minimum.getY(),minimum.getZ()};
 			if(value == 0 && this.getUnit().getWorld().cubeContainsBoulder(pos[0], pos[1], pos[2]) ||
 				(value == 1 && this.getUnit().getWorld().cubeContainsLog(pos[0], pos[1], pos[2])) ||
-				(value == 2 && this.getUnit().getWorld().cubeContainsUnit(pos[0], pos[1], pos[2]) &&
-				this.getUnit().getWorld().CubeContainOtherUnit(pos[0], pos[1], pos[2], this.getUnit())) ||
-				(value == 3 && (this.getUnit().getWorld().getCubeType(pos[0], pos[1], pos[2]) == 3))){
+				(value == 2 && (this.getUnit().getWorld().getCubeType(pos[0], pos[1], pos[2]) == 3)) ||
+				(value == 3 && this.getUnit().getWorld().CubeContainOtherUnit(pos[0], pos[1], pos[2], this.getUnit()))||
+				(value == 4 && this.getUnit().getWorld().CubeContainFriend(pos[0], pos[1], pos[2], this.getUnit())) ||
+				(value == 5 && this.getUnit().getWorld().CubeContainEnemy(pos[0], pos[1], pos[2], this.getUnit()))){
 				break;
 			}			
 			for (int i=-1; i<2; i++){

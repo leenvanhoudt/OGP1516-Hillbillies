@@ -1,7 +1,8 @@
 package hillbillies.expressions;
 
+import java.util.ArrayList;
+
 import hillbillies.model.DijkstraPathFinding;
-import hillbillies.model.PathFinding;
 import hillbillies.model.Unit;
 import hillbillies.scheduler.TaskComponents;
 
@@ -11,11 +12,10 @@ public class AnyExpression extends UnitExpression{
 	
 	@Override
 	public Unit evaluateUnit(TaskComponents taskComponents) throws Error {
-		//TODO return positie of unit zelf? zoek uit voor alle dijksta
 		this.dijkstra.setUnit(taskComponents.getUnit());
-		int[] cube = this.dijkstra.Dijkstra(2);
-		return taskComponents.getWorld().getCubeOtherUnit(cube[0], cube[1], cube[2],
-				taskComponents.getUnit());
+		int[] cube = this.dijkstra.Dijkstra(3);
+		ArrayList<Unit> possibleUnits = taskComponents.getWorld().getCubeOtherUnit(cube[0], cube[1], cube[2], taskComponents.getUnit());
+		return possibleUnits.get(0);
 	}
 
 	@Override

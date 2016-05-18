@@ -12,7 +12,7 @@ public class WorkshopPositionExpression extends CubePositionExpression{
 		System.out.println("WORKSHOP EXP");
 		try{
 			this.dijkstra.setUnit(taskComponents.getUnit());
-			return this.dijkstra.Dijkstra(3);
+			return this.dijkstra.Dijkstra(2);
 		} catch(Throwable e){
 			System.out.println("error finding workshop");
 			throw new Error("no workshop found");

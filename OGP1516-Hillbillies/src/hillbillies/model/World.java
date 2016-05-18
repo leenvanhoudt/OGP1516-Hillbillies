@@ -680,7 +680,7 @@ public class World {
 	 * @throws IllegalArgumentException ...
 	 * 		| If there is no other unit located at that cube.
 	 */
-	public Boolean CubeContainOtherUnit(int x, int y, int z, Unit givenUnit){
+	public boolean CubeContainOtherUnit(int x, int y, int z, Unit givenUnit){
 		for (Unit unit:this.getUnits()){
 			if (unit.getCubeCoordinate()[0]==x && unit.getCubeCoordinate()[1]==y
 					&& unit.getCubeCoordinate()[2]==z && unit != givenUnit){
@@ -690,14 +690,41 @@ public class World {
 		return false;
 	}
 	
-	public Unit getCubeOtherUnit(int x, int y, int z, Unit givenUnit){
+	public boolean CubeContainFriend(int x, int y, int z, Unit givenUnit){
+		if (!this.CubeContainOtherUnit(x, y, z, givenUnit))
+			return false;
+		else{
+			for (Unit unit: this.getCubeOtherUnit(x, y, z, givenUnit)){
+				if (unit.getFaction() == givenUnit.getFaction()){
+					return true;
+				}
+			}
+			return false;
+		}
+	}
+	
+	public boolean CubeContainEnemy(int x, int y, int z, Unit givenUnit){
+		if (!this.CubeContainOtherUnit(x, y, z, givenUnit))
+			return false;
+		else{
+			for (Unit unit: this.getCubeOtherUnit(x, y, z, givenUnit)){
+				if (unit.getFaction() != givenUnit.getFaction()){
+					return true;
+				}
+			}
+			return false;
+		}
+	}
+	
+	public ArrayList<Unit> getCubeOtherUnit(int x, int y, int z, Unit givenUnit){
+		ArrayList<Unit> unitsOnCube = new ArrayList<Unit>();
 		for (Unit unit:this.getUnits()){
 			if (unit.getCubeCoordinate()[0]==x && unit.getCubeCoordinate()[1]==y
 					&& unit.getCubeCoordinate()[2]==z && unit != givenUnit){
-				return unit;
+				unitsOnCube.add(unit);
 			}
 		}
-		return null;
+		return unitsOnCube;
 	}
 	
 	
