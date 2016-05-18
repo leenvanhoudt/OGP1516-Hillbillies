@@ -2,8 +2,9 @@ package hillbillies.expressions;
 
 import hillbillies.scheduler.TaskComponents;
 
-public class AndExpression<E extends BooleanExpression,ReadVariableExpression> extends BooleanExpression implements
-	IBooleanExpression{
+@SuppressWarnings("hiding")
+public class AndExpression<E extends BooleanExpression,ReadVariableExpression> 
+	extends BooleanExpression{
 
 	private BooleanExpression expressionLeft;
 	private BooleanExpression expressionRight;
@@ -36,11 +37,13 @@ public class AndExpression<E extends BooleanExpression,ReadVariableExpression> e
 		boolean left;
 		boolean right;
 		if (this.expressionVariableLeft != null)
-			left = ((IBooleanExpression) this.expressionVariableLeft).evaluateBoolean(taskComponents);
+			left = ((IBooleanExpression) this.expressionVariableLeft)
+				.evaluateBoolean(taskComponents);
 		else
 			left = this.expressionLeft.evaluateBoolean(taskComponents);
 		if (this.expressionVariableRight != null)
-			right = ((IBooleanExpression) this.expressionVariableRight).evaluateBoolean(taskComponents);
+			right = ((IBooleanExpression) this.expressionVariableRight)
+				.evaluateBoolean(taskComponents);
 		else
 			right = this.expressionRight.evaluateBoolean(taskComponents);
 		

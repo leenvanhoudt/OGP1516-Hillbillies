@@ -3,7 +3,9 @@ package hillbillies.expressions;
 import hillbillies.model.Unit;
 import hillbillies.scheduler.TaskComponents;
 
-public class IsFriendExpression<E extends UnitExpression, ReadVariableExpression> extends BooleanExpression{
+@SuppressWarnings("hiding")
+public class IsFriendExpression<E extends UnitExpression, ReadVariableExpression> 
+	extends BooleanExpression{
 
 
 	private UnitExpression expressionUnit;

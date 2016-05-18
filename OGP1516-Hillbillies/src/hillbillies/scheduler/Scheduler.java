@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import be.kuleuven.cs.som.annotate.Basic;
+import be.kuleuven.cs.som.annotate.Raw;
 import hillbillies.model.Unit;
 import ogp.framework.util.ModelException;
 
@@ -23,7 +25,10 @@ public class Scheduler {
 	
 	public void removeTask(Task task){
 		System.out.println("remove");
-		this.scheduledList.remove(task);
+		if (!this.isTerminated){
+			this.terminate();
+			this.scheduledList.remove(task);
+		}
 	}
 	
 	private ArrayList<Task> scheduledList = new ArrayList<Task>();
@@ -48,10 +53,10 @@ public class Scheduler {
 	public Task getTaskHighestPriority(){
 		System.out.println("get highest priority");
 		Task currentHighest = null;
-		for (int i = 0; i<scheduledList.size(); i++){
-			if ((scheduledList.get(i).getAssignedUnit() == null) && (currentHighest == null || 
-					currentHighest.getPriority() < scheduledList.get(i).getPriority())){
-				currentHighest = scheduledList.get(i);
+		for (int i = 0; i<this.getScheduledTasks().size(); i++){
+			if ((this.getScheduledTasks().get(i).getAssignedUnit() == null) && (currentHighest == null || 
+					currentHighest.getPriority() < this.getScheduledTasks().get(i).getPriority())){
+				currentHighest = this.getScheduledTasks().get(i);
 			}
 		}
 		return currentHighest;
@@ -78,7 +83,7 @@ public class Scheduler {
 		unit.setAssignedTask(null);
 	}
 	
-	//TODO leer iterator
+	
 	/**
 	 * Returns an iterator for all tasks currently managed by the given
 	 * scheduler.
@@ -125,5 +130,30 @@ public class Scheduler {
 			
 		};
 	}
+	
+	/**
+	 * Terminate this task.
+	 *
+	 * @post   This task  is terminated.
+	 *       | new.isTerminated()
+	 */
+	 public void terminate() {
+		 this.isTerminated = true;
+	 }
+	 
+	 /**
+	  * Return a boolean indicating whether or not this task
+	  * is terminated.
+	  */
+	 @Basic @Raw
+	 public boolean isTerminated() {
+		 return this.isTerminated;
+	 }
+	 
+	 /**
+	  * Variable registering whether this person is terminated.
+	  */
+	 private boolean isTerminated = false;
+	 
 	
 }

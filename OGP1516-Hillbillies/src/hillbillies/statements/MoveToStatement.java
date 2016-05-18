@@ -10,7 +10,7 @@ public class MoveToStatement<E extends CubePositionExpression,ReadVariableExpres
 	private CubePositionExpression expressionPosition;
 	private ReadVariableExpression expressionVariablePosition;
 
-	public MoveToStatement(E position){
+	public MoveToStatement(CubePositionExpression position){
 		System.out.println("moveto constructor");
 		this.expressionPosition = position;
 	}

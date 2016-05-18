@@ -1230,24 +1230,28 @@ public class Unit {
 			this.isResting = false;
 			this.setHitPoints(this.hitPointsBeforeRest);
 			this.setStaminaPoints(this.staminaPointsBeforeRest);
-		} else if (((this.getCurrentHitPoints() - this.hitPointsBeforeRest > 1)
+		} 
+		else if (((this.getCurrentHitPoints() - this.hitPointsBeforeRest > 1)
 				|| this.getCurrentHitPoints() == this.getMaxHitPoints())
 				&& (this.isMoving() || this.isAttacking() || this.isWorking())) {
 			if (!this.restAfterWork)
 				this.isResting = false;
 			this.restAfterWork = false;
-		} else if ((this.getCurrentHitPoints() == this.getMaxHitPoints())
+		} 
+		else if ((this.getCurrentHitPoints() == this.getMaxHitPoints())
 				&& (this.getCurrentStaminaPoints() == this.getMaxStaminaPoints())) {
 			if (this.isMovingTo)
 				this.setPosition(this.getNextPosition());
 			this.isResting = false;
-		} else if ((this.getCurrentHitPoints() != this.getMaxHitPoints())) {
+		} 
+		else if ((this.getCurrentHitPoints() != this.getMaxHitPoints())) {
 			this.fractionOfHitPoint += (this.getToughness() / 200.0) * (dt / 0.2);
 			if (this.fractionOfHitPoint >= 1) {
 				this.setHitPoints(this.getCurrentHitPoints() + 1);
 				this.fractionOfHitPoint -= 1;
 			}
-		} else if ((this.getCurrentHitPoints() == this.getMaxHitPoints())
+		} 
+		else if ((this.getCurrentHitPoints() == this.getMaxHitPoints())
 				&& (this.getCurrentStaminaPoints() != this.getMaxStaminaPoints())) {
 			this.fractionOfStaminaPoint += (this.getToughness() / 100.0) * (dt / 0.2);
 			if (this.fractionOfStaminaPoint >= 1) {
@@ -1997,80 +2001,94 @@ public class Unit {
 	 * 		| this.fight(unit)
 	 */
 	private void defaultBehavior(double dt) throws IllegalArgumentException, IndexOutOfBoundsException {
-		//TODO interrupted -> unassing manneke en trek priority af.
-		//TODO check of andere unit highest nog niet aan het uitvoeren is
 		if (!this.getFaction().getScheduler().getScheduledTasks().isEmpty()
 				&& this.getAssignedTask()==null && 
-				this.getFaction().getScheduler().getTaskHighestPriority().getAssignedUnit() == null){
-			System.out.println("default assign task");
-			Task task = this.getFaction().getScheduler().getTaskHighestPriority();
-			this.setAssignedTask(task);
-			task.setAssignedUnit(this);
-			this.taskComponents = new TaskComponents(this.getWorld(), this, this.getAssignedTask().getSelectedCube());
+				this.getFaction().getScheduler().getTaskHighestPriority() != null){
+			this.assignUnitToTask();
 		}
 		if (this.getAssignedTask()!= null && !this.getAssignedTask().getActivity().isExecuted()){
-			MyStatement current = this.getAssignedTask().getActivity().getNext(this.taskComponents);
-			System.out.println("default execute task");
-			if (current == null)
-				this.getAssignedTask().getActivity().execute(this.taskComponents);
-			while (!this.getAssignedTask().getActivity().isExecuted() && dt>0){
-				if (current.getNext(this.taskComponents)==null || current.getNext(this.taskComponents).isExecuted()){
-					try{
-					current.execute(this.taskComponents);
-					current = this.getAssignedTask().getActivity().getNext(this.taskComponents);
-					dt = dt - 0.001;
-					if (this.isMovingTo || this.isAttacking() || this.isWorking()){
-						break;
-					}} catch(Throwable e){
-						System.out.println("catch exception");
-						this.interruptTask();
-					}
-				}else{
-					current = current.getNext(this.taskComponents);
-				}
-			}
+			this.executeTask(dt);
 		} 
 		else if (this.getAssignedTask()!= null && this.getAssignedTask().getActivity().isExecuted()){
-			System.out.println("default end task");
-			this.getAssignedTask().getActivity().setExecutedState(false);
-			this.getFaction().getScheduler().removeTask(this.getAssignedTask());
-			this.getFaction().getScheduler().reset(this.getAssignedTask(), this);
+			this.endTask();
 		}
 		else{
-			Random random = new Random();
-			//TODO zet random back
-			int i=2;//random.nextInt(5);
-			int[] randomPosition = new int[] { random.nextInt(this.getWorld().getNbCubesX()), 
-					random.nextInt(this.getWorld().getNbCubesY()), random.nextInt(this.getWorld().getNbCubesZ()) };
-			double[] randomPosition2 = new double[] {randomPosition[0]+ LC/2, randomPosition[1]+LC/2, randomPosition[2]+LC/2};
-			switch (i) {
-			case 0:
-				this.moveTo(randomPosition);
-				break;
-			case 1:
-				if(this.getCubeCoordinate()[0] != this.getWorld().getNbCubesX()-1)
-					this.workAt(this.getCubeCoordinate()[0]+1,this.getCubeCoordinate()[1],this.getCubeCoordinate()[2]);
-				break;
-			case 2:
-				this.rest();
-				break;
-			case 3:
-				this.defaultBehaviorCase3 = true;
-				this.calculateSpeed(randomPosition2);
-				this.moveTo(randomPosition);
-				break;
-			case 4:
-				for (Unit unit:this.getWorld().getUnits()){
-					double d = Math.sqrt(Math.pow(unit.getPosition()[0] - this.getPosition()[0],2) + 
-							Math.pow(unit.getPosition()[1] - this.getPosition()[1],2) +
-							Math.pow(unit.getPosition()[2] - this.getPosition()[2],2));
-					if (d <= MAX_DISTANCE_ADJACENT_CUBE){
-						this.fight(unit);
-						break;
-					}
+			this.randomDefaultBehavior();
+		}
+	}
+	
+	private void assignUnitToTask(){
+		System.out.println("default assign task");
+		Task task = this.getFaction().getScheduler().getTaskHighestPriority();
+		this.setAssignedTask(task);
+		task.setAssignedUnit(this);
+		this.taskComponents = new TaskComponents(this.getWorld(), this, this.getAssignedTask().getSelectedCube());
+	}
+	
+	private void executeTask(double dt){
+		MyStatement current = this.getAssignedTask().getActivity().getNext(this.taskComponents);
+		System.out.println("default execute task");
+		if (current == null)
+			this.getAssignedTask().getActivity().execute(this.taskComponents);
+		while (!this.getAssignedTask().getActivity().isExecuted() && dt>0){
+			if (current.getNext(this.taskComponents)==null || current.getNext(this.taskComponents).isExecuted()){
+				try{
+				current.execute(this.taskComponents);
+				current = this.getAssignedTask().getActivity().getNext(this.taskComponents);
+				dt = dt - 0.001;
+				if (this.isMovingTo || this.isAttacking() || this.isWorking()){
+					break;
+				}} catch(Throwable e){
+					System.out.println("catch exception");
+					this.interruptTask();
 				}
-				break;
+			}else{
+				current = current.getNext(this.taskComponents);
 			}
+		}
+	}
+	
+	private void endTask(){
+		System.out.println("default end task");
+		this.getAssignedTask().getActivity().setExecutedState(false);
+		this.getFaction().getScheduler().removeTask(this.getAssignedTask());
+		this.getFaction().getScheduler().reset(this.getAssignedTask(), this);
+	}
+	
+	private void randomDefaultBehavior(){
+		Random random = new Random();
+		//TODO zet random back
+		int i=2;//random.nextInt(5);
+		int[] randomPosition = new int[] { random.nextInt(this.getWorld().getNbCubesX()), 
+				random.nextInt(this.getWorld().getNbCubesY()), random.nextInt(this.getWorld().getNbCubesZ()) };
+		double[] randomPosition2 = new double[] {randomPosition[0]+ LC/2, randomPosition[1]+LC/2, randomPosition[2]+LC/2};
+		switch (i) {
+		case 0:
+			this.moveTo(randomPosition);
+			break;
+		case 1:
+			if(this.getCubeCoordinate()[0] != this.getWorld().getNbCubesX()-1)
+				this.workAt(this.getCubeCoordinate()[0]+1,this.getCubeCoordinate()[1],this.getCubeCoordinate()[2]);
+			break;
+		case 2:
+			this.rest();
+			break;
+		case 3:
+			this.defaultBehaviorCase3 = true;
+			this.calculateSpeed(randomPosition2);
+			this.moveTo(randomPosition);
+			break;
+		case 4:
+			for (Unit unit:this.getWorld().getUnits()){
+				double d = Math.sqrt(Math.pow(unit.getPosition()[0] - this.getPosition()[0],2) + 
+						Math.pow(unit.getPosition()[1] - this.getPosition()[1],2) +
+						Math.pow(unit.getPosition()[2] - this.getPosition()[2],2));
+				if (d <= MAX_DISTANCE_ADJACENT_CUBE){
+					this.fight(unit);
+					break;
+				}
+			}
+			break;
 		}
 	}
 	
@@ -2078,6 +2096,7 @@ public class Unit {
 	 * Variable registering when the unit must start sprinting if he must execute defaultBehavior case 3.
 	 */
 	public boolean defaultBehaviorCase3 = false;
+	
 	
 	public void interruptTask(){
 		if (this.getAssignedTask() != null){
@@ -2097,7 +2116,7 @@ public class Unit {
 		this.followedUnit = followedUnit;
 	}
 	
-	public void followAdvanceTime(){
+	private void followAdvanceTime(){
 		if ((this.followedUnit.getCubeCoordinate()[0] == this.getCubeCoordinate()[0] &&
 				this.followedUnit.getCubeCoordinate()[1] == this.getCubeCoordinate()[1] &&
 				this.followedUnit.getCubeCoordinate()[2] == this.getCubeCoordinate()[2]) || 

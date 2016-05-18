@@ -2,7 +2,9 @@ package hillbillies.expressions;
 
 import hillbillies.scheduler.TaskComponents;
 
-public class IsPassableExpression<E extends CubePositionExpression,ReadVariableExpression> extends BooleanExpression{
+@SuppressWarnings("hiding")
+public class IsPassableExpression<E extends CubePositionExpression,ReadVariableExpression> 
+	extends BooleanExpression{
 
 
 	private CubePositionExpression expressionPosition;
@@ -21,7 +23,8 @@ public class IsPassableExpression<E extends CubePositionExpression,ReadVariableE
 		System.out.println("ISPASSABLE EXP");
 		int[] cube;
 		if (this.expressionVariablePosition != null)
-			cube = ((ICubePositionExpression) this.expressionVariablePosition).evaluatePosition(taskComponents);
+			cube = ((ICubePositionExpression) this.expressionVariablePosition)
+				.evaluatePosition(taskComponents);
 		else
 			cube = this.expressionPosition.evaluatePosition(taskComponents);
 		return taskComponents.getWorld().isPassable(cube[0], cube[1], cube[2]);
@@ -30,7 +33,8 @@ public class IsPassableExpression<E extends CubePositionExpression,ReadVariableE
 	@Override
 	public boolean containSelectedCube() {
 		if (this.expressionVariablePosition != null)
-			return ((ICubePositionExpression) this.expressionVariablePosition).containSelectedCube();
+			return ((ICubePositionExpression) this.expressionVariablePosition)
+					.containSelectedCube();
 		return this.expressionPosition.containSelectedCube();
 	}
 

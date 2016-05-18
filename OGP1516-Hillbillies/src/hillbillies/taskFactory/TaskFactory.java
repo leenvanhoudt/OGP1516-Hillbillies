@@ -160,7 +160,9 @@ public class TaskFactory implements ITaskFactory<MyExpression,MyStatement,Task>{
 
 	@Override
 	public MyExpression createCarriesItem(MyExpression unit, SourceLocation sourceLocation) {
-		return new CarriesItemExpression<UnitExpression>((UnitExpression)unit);
+		if (unit instanceof ReadVariableExpression)
+			return new CarriesItemExpression<UnitExpression,ReadVariableExpression>((ReadVariableExpression)unit);
+		return new CarriesItemExpression<UnitExpression,ReadVariableExpression>((UnitExpression)unit);
 	}
 
 	@Override

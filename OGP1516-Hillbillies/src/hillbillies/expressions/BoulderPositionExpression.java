@@ -9,11 +9,15 @@ public class BoulderPositionExpression extends CubePositionExpression {
 	private DijkstraPathFinding dijkstra = new DijkstraPathFinding();
 
 	@Override
-	public int[] evaluatePosition(TaskComponents taskComponents) {
+	public int[] evaluatePosition(TaskComponents taskComponents) throws Error{
 		System.out.println("BOULDER EXP");
-		this.dijkstra.setUnit(taskComponents.getUnit());
-		int[] pos = this.dijkstra.Dijkstra(0);
-		return pos;
+		try{
+			this.dijkstra.setUnit(taskComponents.getUnit());
+			int[] pos = this.dijkstra.Dijkstra(0);
+			return pos;
+		} catch(Throwable e){
+			throw new Error("no boulder found");
+		}
 	}
 
 

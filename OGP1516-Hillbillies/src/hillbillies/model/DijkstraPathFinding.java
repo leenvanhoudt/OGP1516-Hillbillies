@@ -7,21 +7,8 @@ import be.kuleuven.cs.som.annotate.Basic;
 public class DijkstraPathFinding {
 
 	public int[] Dijkstra(int value) throws IndexOutOfBoundsException{
-		System.out.println("dijkstra");
 		ArrayList<Cube> unchecked = new ArrayList<Cube>();
-		Cube[][][] grid = new Cube[this.getUnit().getWorld().getNbCubesX()][this.getUnit().getWorld().getNbCubesY()][this.getUnit().getWorld().getNbCubesZ()];
-		for (int i=0; i<this.getUnit().getWorld().getNbCubesX(); i++){
-			for (int j=0; j<this.getUnit().getWorld().getNbCubesY(); j++){
-				for (int k=0; k<this.getUnit().getWorld().getNbCubesZ(); k++){
-					grid[i][j][k] = new Cube(i,j,k);
-					grid[i][j][k].setDijkstraCost(Integer.MAX_VALUE);
-					if (this.getUnit().getWorld().isPassable(grid[i][j][k].getX(), grid[i][j][k].getY(), grid[i][j][k].getZ())
-							&& !this.getUnit().isFallingPosition(grid[i][j][k].getX(), grid[i][j][k].getY(), grid[i][j][k].getZ())){
-					unchecked.add(grid[i][j][k]);
-					}
-				}
-			}
-		}
+		Cube[][][] grid = this.makegrid(unchecked);
 		Cube startCube = grid[this.getUnit().getCubeCoordinate()[0]][this.getUnit().getCubeCoordinate()[1]][this.getUnit().getCubeCoordinate()[2]];
 		startCube.setDijkstraCost(0);
 		Cube minimum = unchecked.get(0);
@@ -43,56 +30,61 @@ public class DijkstraPathFinding {
 				(value == 4 && this.getUnit().getWorld().CubeContainFriend(pos[0], pos[1], pos[2], this.getUnit())) ||
 				(value == 5 && this.getUnit().getWorld().CubeContainEnemy(pos[0], pos[1], pos[2], this.getUnit()))){
 				break;
-			}			
-			for (int i=-1; i<2; i++){
-				for (int j=-1; j<2; j++){
-					for (int k=-1; k<2; k++){
-						if (minimum.getX()+i>=0 && minimum.getX()+i<this.getUnit().getWorld().getNbCubesX() 
-								&& minimum.getY()+j>=0 && minimum.getY()+j<this.getUnit().getWorld().getNbCubesY() 
-								&& minimum.getZ()+k>=0 && minimum.getZ()+k<unit.getWorld().getNbCubesZ()){
-							Cube adjacent = grid[minimum.getX()+i][minimum.getY()+j][minimum.getZ()+k];
-							int tempdistance = Integer.MAX_VALUE;
-							if (this.getUnit().getWorld().isPassable(adjacent.getX(), adjacent.getY(), adjacent.getZ())
-									&& !this.getUnit().isFallingPosition(adjacent.getX(), adjacent.getY(), adjacent.getZ())){
-								if (((i==-1 || i==1) && j==0 && k==0) || ((j==-1 || j==1) && i==0 && k==0) || ((k==-1 || k==1) && j==0 && i==0)){
-									tempdistance = minimum.getDijkstraCost() + 10;
-								}
-								else if (((i==-1||i==1)&&(j==-1||j==1)&&k==0)||((i==-1||i==1)&&(k==-1||k==1)&&j==0)||((k==-1||k==1)&&(j==-1||j==1)&&i==0)){
-									tempdistance = minimum.getDijkstraCost() + 14;								}
-								else if ((i==-1||i==1)&&(j==-1||j==1)&&(k==-1||k==1)){
-									tempdistance = minimum.getDijkstraCost() + 17;
-								}
-								if (tempdistance < adjacent.getDijkstraCost()){
-									adjacent.setDijkstraCost(tempdistance);
-									adjacent.setDijkstraParent(minimum);
-								}
+			}
+			this.calculateDijkstraCost(minimum, grid);
+		}
+		
+		int[] cubePosition = {minimum.getX(),minimum.getY(),minimum.getZ()};
+		return cubePosition;
+	}
+	
+	private Cube[][][] makegrid(ArrayList<Cube> unchecked){
+		Cube[][][] grid = new Cube[this.getUnit().getWorld().getNbCubesX()][this.getUnit().getWorld().getNbCubesY()][this.getUnit().getWorld().getNbCubesZ()];
+		for (int i=0; i<this.getUnit().getWorld().getNbCubesX(); i++){
+			for (int j=0; j<this.getUnit().getWorld().getNbCubesY(); j++){
+				for (int k=0; k<this.getUnit().getWorld().getNbCubesZ(); k++){
+					grid[i][j][k] = new Cube(i,j,k);
+					grid[i][j][k].setDijkstraCost(Integer.MAX_VALUE);
+					if (this.getUnit().getWorld().isPassable(grid[i][j][k].getX(), grid[i][j][k].getY(), grid[i][j][k].getZ())
+							&& !this.getUnit().isFallingPosition(grid[i][j][k].getX(), grid[i][j][k].getY(), grid[i][j][k].getZ())){
+					unchecked.add(grid[i][j][k]);
+					}
+				}
+			}
+		}
+		return grid;
+	}
+	
+	private void calculateDijkstraCost(Cube minimum, Cube[][][] grid){
+		for (int i=-1; i<2; i++){
+			for (int j=-1; j<2; j++){
+				for (int k=-1; k<2; k++){
+					if (minimum.getX()+i>=0 && minimum.getX()+i<this.getUnit().getWorld().getNbCubesX() 
+							&& minimum.getY()+j>=0 && minimum.getY()+j<this.getUnit().getWorld().getNbCubesY() 
+							&& minimum.getZ()+k>=0 && minimum.getZ()+k<unit.getWorld().getNbCubesZ()){
+						Cube adjacent = grid[minimum.getX()+i][minimum.getY()+j][minimum.getZ()+k];
+						int tempdistance = Integer.MAX_VALUE;
+						if (this.getUnit().getWorld().isPassable(adjacent.getX(), adjacent.getY(), adjacent.getZ())
+								&& !this.getUnit().isFallingPosition(adjacent.getX(), adjacent.getY(), adjacent.getZ())){
+							if (((i==-1 || i==1) && j==0 && k==0) || ((j==-1 || j==1) && i==0 && k==0) || ((k==-1 || k==1) && j==0 && i==0)){
+								tempdistance = minimum.getDijkstraCost() + 10;
+							}
+							else if (((i==-1||i==1)&&(j==-1||j==1)&&k==0)||((i==-1||i==1)&&(k==-1||k==1)&&j==0)||((k==-1||k==1)&&(j==-1||j==1)&&i==0)){
+								tempdistance = minimum.getDijkstraCost() + 14;								}
+							else if ((i==-1||i==1)&&(j==-1||j==1)&&(k==-1||k==1)){
+								tempdistance = minimum.getDijkstraCost() + 17;
+							}
+							if (tempdistance < adjacent.getDijkstraCost()){
+								adjacent.setDijkstraCost(tempdistance);
+								adjacent.setDijkstraParent(minimum);
 							}
 						}
 					}
 				}
 			}
 		}
-		int[] cubePosition = {minimum.getX(),minimum.getY(),minimum.getZ()};
-		return cubePosition;
-
 	}
 	
-//	private Cube[][][] makegrid(ArrayList<Cube> unchecked){
-//		Cube[][][] grid = new Cube[this.getUnit().getWorld().getNbCubesX()][this.getUnit().getWorld().getNbCubesY()][this.getUnit().getWorld().getNbCubesZ()];
-//		for (int i=0; i<this.getUnit().getWorld().getNbCubesX(); i++){
-//			for (int j=0; j<this.getUnit().getWorld().getNbCubesY(); j++){
-//				for (int k=0; k<this.getUnit().getWorld().getNbCubesZ(); k++){
-//					grid[i][j][k] = new Cube(i,j,k);
-//					grid[i][j][k].setDijkstraCost(Integer.MAX_VALUE);
-//					if (this.getUnit().getWorld().isPassable(grid[i][j][k].getX(), grid[i][j][k].getY(), grid[i][j][k].getZ())
-//							&& !this.getUnit().isFallingPosition(grid[i][j][k].getX(), grid[i][j][k].getY(), grid[i][j][k].getZ())){
-//					unchecked.add(grid[i][j][k]);
-//					}
-//				}
-//			}
-//		}
-//		return grid;
-//	}
 	
 	/**
 	 * Return the unit that wants to find the path.

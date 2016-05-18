@@ -3,7 +3,9 @@ package hillbillies.expressions;
 import hillbillies.model.Unit;
 import hillbillies.scheduler.TaskComponents;
 
-public class PositionOfExpression<E extends UnitExpression, ReadVariableExpression> extends CubePositionExpression {
+@SuppressWarnings("hiding")
+public class PositionOfExpression<E extends UnitExpression, ReadVariableExpression> 
+	extends CubePositionExpression {
 
 
 	private UnitExpression expressionUnit;

@@ -12,10 +12,16 @@ public class AnyExpression extends UnitExpression{
 	
 	@Override
 	public Unit evaluateUnit(TaskComponents taskComponents) throws Error {
-		this.dijkstra.setUnit(taskComponents.getUnit());
-		int[] cube = this.dijkstra.Dijkstra(3);
-		ArrayList<Unit> possibleUnits = taskComponents.getWorld().getCubeOtherUnit(cube[0], cube[1], cube[2], taskComponents.getUnit());
-		return possibleUnits.get(0);
+		try{
+			this.dijkstra.setUnit(taskComponents.getUnit());
+			int[] cube = this.dijkstra.Dijkstra(3);
+			ArrayList<Unit> possibleUnits = taskComponents.getWorld()
+					.getCubeOtherUnit(cube[0], cube[1], cube[2], taskComponents.getUnit());
+			return possibleUnits.get(0);
+		} catch(Throwable e){
+			throw new Error("no other unit found");
+		}
+		
 	}
 
 	@Override

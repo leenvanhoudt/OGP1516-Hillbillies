@@ -4,6 +4,7 @@ package hillbillies.expressions;
 import java.util.NoSuchElementException;
 import hillbillies.scheduler.TaskComponents;
 
+@SuppressWarnings("hiding")
 public class NextToPositionExpression<E extends CubePositionExpression, ReadVariableExpression> 
 	extends CubePositionExpression{
 	
@@ -25,7 +26,8 @@ public class NextToPositionExpression<E extends CubePositionExpression, ReadVari
 		System.out.println("NEXTO EXP");
 		int[] unitPosition;
 		if (this.expressionVariablePosition != null)
-			unitPosition = ((ICubePositionExpression) this.expressionVariablePosition).evaluatePosition(taskComponents);
+			unitPosition = ((ICubePositionExpression) this.expressionVariablePosition)
+				.evaluatePosition(taskComponents);
 		else
 			unitPosition = this.expressionPosition.evaluatePosition(taskComponents);
 		
@@ -62,7 +64,8 @@ public class NextToPositionExpression<E extends CubePositionExpression, ReadVari
 	@Override
 	public boolean containSelectedCube() {
 		if (this.expressionVariablePosition != null)
-			return ((CubePositionExpression) this.expressionVariablePosition).containSelectedCube();
+			return ((CubePositionExpression) this.expressionVariablePosition)
+					.containSelectedCube();
 		return this.expressionPosition.containSelectedCube();
 	}
 

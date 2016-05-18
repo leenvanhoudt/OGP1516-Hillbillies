@@ -4,7 +4,9 @@ package hillbillies.expressions;
 import hillbillies.model.Unit;
 import hillbillies.scheduler.TaskComponents;
 
-public class IsAliveExpression<E extends UnitExpression, ReadVariableExpression> extends BooleanExpression{
+@SuppressWarnings("hiding")
+public class IsAliveExpression<E extends UnitExpression, ReadVariableExpression> 
+	extends BooleanExpression{
 
 	private UnitExpression expressionUnit;
 	private ReadVariableExpression expressionVariableUnit;
