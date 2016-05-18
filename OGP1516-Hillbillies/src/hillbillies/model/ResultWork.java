@@ -36,27 +36,27 @@ public class ResultWork {
 	 */
 
 	public void resultWorkAt(int x, int y, int z) throws IllegalArgumentException{
-		if ((unit.isCarryingLog() || unit.isCarryingBoulder()) && unit.getWorld().isPassable(x, y, z)){
+		if ((this.getUnit().isCarryingLog() || this.getUnit().isCarryingBoulder()) && this.getUnit().getWorld().isPassable(x, y, z)){
 			this.dropLogOrBoulder(x, y, z);
 		}
-		else if (unit.getWorld().getCubeType(x, y, z)==3
-				&& !unit.getWorld().getBoulders().isEmpty() && unit.getWorld().cubeContainsBoulder(x, y, z)
-				&& !unit.getWorld().getLogs().isEmpty() && unit.getWorld().cubeContainsLog(x, y, z)){
+		else if (this.getUnit().getWorld().getCubeType(x, y, z)==3
+				&& !this.getUnit().getWorld().getBoulders().isEmpty() && this.getUnit().getWorld().cubeContainsBoulder(x, y, z)
+				&& !this.getUnit().getWorld().getLogs().isEmpty() && this.getUnit().getWorld().cubeContainsLog(x, y, z)){
 			this.improveEquipment(x, y, z);
 		}
-		else if (!unit.getWorld().getBoulders().isEmpty() && unit.getWorld().cubeContainsBoulder(x, y, z)){
+		else if (!this.getUnit().getWorld().getBoulders().isEmpty() && this.getUnit().getWorld().cubeContainsBoulder(x, y, z)){
 			this.pickUpBoulder(x, y, z);
 		}
-		else if (!unit.getWorld().getLogs().isEmpty() && unit.getWorld().cubeContainsLog(x, y, z)){
+		else if (!this.getUnit().getWorld().getLogs().isEmpty() && this.getUnit().getWorld().cubeContainsLog(x, y, z)){
 			this.pickUpLog(x, y, z);
 		}
-		else if (unit.getWorld().getCubeType(x, y, z)==2){
+		else if (this.getUnit().getWorld().getCubeType(x, y, z)==2){
 			this.workOnWood(x, y, z);
 		}
-		else if (unit.getWorld().getCubeType(x, y, z)==1){
+		else if (this.getUnit().getWorld().getCubeType(x, y, z)==1){
 			this.workOnRock(x, y, z);
 		}
-		unit.setExperiencePoints(unit.getExperiencePoints()+10);
+		this.getUnit().setExperiencePoints(this.getUnit().getExperiencePoints()+10);
 	}
 	
 	/**
@@ -78,16 +78,16 @@ public class ResultWork {
 	 * 		| the boulder and the boulder will be added to the world.
 	 */
 	private void dropLogOrBoulder(int x,int y,int z){
-		if (unit.isCarryingLog()){
-			unit.isCarryingLog = false;
-			unit.log.setPosition(x+Unit.LC/2,y+Unit.LC/2,z+Unit.LC/2);
-			unit.setWeight(unit.getWeight()-unit.log.getMaterialWeight());
-			unit.getWorld().addLog(unit.log);
+		if (this.getUnit().isCarryingLog()){
+			this.getUnit().isCarryingLog = false;
+			this.getUnit().log.setPosition(x+Unit.LC/2,y+Unit.LC/2,z+Unit.LC/2);
+			this.getUnit().setWeight(this.getUnit().getWeight()-this.getUnit().log.getMaterialWeight());
+			this.getUnit().getWorld().addLog(this.getUnit().log);
 		} else{
-			unit.isCarryingBoulder = false;
-			unit.boulder.setPosition(x+Unit.LC/2,y+Unit.LC/2,z+Unit.LC/2);
-			unit.setWeight(unit.getWeight()-unit.boulder.getMaterialWeight());
-			unit.getWorld().addBoulder(unit.boulder);
+			this.getUnit().isCarryingBoulder = false;
+			this.getUnit().boulder.setPosition(x+Unit.LC/2,y+Unit.LC/2,z+Unit.LC/2);
+			this.getUnit().setWeight(this.getUnit().getWeight()-this.getUnit().boulder.getMaterialWeight());
+			this.getUnit().getWorld().addBoulder(this.getUnit().boulder);
 		}
 	}
 	
@@ -107,10 +107,10 @@ public class ResultWork {
 	 * 		| The boulder and log are removed from the world.
 	 */
 	private void improveEquipment(int x, int y, int z) throws IllegalArgumentException{
-		unit.setWeight(unit.getWeight()+1);
-		unit.setToughness(unit.getToughness()+1);
-		unit.getWorld().removeLog(unit.getWorld().getCubeLog(x, y, z));
-		unit.getWorld().removeBoulder(unit.getWorld().getCubeBoulder(x, y, z));
+		this.getUnit().setWeight(this.getUnit().getWeight()+1);
+		this.getUnit().setToughness(this.getUnit().getToughness()+1);
+		this.getUnit().getWorld().removeLog(this.getUnit().getWorld().getCubeLog(x, y, z));
+		this.getUnit().getWorld().removeBoulder(this.getUnit().getWorld().getCubeBoulder(x, y, z));
 	}
 	
 	/**
@@ -128,11 +128,11 @@ public class ResultWork {
 	 * 		| The unit is carrying the boulder and the boulder is removed from the world.
 	 */
 	private void pickUpBoulder(int x, int y, int z)throws IllegalArgumentException{
-		unit.boulder = unit.getWorld().getCubeBoulder(x, y, z);
-		unit.boulder.setWorld(unit.getWorld());
-		unit.weight = (unit.getWeight() + unit.boulder.getMaterialWeight());
-		unit.getWorld().removeBoulder(unit.boulder);
-		unit.isCarryingBoulder = true;
+		this.getUnit().boulder = this.getUnit().getWorld().getCubeBoulder(x, y, z);
+		this.getUnit().boulder.setWorld(this.getUnit().getWorld());
+		this.getUnit().weight = (this.getUnit().getWeight() + this.getUnit().boulder.getMaterialWeight());
+		this.getUnit().getWorld().removeBoulder(this.getUnit().boulder);
+		this.getUnit().isCarryingBoulder = true;
 	}
 	
 	/**
@@ -150,11 +150,11 @@ public class ResultWork {
 	 * 		| The unit is carrying the log and the log is removed from the world.
 	 */
 	private void pickUpLog(int x, int y, int z) throws IllegalArgumentException{
-		unit.log = unit.getWorld().getCubeLog(x, y, z);
-		unit.log.setWorld(unit.getWorld());
-		unit.weight = (unit.getWeight() + unit.log.getMaterialWeight());
-		unit.getWorld().removeLog(unit.log);
-		unit.isCarryingLog = true;
+		this.getUnit().log = this.getUnit().getWorld().getCubeLog(x, y, z);
+		this.getUnit().log.setWorld(this.getUnit().getWorld());
+		this.getUnit().weight = (this.getUnit().getWeight() + this.getUnit().log.getMaterialWeight());
+		this.getUnit().getWorld().removeLog(this.getUnit().log);
+		this.getUnit().isCarryingLog = true;
 	}
 	
 	/**
@@ -173,15 +173,15 @@ public class ResultWork {
 	 * 		| A new log is created and placed into the world at the given position.
 	 */
 	private void workOnWood(int x, int y, int z) throws IllegalArgumentException{
-		List<int[]> changedCubes = unit.getWorld().connectedToBorder.changeSolidToPassable(x,y,z);
+		List<int[]> changedCubes = this.getUnit().getWorld().connectedToBorder.changeSolidToPassable(x,y,z);
 		if (!changedCubes.isEmpty())
-			unit.getWorld().addCubesChanged(changedCubes);
-		unit.getWorld().setCubeType(x, y, z, 0);
+			this.getUnit().getWorld().addCubesChanged(changedCubes);
+		this.getUnit().getWorld().setCubeType(x, y, z, 0);
 		Log newlog = new Log();
-		newlog.setWorld(unit.getWorld());
+		newlog.setWorld(this.getUnit().getWorld());
 		newlog.setPosition(x+Unit.LC/2,y+Unit.LC/2,z+Unit.LC/2);
-		unit.getWorld().addLog(newlog);
-		unit.getWorld().modelListener.notifyTerrainChanged(x, y, z);
+		this.getUnit().getWorld().addLog(newlog);
+		this.getUnit().getWorld().modelListener.notifyTerrainChanged(x, y, z);
 	}
 	
 	/**
@@ -200,15 +200,15 @@ public class ResultWork {
 	 * 		| A new boulder is created and placed into the world at the given position.
 	 */
 	private void workOnRock(int x, int y, int z)throws IllegalArgumentException{
-		List<int[]> changedCubes = unit.getWorld().connectedToBorder.changeSolidToPassable(x,y,z);
+		List<int[]> changedCubes = this.getUnit().getWorld().connectedToBorder.changeSolidToPassable(x,y,z);
 		if (!changedCubes.isEmpty())
-			unit.getWorld().addCubesChanged(changedCubes);
-		unit.getWorld().setCubeType(x, y, z, 0);
+			this.getUnit().getWorld().addCubesChanged(changedCubes);
+		this.getUnit().getWorld().setCubeType(x, y, z, 0);
 		Boulder newboulder = new Boulder();
-		newboulder.setWorld(unit.getWorld());
+		newboulder.setWorld(this.getUnit().getWorld());
 		newboulder.setPosition(x+Unit.LC/2,y+Unit.LC/2,z+Unit.LC/2);
-		unit.getWorld().addBoulder(newboulder);
-		unit.getWorld().modelListener.notifyTerrainChanged(x, y, z);
+		this.getUnit().getWorld().addBoulder(newboulder);
+		this.getUnit().getWorld().modelListener.notifyTerrainChanged(x, y, z);
 	}
 	
 	/**

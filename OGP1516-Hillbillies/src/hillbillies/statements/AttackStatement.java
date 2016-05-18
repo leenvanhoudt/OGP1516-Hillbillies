@@ -7,7 +7,9 @@ import hillbillies.scheduler.MyStatement;
 import hillbillies.scheduler.TaskComponents;
 import hillbillies.expressions.ReadVariableExpression;
 
-public class AttackStatement<E extends UnitExpression,ReadVariableExpression> extends MyStatement {
+@SuppressWarnings("hiding")
+public class AttackStatement<E extends UnitExpression,ReadVariableExpression> 
+	extends MyStatement {
 	
 	private UnitExpression expressionUnit;
 	private ReadVariableExpression expressionVariableUnit;
