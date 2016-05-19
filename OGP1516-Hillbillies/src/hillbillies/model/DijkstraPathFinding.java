@@ -146,7 +146,6 @@ public class DijkstraPathFinding {
 	 * 		| The unit is set to the given unit.
 	 */
 	public void setUnit(Unit unit){
-		System.out.println("set unit");
 		this.unit = unit;
 	}
 	
