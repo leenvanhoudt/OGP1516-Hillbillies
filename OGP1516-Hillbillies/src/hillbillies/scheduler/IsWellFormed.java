@@ -15,7 +15,7 @@ public class IsWellFormed {
 		this.task = task;
 	}
 	
-	public boolean CheckWellFormedness(){
+	public boolean CheckWellFormedness() throws Error{
 		ArrayList<MyStatement> breakList = new ArrayList<MyStatement>();
 		ArrayList<MyStatement> readVariableStatementList = new ArrayList<MyStatement>();
 		MyStatement current = this.task.getActivity();
@@ -27,7 +27,11 @@ public class IsWellFormed {
 			this.task.getActivity().setExecutedState(true);
 		}
 		else{
+			try{
 			this.findBreakAndReadVariableStatements(current, breakList, readVariableStatementList);
+			} catch (Throwable e){
+				throw new Error("error");
+			}
 		}
 		this.task.getActivity().setExecutedState(false);
 		

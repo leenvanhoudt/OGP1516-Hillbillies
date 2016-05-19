@@ -48,7 +48,7 @@ public class ExpressionsAndStatementsTests {
 		return types;
 	}
 	
-	@Test
+/*	@Test
 	public void testSimpleFollowTask() throws ModelException{
 		int[][][] types = this.cubeTypesFlatSurface();
 		World world = new World(types, new DefaultTerrainChangeListener());
@@ -190,7 +190,29 @@ public class ExpressionsAndStatementsTests {
 	}
 	
 	@Test
-	public void testWhileKeepWorking() throws ModelException{
+	public void testWhileNotKeepWorkingNextTo() throws ModelException{
+		int[][][] types = this.cubeTypesFlatSurface();
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit unit = new Unit("Test", new int[] { 5, 5, 2 }, 50, 50, 50, 50, true);
+		world.addUnit(unit);
+		Faction faction = unit.getFaction();
+
+		Scheduler scheduler = faction.getScheduler();
+		TaskFactory factory = new TaskFactory();
+
+		List<Task> tasks = TaskParser.parseTasksFromString(
+				"name: \"task\"\npriority: 1"
+				+ "\nactivities: e :=  false; \n while !e do\nwork next_to here;\ndone",
+				factory, Collections.singletonList(null));
+		Task task = tasks.get(0);
+		
+		scheduler.schedule(task);
+		advanceTimeFor(world, 100, 0.02);
+		assertTrue("unit worked", unit.isWorking());
+	}
+	
+	@Test
+	public void testWhileKeepWorkingHere() throws ModelException{
 		int[][][] types = this.cubeTypesFlatSurface();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit unit = new Unit("Test", new int[] { 5, 5, 2 }, 50, 50, 50, 50, true);
@@ -211,6 +233,31 @@ public class ExpressionsAndStatementsTests {
 		scheduler.schedule(task);
 		advanceTimeFor(world, 100, 0.02);
 		assertTrue("unit worked", unit.isWorking());
+	}
+	*/
+	@Test
+	public void testIfElse() throws ModelException{
+		System.out.println("PRINT IF ELSE");
+		int[][][] types = this.cubeTypesFlatSurface();
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit unit = new Unit("Test", new int[] { 5, 5, 2 }, 50, 50, 50, 50, true);
+		Unit enemy = new Unit("Test", new int[] { 5, 6, 2 }, 50, 50, 50, 50, false);
+		world.addUnit(unit);
+		world.addUnit(enemy);
+		Faction faction = unit.getFaction();
+
+		Scheduler scheduler = faction.getScheduler();
+		TaskFactory factory = new TaskFactory();
+
+		List<Task> tasks = TaskParser.parseTasksFromString(
+				"name: \"task\"\npriority: 1"
+				+ "\nactivities: e:=true; \n if !e then \n work here; \n else attack enemy; \n fi",
+				factory, Collections.singletonList(null));
+		Task task = tasks.get(0);
 		
+		scheduler.schedule(task);
+		advanceTimeFor(world, 0.5, 0.02);
+		assertFalse("unit isn't working", unit.isWorking());
+		assertTrue("unit is attacking", unit.isAttacking());
 	}
 }

@@ -29,7 +29,7 @@ public class NotExpression<E extends BooleanExpression, ReadVariableExpression>
 	@Override
 	public boolean containSelectedCube() {
 		if (this.expressionVariableExpression != null)
-			return ((BooleanExpression) this.expressionVariableExpression)
+			return ((IBooleanExpression) this.expressionVariableExpression)
 					.containSelectedCube();
 		return this.expressionExpression.containSelectedCube();
 	}

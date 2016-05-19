@@ -25,8 +25,12 @@ public class Task {
 			throw new IllegalArgumentException();
 	}
 	
-	public boolean isWellFormed(){
+	public boolean isWellFormed() throws IllegalArgumentException{
+		try{
 		return this.isWellFormed.CheckWellFormedness();
+		} catch (Throwable e){
+			throw new IllegalArgumentException();
+		}
 	}
 	
 	private IsWellFormed isWellFormed = new IsWellFormed(this);
