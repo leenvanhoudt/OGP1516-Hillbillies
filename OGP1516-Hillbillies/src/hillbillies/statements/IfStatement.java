@@ -100,13 +100,11 @@ public class IfStatement<E extends BooleanExpression,ReadVariableExpression> ext
 
 	@Override
 	public boolean containReadVariableExpression() {
-		// TODO Auto-generated method stub
 		return this.expressionVariableCondition != null;
 	}
 
 	@Override
 	public hillbillies.expressions.ReadVariableExpression getReadVariableExpression() {
-		// TODO Auto-generated method stub
 		return (hillbillies.expressions.ReadVariableExpression) this.expressionVariableCondition;
 	}
 	

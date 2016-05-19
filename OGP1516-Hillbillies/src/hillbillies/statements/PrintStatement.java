@@ -63,11 +63,15 @@ public class PrintStatement extends MyStatement{
 
 	@Override
 	public boolean containReadVariableExpression() {
+		if (this.expressionValue instanceof ReadVariableExpression)
+			return true;
 		return false;
 	}
 
 	@Override
 	public ReadVariableExpression getReadVariableExpression() {
+		if (this.expressionValue instanceof ReadVariableExpression)
+			return (ReadVariableExpression) this.expressionValue;
 		return null;
 	}
 

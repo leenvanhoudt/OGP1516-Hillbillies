@@ -526,10 +526,16 @@ public class UnitTests {
 		assertFalse("units aren't fighting", unit.isAttacking());
 	}
 	
-	@Test
+	@Test (expected = IllegalArgumentException.class)
 	public void testFightToFarApart() throws ModelException{
-		Unit unit = new Unit("TestUnit", new int[] { 1, 2, 3 }, 50, 50, 50, 50, false);
-		Unit defender = new Unit("TestUnit", new int[] { 6, 2, 3 }, 50, 50, 50, 50, false);
+		int[][][] types = new int[4][4][4];
+		types[0][0][1] = 1;
+		types[3][3][1] = 1;
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit unit = new Unit("TestUnit", new int[] { 0, 0, 2 }, 50, 50, 50, 50, false);
+		Unit defender = new Unit("TestUnit", new int[] { 3, 3, 2 }, 50, 50, 50, 50, false);
+		world.addUnit(unit);
+		world.addUnit(defender);
 		unit.fight(defender);
 		assertFalse("unit is attacking defender", unit.isAttacking());
 	}

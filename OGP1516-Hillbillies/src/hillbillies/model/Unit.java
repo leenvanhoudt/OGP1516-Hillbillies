@@ -1748,6 +1748,7 @@ public class Unit {
 	 *		| this.work()
 	 */
 	public void workAt(int x, int y, int z){
+		System.out.println("work at");
 		double d = Math.sqrt(Math.pow(x-this.getCubeCoordinate()[0],2)+
 				Math.pow(y-this.getCubeCoordinate()[1],2)+Math.pow(z-this.getCubeCoordinate()[2],2));
 		if (!this.isFalling && d<=MAX_DISTANCE_ADJACENT_CUBE ){
@@ -1805,7 +1806,7 @@ public class Unit {
 	 * 		| Make the unit attack. 
 	 * 		| new.isAttacking == true
 	 * @IllegalArgumentException ...
-	 * 		| throw an excecption if the other unit is to far.
+	 * 		| throw an exception if the other unit is to far.
 	 */
 	private void attack(Unit defender) throws IllegalArgumentException {
 		System.out.println("attacking");
