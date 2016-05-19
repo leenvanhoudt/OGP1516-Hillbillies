@@ -39,7 +39,7 @@ public class ResultWork {
 		if ((this.getUnit().isCarryingLog() || this.getUnit().isCarryingBoulder()) && this.getUnit().getWorld().isPassable(x, y, z)){
 			this.dropLogOrBoulder(x, y, z);
 		}
-		else if (this.getUnit().getWorld().getCubeType(x, y, z)==3
+		else if (this.getUnit().getWorld().getCubeType(x, y, z)==CubeType.WORKSHOP.getCubeType()
 				&& !this.getUnit().getWorld().getBoulders().isEmpty() && this.getUnit().getWorld().cubeContainsBoulder(x, y, z)
 				&& !this.getUnit().getWorld().getLogs().isEmpty() && this.getUnit().getWorld().cubeContainsLog(x, y, z)){
 			this.improveEquipment(x, y, z);
@@ -50,10 +50,10 @@ public class ResultWork {
 		else if (!this.getUnit().getWorld().getLogs().isEmpty() && this.getUnit().getWorld().cubeContainsLog(x, y, z)){
 			this.pickUpLog(x, y, z);
 		}
-		else if (this.getUnit().getWorld().getCubeType(x, y, z)==2){
+		else if (this.getUnit().getWorld().getCubeType(x, y, z)==CubeType.TREE.getCubeType()){
 			this.workOnWood(x, y, z);
 		}
-		else if (this.getUnit().getWorld().getCubeType(x, y, z)==1){
+		else if (this.getUnit().getWorld().getCubeType(x, y, z)==CubeType.ROCK.getCubeType()){
 			this.workOnRock(x, y, z);
 		}
 		this.getUnit().setExperiencePoints(this.getUnit().getExperiencePoints()+10);
@@ -176,7 +176,7 @@ public class ResultWork {
 		List<int[]> changedCubes = this.getUnit().getWorld().connectedToBorder.changeSolidToPassable(x,y,z);
 		if (!changedCubes.isEmpty())
 			this.getUnit().getWorld().addCubesChanged(changedCubes);
-		this.getUnit().getWorld().setCubeType(x, y, z, 0);
+		this.getUnit().getWorld().setCubeType(x, y, z, CubeType.AIR.getCubeType());
 		Log newlog = new Log();
 		newlog.setWorld(this.getUnit().getWorld());
 		newlog.setPosition(x+Unit.LC/2,y+Unit.LC/2,z+Unit.LC/2);
@@ -203,7 +203,7 @@ public class ResultWork {
 		List<int[]> changedCubes = this.getUnit().getWorld().connectedToBorder.changeSolidToPassable(x,y,z);
 		if (!changedCubes.isEmpty())
 			this.getUnit().getWorld().addCubesChanged(changedCubes);
-		this.getUnit().getWorld().setCubeType(x, y, z, 0);
+		this.getUnit().getWorld().setCubeType(x, y, z, CubeType.AIR.getCubeType());
 		Boulder newboulder = new Boulder();
 		newboulder.setWorld(this.getUnit().getWorld());
 		newboulder.setPosition(x+Unit.LC/2,y+Unit.LC/2,z+Unit.LC/2);

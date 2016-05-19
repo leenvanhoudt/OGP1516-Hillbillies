@@ -53,7 +53,7 @@ public class World {
 					int value = terrainTypes[x][y][z];
 					if(!isValidCubeType(value))
 						throw new IllegalArgumentException();
-					if (value == 0 || value == 3){
+					if (value == CubeType.AIR.getCubeType()|| value == CubeType.WORKSHOP.getCubeType()){
 						this.temporary = this.connectedToBorder.changeSolidToPassable(x, y, z);
 						if (!this.temporary.isEmpty())
 							this.addCubesChanged(this.temporary);
@@ -171,8 +171,8 @@ public class World {
 	 * 		| Return true if a cube is passable.
 	 */
 	public boolean isPassable(int x, int y, int z){
-		return (this.getCubeType(x, y, z)==0 
-				|| this.getCubeType(x, y, z)==3);
+		return (this.getCubeType(x, y, z)==CubeType.AIR.getCubeType()
+				|| this.getCubeType(x, y, z)==CubeType.WORKSHOP.getCubeType());
 	}
 	
 	/**
@@ -219,9 +219,9 @@ public class World {
 			if (!this.getCubesChanged().isEmpty()){
 				this.updateCubes();
 			}
-		}//else{
-//			throw new IllegalArgumentException();
-//		}
+		}else{
+			throw new IllegalArgumentException();
+		}
 	}
 	
 	/**
@@ -391,8 +391,10 @@ public class World {
 	 * 		| Return true if it is a valid standing position.
 	 */
 	public boolean isValidStandingPosition(int x,int y,int z){
-		return ((z == 0 || this.getCubeType(x, y, z-1) == 1 || this.getCubeType(x, y, z-1) == 2) 
-				&& (this.getCubeType(x, y, z) == 0 || this.getCubeType(x, y, z) == 3));
+		return ((z == 0 || this.getCubeType(x, y, z-1) == CubeType.ROCK.getCubeType() ||
+				this.getCubeType(x, y, z-1) == CubeType.TREE.getCubeType()) && 
+			 (this.getCubeType(x, y, z) == CubeType.AIR.getCubeType() || 
+			 this.getCubeType(x, y, z) == CubeType.WORKSHOP.getCubeType()));
 	}
 	
 	/**
@@ -460,14 +462,14 @@ public class World {
 			Random random = new Random();
 			if (random.nextInt(100) <= (P*100)){
 				//rock
-				if (this.getCubeType(cube[0], cube[1], cube[2])==1){
+				if (this.getCubeType(cube[0], cube[1], cube[2])==CubeType.ROCK.getCubeType()){
 					Boulder boulder = new Boulder();
 					boulder.setWorld(this);
 					boulder.setPosition(cube[0]+Unit.LC/2, cube[1]+Unit.LC/2, cube[2]+Unit.LC/2);
 					this.addBoulder(boulder);
 				}
 				//wood
-				else if (this.getCubeType(cube[0], cube[1], cube[2])==2){
+				else if (this.getCubeType(cube[0], cube[1], cube[2])==CubeType.TREE.getCubeType()){
 					Log log = new Log();
 					log.setWorld(this);
 					log.setPosition(cube[0]+Unit.LC/2, cube[1]+Unit.LC/2, cube[2]+Unit.LC/2);

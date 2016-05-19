@@ -5,8 +5,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import be.kuleuven.cs.som.annotate.Basic;
-import be.kuleuven.cs.som.annotate.Raw;
 import hillbillies.model.Unit;
 import ogp.framework.util.ModelException;
 
@@ -24,8 +22,9 @@ public class Scheduler {
 	
 	public void removeTask(Task task){
 		System.out.println("remove");
-		if (!this.isTerminated){
-			this.terminate();
+		System.out.println(task.isTerminated());
+		if (!task.isTerminated()){
+			task.terminate();
 			this.scheduledList.remove(task);
 		}
 	}
@@ -129,30 +128,5 @@ public class Scheduler {
 			
 		};
 	}
-	
-	/**
-	 * Terminate this task.
-	 *
-	 * @post   This task  is terminated.
-	 *       | new.isTerminated()
-	 */
-	 public void terminate() {
-		 this.isTerminated = true;
-	 }
-	 
-	 /**
-	  * Return a boolean indicating whether or not this task
-	  * is terminated.
-	  */
-	 @Basic @Raw
-	 public boolean isTerminated() {
-		 return this.isTerminated;
-	 }
-	 
-	 /**
-	  * Variable registering whether this person is terminated.
-	  */
-	 private boolean isTerminated = false;
-	 
 	
 }
