@@ -2,6 +2,12 @@ package hillbillies.scheduler;
 
 import hillbillies.expressions.ReadVariableExpression;
 
+/**
+ * @author Laura Vranken & Leen Van Houdt, 
+ * 			2e bach Ingenieurswetenschappen: Objectgericht Programmeren 
+ * 			link code repository: https://github.com/leenvanhoudt/OGP1516-Hillbillies
+ *
+ */
 public abstract class MyStatement {
 	
 	public abstract void execute(TaskComponents taskComponents);
@@ -20,8 +26,6 @@ public abstract class MyStatement {
 	
 	public abstract ReadVariableExpression getReadVariableExpression();
 	
-
-
 	
 	public MyStatement getParent(){
 		return this.parent;
