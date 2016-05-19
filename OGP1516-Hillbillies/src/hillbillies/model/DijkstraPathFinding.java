@@ -4,8 +4,27 @@ import java.util.ArrayList;
 
 import be.kuleuven.cs.som.annotate.Basic;
 
+/**
+ *  A class which can be used to find the closest boulder/log/unit/friend/enemy.
+ * 
+ * @author Laura Vranken & Leen Van Houdt, 
+ * 			2e bach Ingenieurswetenschappen: Objectgericht Programmeren 
+ * 			link code repository: https://github.com/leenvanhoudt/OGP1516-Hillbillies
+ *
+ */
 public class DijkstraPathFinding {
 
+	/**
+	 * Find the position of the closest boulder/log/unit/friend/enemy
+	 * 
+	 * @param value
+	 * 		the value specifies the condition for which we are applying Dijkstra Algorithm.
+	 * @return ...
+	 * 		| the position of the cube where the closest log/boulder/unit/friend/enemy
+	 * 		| is located.
+	 * @throws IndexOutOfBoundsException ...
+	 * 		| throws an exception when no log/boulder/unit/friend/enemy is found.
+	 */
 	public int[] Dijkstra(int value) throws IndexOutOfBoundsException{
 		ArrayList<Cube> unchecked = new ArrayList<Cube>();
 		Cube[][][] grid = this.makegrid(unchecked);
@@ -38,6 +57,19 @@ public class DijkstraPathFinding {
 		return cubePosition;
 	}
 	
+	/**
+	 * Return a grid of cubes with the same dimensions as the world where the
+	 * boulder/log/unit/friend/enemy is placed in.
+	 * 
+	 * @param unchecked
+	 * 		the list wherein the passable and not fallingposition cubes are added.
+	 * @post ...
+	 * 		| The dijkstraCost of every cube in the grid is set to maximum integer value.
+	 * @post ...
+	 * 		| Every passable and not-fallingposition cube is added to the ArrayList unchecked.
+	 * @return ...
+	 * 		| Result is a 3D list of Cubes.
+	 */
 	private Cube[][][] makegrid(ArrayList<Cube> unchecked){
 		Cube[][][] grid = new Cube[this.getUnit().getWorld().getNbCubesX()][this.getUnit().getWorld().getNbCubesY()][this.getUnit().getWorld().getNbCubesZ()];
 		for (int i=0; i<this.getUnit().getWorld().getNbCubesX(); i++){
@@ -55,6 +87,16 @@ public class DijkstraPathFinding {
 		return grid;
 	}
 	
+	/**
+	 * Calculate for every adjacent cube of the minimum cube the dijkstraCost. 
+	 * 
+	 * @param minimum
+	 * 		The minimum cube for which we are going to check the adjacent cubes.
+	 * @param grid
+	 * 		The grid which contains all the cubes.
+	 * @post ...
+	 * 		| The dijkstraCost of all the adjacent cubes of the minimum cube are set.
+	 */
 	private void calculateDijkstraCost(Cube minimum, Cube[][][] grid){
 		for (int i=-1; i<2; i++){
 			for (int j=-1; j<2; j++){
@@ -88,7 +130,7 @@ public class DijkstraPathFinding {
 	
 	
 	/**
-	 * Return the unit that wants to find the path.
+	 * Return the unit that wants to find the boulder/log/unit/friend/enemy.
 	 */
 	@Basic
 	public Unit getUnit() {
@@ -97,8 +139,9 @@ public class DijkstraPathFinding {
 	
 	/**
 	 * Set the unit to the given unit.
+	 * 
 	 * @param unit
-	 * 		the unit for which the path is searched.
+	 * 		the unit for which the boulder/log/unit/friend/enemy is searched.
 	 * @post ...
 	 * 		| The unit is set to the given unit.
 	 */
@@ -108,7 +151,8 @@ public class DijkstraPathFinding {
 	}
 	
 	/**
-	 * Object of the class unit registering the unit that wants to find the path.
+	 * Object of the class unit registering the unit that wants 
+	 * to find the boulder/log/unit/friend/enemy.
 	 */
 	private Unit unit;
 }

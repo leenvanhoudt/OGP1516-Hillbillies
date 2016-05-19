@@ -2,16 +2,25 @@ package hillbillies.model;
 
 public class UtilCompareList {
 	
-	public static boolean compareIntList(int[] i1, int[] i2){
-		if (i1[0] == i2[0] && i1[1] == i2[1] && i1[2] == i2[2])
-			return true;
-		return false;
-	}
-	
-	public static boolean compareDoubleList(double[] d1, double[] d2){
-		if (d1[0] == d2[0] && d1[1] == d2[1] && d1[2] == d2[2])
-			return true;
-		return false;
+	/**
+	 * Compare every component of an int list.
+	 * 
+	 * @param i1
+	 * 		The first int[] we have to compare.
+	 * @param i2
+	 * 		The second int[] we have to compare.
+	 * @return
+	 * 		| Return true if all the components are the same.
+	 */
+	public static boolean compareIntList(int[] i1, int[] i2) throws IllegalArgumentException{
+		if (i1.length != i2.length){
+			throw new IllegalArgumentException();
+		}
+		for (int i=0; i<i1.length;i++){
+			if (i1[i] != i2[i])
+				return false;
+		}
+		return true;
 	}
 
 }

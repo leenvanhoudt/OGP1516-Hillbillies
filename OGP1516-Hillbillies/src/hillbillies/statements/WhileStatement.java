@@ -60,7 +60,6 @@ public class WhileStatement<E extends BooleanExpression,ReadVariableExpression> 
 	
 	@Override
 	public MyStatement getNextWellFormed() {
-		//System.out.println("while next");
 		return this.statementBody;
 	}
 

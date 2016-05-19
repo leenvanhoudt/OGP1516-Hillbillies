@@ -13,6 +13,9 @@ package hillbillies.model;
  */
 public class Log extends Material{
 	
+	/**
+	 *  Create boulder with his specifications, inherited from Material.
+	 */
 	public Log(){
 		super();
 	}

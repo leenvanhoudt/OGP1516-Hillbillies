@@ -5,7 +5,7 @@ import java.util.*;
 import be.kuleuven.cs.som.annotate.Basic;
 import hillbillies.scheduler.Scheduler;
 /**
- * A class of factions and their units.
+ * A class of factions and their units. Each faction has a scheduler for scheduling tasks.
  * 
  * @author Laura Vranken & Leen Van Houdt, 
  * 			2e bach Ingenieurswetenschappen: Objectgericht Programmeren 
@@ -68,14 +68,28 @@ public class Faction {
 		return (this.getUnitsOfFaction()).size();
 	}
 
-	
+	/**
+	 * Return the scheduler of this faction.
+	 */
+	@Basic
 	public Scheduler getScheduler(){
 		return this.scheduler;
 	}
 	
+	/**
+	 * Set the scheduler of this faction to the given scheduler.
+	 * 
+	 * @param scheduler
+	 * 		The scheduler to which the scheduler of this faction has to be set.
+	 * @post ...
+	 * 		| The scheduler of this faction is set to the given scheduler.
+	 */
 	public void setScheduler(Scheduler scheduler){
 		this.scheduler = scheduler;
 	}
 	
+	/**
+	 * Object of the class scheduler.
+	 */
 	private Scheduler scheduler;
 }

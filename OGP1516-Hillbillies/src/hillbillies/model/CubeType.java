@@ -1,5 +1,7 @@
 package hillbillies.model;
 
+import be.kuleuven.cs.som.annotate.Basic;
+
 /**
  * An enumeration of cubeTypes.
  *    In its current definition, the class distinguishes between
@@ -14,7 +16,10 @@ public enum CubeType {
 
 	AIR{
 
-		@Override
+		/**
+		 * Return the number corresponding with the cubeType of air.
+		 */
+		@Override @Basic
 		public int getCubeType() {
 			return 0;
 		}
@@ -23,7 +28,10 @@ public enum CubeType {
 	
 	ROCK{
 
-		@Override
+		/**
+		 * Return the number corresponding with the cubeType of rock.
+		 */
+		@Override @Basic
 		public int getCubeType() {
 			return 1;
 		}
@@ -32,7 +40,10 @@ public enum CubeType {
 	
 	TREE{
 
-		@Override
+		/**
+		 * Return the number corresponding with the cubeType of tree.
+		 */
+		@Override @Basic
 		public int getCubeType() {
 			return 2;
 		}
@@ -41,12 +52,18 @@ public enum CubeType {
 	
 	WORKSHOP{
 
-		@Override
+		/**
+		 * Return the number corresponding with the cubeType of workshop.
+		 */
+		@Override @Basic
 		public int getCubeType() {
 			return 3;
 		}
 		
 	};
 	
+	/**
+	 * Return the number corresponding with the cubeType.
+	 */
 	public abstract int getCubeType();
 }
