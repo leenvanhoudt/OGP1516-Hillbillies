@@ -24,6 +24,9 @@ public class IsWellFormed {
 	 * 
 	 * @param task
 	 * 		The task on which the wellformedness is checked.
+	 * @post ...
+	 * 		| the task is set to the given task.
+	 * 		| new.task == task
 	 */
 	public IsWellFormed(Task task){
 		this.task = task;

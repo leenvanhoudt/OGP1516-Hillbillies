@@ -7,7 +7,6 @@ import java.util.List;
 
 import be.kuleuven.cs.som.annotate.Basic;
 import hillbillies.model.Unit;
-import ogp.framework.util.ModelException;
 
 /**
  * A class that schedules tasks that have to be executed for one faction.
@@ -29,12 +28,16 @@ public class Scheduler {
 	
 	/**
 	 * Schedule a task, in other words adding the task to the list with scheduled tasks.
+	 * Add the scheduler to the list of schedulers which contain that task.
 	 * 
 	 * @param task
 	 * 		The task that has to be scheduled.
 	 * @effect ...
 	 * 		| the task is scheduled.
 	 * 		| this.scheduledList.add(task)
+	 * @effect ...
+	 * 		| add the task to the scheduler list of task.
+	 * 		| task.addScheduler(this);
 	 */
 	public void schedule(Task task){
 		System.out.println("schedule");
@@ -68,9 +71,18 @@ public class Scheduler {
 	private ArrayList<Task> scheduledList = new ArrayList<Task>();
 	
 	/**
+	 * Replace the original task with a new task.
 	 * 
 	 * @param original
+	 * 		The original task that has to be replaced.
 	 * @param replacement
+	 * 		The task that replaces the original.
+	 * @effect ...
+	 * 		| remove the original task.
+	 * 		| this.removeTask(original)
+	 * @effect ...
+	 * 		| schedule the replacement.
+	 * 		| this.schedule(replacement)
 	 */
 	public void replace(Task original, Task replacement){
 		System.out.println("replace");
@@ -80,6 +92,16 @@ public class Scheduler {
 		this.schedule(replacement);
 	}
 	
+	/**
+	 * Check if all tasks are part of the list of scheduled tasks.
+	 * 
+	 * @param tasks
+	 * 		The tasks to check.
+	 * @return
+	 * 		| Return false if scheduledList does not contain one of the tasks.
+	 * 		| result == if (!this.getScheduledTasks().contains(task)
+	 * 		|			then return false
+	 */
 	public boolean areTasksPartOf(Collection<Task> tasks){
 		System.out.println("tasks are part of");
 		for (Task task : tasks){
@@ -89,6 +111,13 @@ public class Scheduler {
 		return true;
 	}
 	
+	/**
+	 * Return the task with the highest priority that is not currently being executed.
+	 * 
+	 * @return ...
+	 * 		| The task with the highest priority that is not currently being executed.
+	 * 		| result == currentHighest
+	 */
 	public Task getTaskHighestPriority(){
 		Task currentHighest = null;
 		for (int i = 0; i<this.getScheduledTasks().size(); i++){
@@ -100,6 +129,15 @@ public class Scheduler {
 		return currentHighest;
 	}
 	
+	/**
+	 * Return all tasks meeting the condition.
+	 * 
+	 * @param condition
+	 * 		The condition that the tasks have to meet.
+	 * @return ...
+	 * 		| Return all the tasks meeting the condtion.
+	 * 		| result == allTasksMeetingCondition
+	 */
 	public List<Task> getAllTasksCondition(Boolean condition){
 		System.out.println("get all tasks condition");
 		List<Task> allTasksMeetingCondition = new ArrayList<Task>();
@@ -111,11 +149,39 @@ public class Scheduler {
 		return allTasksMeetingCondition;
 	}
 	
+	/**
+	 * Assign a task to a unit and a unit to a task.
+	 * 
+	 * @param task
+	 * 		the task assigned to the unit.
+	 * @param unit
+	 * 		the unit assigned to the task.
+	 * @effect ...
+	 * 		| assign the unit to the task.
+	 * 		| task.setAssignedUnit(unit)
+	 * @effect ...
+	 * 		| assign the task to the unit.
+	 * 		| unit.setAssignedTask(task)
+	 */
 	public void assignTaskToUnit(Task task, Unit unit){
 		task.setAssignedUnit(unit);
 		unit.setAssignedTask(task);
 	}
 	
+	/**
+	 * Reset the assigned task and the assigned unit.
+	 * 
+	 * @param task
+	 * 		The task for which the assigned unit has to be reset.
+	 * @param unit
+	 * 		The unit for which the assigned task has to be reset.
+	 * @effect ...
+	 * 		| set the assigned unit of task to null.
+	 * 		| task.setAssignedUnit(null)
+	 * @effect ...
+	 * 		| set the assigned task of unit to null.
+	 * 		| unit.setAssignedTask(null)
+	 */
 	public void reset(Task task, Unit unit){
 		task.setAssignedUnit(null);
 		unit.setAssignedTask(null);
@@ -129,13 +195,12 @@ public class Scheduler {
 	 * @param scheduler
 	 *            The scheduler for which to return an iterator.
 	 * 
-	 * @return An iterator that yields all scheduled tasks managed by the given
-	 *         scheduler, independent of whether they're currently assigned to a
-	 *         Unit or not. Completed tasks should not be part of the result.
-	 *         The tasks should be delivered by decreasing priority (highest
-	 *         priority first).
-	 * @throws ModelException
-	 *             A precondition was violated or an exception was thrown.
+	 * @return ...
+	 * 		| An iterator that yields all scheduled tasks managed by the given
+	 *      | scheduler, independent of whether they're currently assigned to a
+	 *      | Unit or not.
+	 *      | The tasks are ranked by decreasing priority
+	 *      | result == new Iterator<Task>()
 	 */
 	public Iterator<Task> getAllTasksIterator(){
 		return new Iterator<Task>(){
