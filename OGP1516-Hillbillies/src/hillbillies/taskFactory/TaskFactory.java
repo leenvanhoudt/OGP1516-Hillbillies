@@ -49,8 +49,12 @@ import hillbillies.statements.WorkStatement;
 public class TaskFactory implements ITaskFactory<MyExpression,MyStatement,Task>{
 
 	@Override
-	public List<Task> createTasks(String name, int priority, MyStatement activity, List<int[]> selectedCubes) {
-		return new CreateTasks(name, priority, activity, selectedCubes).tasks();
+	public List<Task> createTasks(String name, int priority, MyStatement activity, List<int[]> selectedCubes) throws Error {
+		try{
+			return new CreateTasks(name, priority, activity, selectedCubes).tasks();
+		} catch(Throwable e){
+			throw new Error("can not create task");
+		}
 	}
 
 	@Override

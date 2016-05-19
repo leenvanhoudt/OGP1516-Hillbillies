@@ -3,13 +3,28 @@ package hillbillies.scheduler;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class for creating tasks.
+ * 
+ * @author Laura Vranken & Leen Van Houdt, 
+ * 			2e bach Ingenieurswetenschappen: Objectgericht Programmeren 
+ * 			link code repository: https://github.com/leenvanhoudt/OGP1516-Hillbillies
+ *
+ */
 public class CreateTasks {
 	
-	private String name;
-	private int priority;
-	private MyStatement statementActivity;
-	private List<int[]> selectedCubes;
-
+	/**
+	 * Create a task with the given parameters.
+	 * 
+	 * @param name
+	 * 		The name of the task.
+	 * @param priority
+	 * 		The priority of the task.
+	 * @param activity
+	 * 		The statements out which the task exists.
+	 * @param selectedCubes
+	 * 		The selectedCubes on which the task has to be executed.
+	 */
 	public CreateTasks(String name, int priority, MyStatement activity, List<int[]> selectedCubes){
 		System.out.println("create tasks constructor");
 		this.name = name;
@@ -18,7 +33,25 @@ public class CreateTasks {
 		this.selectedCubes = selectedCubes;
 	}
 	
-	public List<Task> tasks(){
+	/**
+	 * Variables registering the name, priority, activity and selectedCubes of a task.
+	 */
+	private String name;
+	private int priority;
+	private MyStatement statementActivity;
+	private List<int[]> selectedCubes;
+	
+	/**
+	 * Return the tasks that are made for every selectedCube. If there is no selectedCube
+	 * and it is not needed for the task, a task without a cube will be created. Otherwise
+	 * if there is no selectedCube and there is one needed, an exception will be thrown.
+	 *
+	 * @return ...
+	 * 		| Return all the created tasks.
+	 * @Error ...
+	 * 		| Throw an error if there are no selectedCubes and a selectedCube is expected.
+	 */
+	public List<Task> tasks() throws Error{
 		System.out.println("create task");
 		List<Task> taskOnMoreCubes = new ArrayList<Task>();
 		if (!this.selectedCubes.isEmpty()){
