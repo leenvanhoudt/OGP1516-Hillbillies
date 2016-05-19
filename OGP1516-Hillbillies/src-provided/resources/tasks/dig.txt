@@ -4,10 +4,6 @@ activities:
 	if carries_item(this) then
 		work here;
 	fi
-	while is_alive(enemy) do
-		follow enemy;
-		break;
-	done
 	if is_solid(selected) then
 		moveTo (next_to selected);
 		work selected;
