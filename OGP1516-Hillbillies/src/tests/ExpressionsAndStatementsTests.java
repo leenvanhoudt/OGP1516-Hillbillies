@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+import hillbillies.model.Boulder;
 import hillbillies.model.CubeType;
 import hillbillies.model.Faction;
 import hillbillies.model.Unit;
@@ -73,7 +74,7 @@ public class ExpressionsAndStatementsTests {
 	public void testWhileBreak() throws ModelException{
 		int[][][] types = this.cubeTypesFlatSurface();
 		World world = new World(types, new DefaultTerrainChangeListener());
-		Unit unit = new Unit("Test", new int[] { 5, 5, 2 }, 50, 50, 50, 50, false);
+		Unit unit = new Unit("Test", new int[] { 9, 9, 2 }, 50, 50, 50, 50, true);
 		Unit enemy = new Unit("Test", new int[] { 0, 0, 2 }, 50, 50, 50, 50, false);
 		world.addUnit(unit);
 		world.addUnit(enemy);
@@ -83,17 +84,65 @@ public class ExpressionsAndStatementsTests {
 		TaskFactory factory = new TaskFactory();
 
 		List<Task> tasks = TaskParser.parseTasksFromString(
-				"name: \"while break task\"\npriority: 1\nactivities: while is_alive(enemy) do\nfollow enemy;\nbreak;\ndone",
+				"name: \"while break task\"\npriority: 1\nactivities: print enemy; \nwhile is_alive(enemy) do\nfollow enemy;\nbreak;\ndone",
 				factory, Collections.singletonList(new int[] { 1, 1, 1 }));
+		Task task = tasks.get(0);
+		
+		scheduler.schedule(task);
+		advanceTimeFor(world, 2, 0.02);
+		assertTrue("is following", unit.isMoving());
+		advanceTimeFor(world, 10, 0.02);
+		assertFalse("break after followed", unit.isMoving());
+	}
+	
+	@Test
+	public void testFollowAny() throws ModelException{
+		int[][][] types = this.cubeTypesFlatSurface();
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit unit = new Unit("Test", new int[] { 5, 5, 2 }, 50, 50, 50, 50, true);
+		Unit otherUnit = new Unit("Test", new int[] { 0, 0, 2 }, 50, 50, 50, 50, false);
+		world.addUnit(unit);
+		world.addUnit(otherUnit);
+		Faction faction = unit.getFaction();
+
+		Scheduler scheduler = faction.getScheduler();
+		TaskFactory factory = new TaskFactory();
+
+		List<Task> tasks = TaskParser.parseTasksFromString(
+				"name: \"while break task\"\npriority: 1\nactivities: follow any;",
+				factory, Collections.singletonList(new int[] { 1, 1, 1 }));
+		Task task = tasks.get(0);
+		
+		scheduler.schedule(task);
+		advanceTimeFor(world, 2, 0.02);
+		assertTrue("is following", unit.isMoving());
+	}
+	
+	@Test
+	public void testCarriesBoulder() throws ModelException{
+		int[][][] types = this.cubeTypesFlatSurface();
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit unit = new Unit("Test", new int[] { 5, 5, 2 }, 50, 50, 50, 50, true);
+		world.addUnit(unit);
+		Boulder boulder = new Boulder();
+		world.addBoulder(boulder);
+		boulder.setWorld(world);
+		boulder.setPosition(5, 4, 2);
+		Faction faction = unit.getFaction();
+
+		Scheduler scheduler = faction.getScheduler();
+		TaskFactory factory = new TaskFactory();
+
+		List<Task> tasks = TaskParser.parseTasksFromString(
+				"name: \"while break task\"\npriority: 1\nactivities: if carries_item(this) then \n work selected; \nfi",
+				factory, Collections.singletonList(new int[] { 5, 5, 1 }));
 		System.out.println("tasks");
 		Task task = tasks.get(0);
 		
 		scheduler.schedule(task);
-		System.out.println(scheduler.getScheduledTasks().size());
-		//advanceTimeFor(world, 2, 0.02);
-//		assertTrue("is following", unit.isMoving());
-//		advanceTimeFor(world, 10, 0.02);
-//		assertFalse("break after followed", unit.isMoving());
+		unit.workAt(5, 4, 2);
+		advanceTimeFor(world, 15, 0.02);
+		assertTrue("working", unit.isWorking());
 	}
 
 }
