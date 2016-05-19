@@ -29,6 +29,21 @@ public class UnitTests {
 		unit.advanceTime(time - n * step);
 	}
 	
+	/**
+	 * Helper method to advance time for the given world by some time.
+	 * 
+	 * @param time
+	 *            The time, in seconds, to advance.
+	 * @param step
+	 *            The step size, in seconds, by which to advance.
+	 */
+	private static void advanceTimeFor(World world, double time, double step) throws ModelException {
+		int n = (int) (time / step);
+		for (int i = 0; i < n+1; i++)
+			world.advanceTime(step);
+		world.advanceTime(time - n * step);
+	}
+	
 	@Test
 	public void testSetNameDoubleQuotes() throws ModelException {
 		Unit unit = new Unit("TestUnit", new int[] { 1, 2, 3 }, 50, 50, 50, 50, false);
@@ -678,4 +693,27 @@ public class UnitTests {
 		unit.advanceTime(0.1);
 		assertFalse("unit isn't working", unit.isAttacking());
 	}
+	
+	@Test
+	public void testFollowing() throws ModelException{
+		int[][][] types = new int[8][4][4];
+		for (int i=0; i<8; i++)
+			types[i][1][1] = 1;
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit follower = new Unit("TestUnit", new int[] { 0, 1, 2 }, 50, 50, 50, 50, false);
+		Unit followed = new Unit("TestUnit", new int[] { 3, 1, 2 }, 50, 50, 50, 50, false);
+		world.addUnit(follower);
+		world.addUnit(followed);
+		follower.follow(followed);
+		advanceTimeFor(world,3,0.1);
+		assertTrue("followed", follower.getCubeCoordinate()[0]==3);
+		followed.moveTo(new int[]{7,1,2});
+		advanceTimeFor(world,3,0.1);
+		assertTrue("stopped following", follower.getCubeCoordinate()[0]==3);
+		follower.follow(followed);
+		advanceTimeFor(world,3,0.1);
+		assertTrue("followed again", follower.getCubeCoordinate()[0]==7);
+	}
+	
+	
 }
