@@ -219,9 +219,9 @@ public class World {
 			if (!this.getCubesChanged().isEmpty()){
 				this.updateCubes();
 			}
-		}else{
-			throw new IllegalArgumentException();
-		}
+		}//else{
+//			throw new IllegalArgumentException();
+//		}
 	}
 	
 	/**

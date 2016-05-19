@@ -1,14 +1,16 @@
 package hillbillies.model;
 
 import be.kuleuven.cs.som.annotate.Basic;
+import be.kuleuven.cs.som.annotate.Value;
 
 /**
- * A class of cubes and their position, cost and parent.
+ * A class of cubes and their position, costs and parent.
  * 
  * @author Laura Vranken & Leen Van Houdt, 
  * 			2e bach Ingenieurswetenschappen: Objectgericht Programmeren 
  * 			link code repository: https://github.com/leenvanhoudt/OGP1516-Hillbillies
  */
+@Value
 public class Cube {
 		
 	/**
@@ -57,6 +59,7 @@ public class Cube {
 	public int getZ(){
 		return this.z;
 	}
+	
 	
 	/**
 	 * Return the fCost of the cube.
@@ -166,19 +169,35 @@ public class Cube {
 	private Cube parent;
 	
 	
+	/**
+	 * Return the dijkstraCost of this cube.
+	 */
+	@Basic
 	public int getDijkstraCost(){
 		return this.dijkstraCost;
 	}
 
-	
+	/**
+	 * Set the dijkstraCost of this cube to the given value.
+	 * The dijkstraCost is the distance from the startCube to this cube.
+	 * 
+	 * @param value
+	 * 		The cost to which to set the gCost of the cube.
+	 * @post ...
+	 * 		| The dijkstraCost of the cube is set to the given value.
+	 */
 	public void setDijkstraCost(int value){
 		this.dijkstraCost = value;
 	}
 	
+	/**
+	 * Variable registering the dijkstraCost of the cube.
+	 */
 	private int dijkstraCost;
 	
+	
 	/**
-	 * Return the parent of the cube.
+	 * Return the dijkstraParent of the cube.
 	 */
 	@Basic
 	public Cube getDijkstraParent(){
@@ -186,19 +205,19 @@ public class Cube {
 	}
 	
 	/**
-	 * Set the parent of the cube to the given parent.
+	 * Set the dijkstraParent of the cube to the given parent.
 	 * 
 	 * @param parent
-	 * 		The cube to which to set the cubes parent.
+	 * 		The cube to which to set the cubes dijkstraParent.
 	 * @post ...
-	 * 		| The cubes parent is set to the given parent.
+	 * 		| The cubes dijkstraParent is set to the given parent.
 	 */
 	public void setDijkstraParent(Cube parent){
 		this.DijkstraParent = parent;
 	}
 	
 	/**
-	 * Object of the class cube registering the parent of the cube.
+	 * Object of the class cube registering the dijkstraParent of the cube.
 	 */
 	private Cube DijkstraParent;
 }

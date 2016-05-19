@@ -5,6 +5,17 @@ import java.util.Random;
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Raw;
 
+/**
+ * A class of materials with their weight and position. A material can fall and be picked up.
+ * Material is a superclass for Boulder and Log.
+ * 
+ * @author Laura Vranken & Leen Van Houdt, 
+ * 			2e bach Ingenieurswetenschappen: Objectgericht Programmeren 
+ * 			link code repository: https://github.com/leenvanhoudt/OGP1516-Hillbillies
+ * 
+ * @invar The position of each material must be a valid position for any material.
+ *      | isValidPosition(getPosition())
+ */
 public abstract class Material {
 
 	/**

@@ -880,9 +880,9 @@ public class Unit {
 				this.resting3MinutesTime = 0;
 				this.rest();
 			}
-		} else{
-			throw new IllegalArgumentException();
-		}
+		} //else{
+//			throw new IllegalArgumentException();
+//		}
 	}
 	
 	/**
@@ -1634,7 +1634,6 @@ public class Unit {
 	 * 		| (this.isFallingPosition)
 	 */
 	public void moveTo(int[] cube) throws IllegalArgumentException {
-		System.out.println("move to");
 		this.cubeEndPosition = cube;
 		if (!this.getWorld().isPassable(this.cubeEndPosition[0], this.cubeEndPosition[1], this.cubeEndPosition[2])
 				|| this.isFallingPosition(this.cubeEndPosition[0], this.cubeEndPosition[1], this.cubeEndPosition[2])){
@@ -1647,22 +1646,18 @@ public class Unit {
 			if (!this.isMovingTo){
 				pathFinding.setUnit(this);
 				try{
-					System.out.println("find path");
 					this.path = pathFinding.findPath(this.cubeEndPosition);
 				}catch(IndexOutOfBoundsException e){
-					System.out.println("no path found");
 					throw new IllegalArgumentException();
 				}
 				this.isMovingTo = true;
 			}
 			if (UtilCompareList.compareIntList(this.getCubeCoordinate(), this.cubeEndPosition)){
-				System.out.println("arrived move to");
 				this.isMovingTo = false;
 				this.defaultBehaviorCase3 = false;
 				this.setCurrentSpeed(0);
 			}
 			if (this.isMovingTo){
-				System.out.println("moving");
 				int dx = 0;
 				int dy = 0;
 				int dz = 0;
@@ -2031,7 +2026,6 @@ public class Unit {
 	}
 	
 	private void assignUnitToTask(){
-		System.out.println("default assign task");
 		Task task = this.getFaction().getScheduler().getTaskHighestPriority();
 		this.setAssignedTask(task);
 		task.setAssignedUnit(this);
@@ -2040,21 +2034,17 @@ public class Unit {
 	
 	private void executeTask(double dt){
 		MyStatement current = this.getAssignedTask().getActivity().getNext(this.taskComponents);
-		System.out.println("default execute task");
 		if (current == null)
 			this.getAssignedTask().getActivity().execute(this.taskComponents);
 		while (!this.getAssignedTask().getActivity().isExecuted() && dt>0){
-			System.out.println(current);
 			if (current.getNext(this.taskComponents)==null || current.getNext(this.taskComponents).isExecuted()){
 				try{
 				current.execute(this.taskComponents);
 				current = this.getAssignedTask().getActivity().getNext(this.taskComponents);
 				dt = dt - 0.001;
-				if (this.isMovingTo || this.isAttacking() || this.isWorking()){
+				if (this.isMovingTo || this.isAttacking() || this.isWorking() || this.isFollowing){
 					break;
 				}} catch(Throwable e){
-					System.out.println("catch exception");
-					System.out.println(this.getAssignedTask());
 					this.interruptTask();
 					throw new Error("can not execute this task");
 				}
@@ -2065,12 +2055,9 @@ public class Unit {
 	}
 	
 	private void endTask(){
-		System.out.println("default end task");
 		this.getAssignedTask().getActivity().setExecutedState(false);
 		this.getFaction().getScheduler().removeTask(this.getAssignedTask());
 		this.getFaction().getScheduler().reset(this.getAssignedTask(), this);
-		System.out.println(this.getFaction().getScheduler().getScheduledTasks().size());
-		System.out.println(this.getAssignedTask());
 	}
 	
 	private void randomDefaultBehavior(){
