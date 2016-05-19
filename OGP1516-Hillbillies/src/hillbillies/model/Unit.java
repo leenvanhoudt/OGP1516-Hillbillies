@@ -2121,12 +2121,31 @@ public class Unit {
 		this.followedUnit = followedUnit;
 	}
 	
+	/**
+	 * The unit will follow the followedUnit until the followedUnit died or the unit arrived
+	 * at the same cube as the followedUnit is standing.
+	 * 
+	 * @post ...
+	 * 		| If the followedUnit died, this unit will stop following him. The unit will also
+	 * 		| be placed to the next position in the centre of a cube.
+	 * 		| new.isFollowing == false
+	 * 		| new.position == this.nextPosition
+	 * @post ...
+	 * 		| If the unit catched up the followedUnit, the unit will stop following him.
+	 * 		| new.isFollowing == false
+	 * @effect ...
+	 * 		| If the unit has not reached the followed unit yet, it will keep moving to
+	 * 		| the position of the followedUnit. The oldposition will also be updated to the
+	 * 		| most recent position of the followedUnit.
+	 * 		| this.moveTo(positionFollowedUnit)
+	 */
 	private void followAdvanceTime(){
 		if (UtilCompareList.compareIntList(this.followedUnit.getCubeCoordinate(),
 				this.getCubeCoordinate()) || !this.followedUnit.isAlive()){
 			this.isFollowing = false;
 			this.isMovingTo = false;
-			this.setPosition(this.getNextPosition());
+			if (!this.followedUnit.isAlive())
+				this.setPosition(this.getNextPosition());
 		}
 		else if ((this.oldPositionFollowedUnit == null || 
 				UtilCompareList.compareIntList(this.oldPositionFollowedUnit, this.getCubeCoordinate()))){
@@ -2137,19 +2156,38 @@ public class Unit {
 		}
 	}
 
+	/**
+	 * Variables registering if the unit is following the followed unit, the followed unit 
+	 * and the followed unit's first position
+	 */
 	private boolean isFollowing = false;
 	private Unit followedUnit;
 	private int[] oldPositionFollowedUnit;
 	
-	
+	/**
+	 * Return the assigned task of this unit.
+	 */
+	@Basic
 	public Task getAssignedTask(){
 		return this.assignedTask;
 	}
 	
+	/**
+	 * Assign a task to a unit.
+	 * 
+	 * @param task
+	 * 		the new task to which the unit will be assigned.
+	 * @post ...
+	 * 		| The task of this new unit is equal to the given task. 
+	 * 		| new.getAssignedTask() == task
+	 */
 	public void setAssignedTask(Task task){
 		this.assignedTask = task;
 	}
 	
+	/**
+	 * Initializing an object of the class Task.
+	 */
 	private Task assignedTask;
 	
 	/**

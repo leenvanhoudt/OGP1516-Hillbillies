@@ -9,8 +9,8 @@ import hillbillies.scheduler.Scheduler;
 import hillbillies.util.ConnectedToBorder;
 
 /**
- * A class of the World where the Hillbillies can execute their activities and be divided in factions and
- * where boulders and logs can be added.
+ * A class of the World where the Hillbillies can execute their activities and be divided
+ * in factions and where boulders and logs can be added.
  * 
  * @author Laura Vranken & Leen Van Houdt, 
  * 			2e bach Ingenieurswetenschappen: Objectgericht Programmeren 
@@ -32,11 +32,11 @@ public class World {
 	 * 		| The class connectedToBorder is initialized as a world, with the given dimensions,
 	 * 		| full of solid blocks.
 	 * @effect ...
-	 * 		| All cubes within the dimension of the world that are air or workshop are changed from
-	 * 		| solid to passable.
+	 * 		| All cubes within the dimension of the world that are air or workshop are 
+	 * 		| changed from solid to passable.
 	 * @effect ...
-	 * 		| All cubes are checked if they are connected to border. If not, they are added to the list
-	 * 		| of cubes that have to cave in.
+	 * 		| All cubes are checked if they are connected to border. If not, they are added
+	 * 		| to the list of cubes that have to cave in.
 	 * @throws IllegalArgumentException
 	 * 		| If the cubeType doesn't have a valid value.
 	 */
@@ -65,7 +65,8 @@ public class World {
 	}
 	
 	/**
-	 * List for temporarily saving the returned list of this.connectedToBorder.changeSolidToPassable(x,y,z).
+	 * List for temporarily saving the returned list of 
+	 * this.connectedToBorder.changeSolidToPassable(x,y,z).
 	 */
 	private List<int[]> temporary = new ArrayList<int[]>();
 	
@@ -185,7 +186,6 @@ public class World {
 	 * 		| Return true if the duration is valid.
 	 */
 	public boolean isValidDuration(double dt) {
-		//TODO als we <= 0.2 nemen, geen null exception;
 		return dt >= 0 && dt < MAX_DURATION;
 	}
 
@@ -219,9 +219,9 @@ public class World {
 			if (!this.getCubesChanged().isEmpty()){
 				this.updateCubes();
 			}
-		}//else{
-//			throw new IllegalArgumentException();
-//		}
+		}else{
+			throw new IllegalArgumentException();
+		}
 	}
 	
 	/**
@@ -247,8 +247,8 @@ public class World {
 	private static final int MAX_NB_FACTIONS = 5;
 	
 	/**
-	 * Spawn a unit with random characteristics at a random standing place in the world. The unit
-	 * It will be added to the faction with the smallest number of units.
+	 * Spawn a unit with random characteristics at a random standing place in the world.
+	 * The unit will be added to the faction with the smallest number of units.
 	 * 
 	 * @param enableDefaultBehavior
 	 * 		Check if default behaviour is enabled.
@@ -449,12 +449,12 @@ public class World {
 	
 	/**
 	 * Update the cube type of a cube that have to cave in from inpassable to air.
-	 * If the cube was wood or rock, it has 25% change that a log or a boulder is dropped at that place after
-	 * that the cube caved in.
+	 * If the cube was wood or rock, it has 25% change that a log or a boulder is dropped
+	 * at that place after that the cube caved in.
 	 * 
 	 * @effect ...
-	 * 		| The cubes of the list cubesChanged are caved in and sometimes there is a boulder or a log 
-	 * 		| dropped at that place.
+	 * 		| The cubes of the list cubesChanged are caved in and sometimes there is a boulder
+	 * 		| or a log dropped at that place.
 	 */
 	private void updateCubes()throws IllegalArgumentException{
 		for (int[] cube : this.getCubesChanged()){
@@ -692,6 +692,21 @@ public class World {
 		return false;
 	}
 	
+	/**
+	 * Return true if a friend is located at the given cube. 
+	 * The unit may not be equal to the given unit.
+	 * 
+	 * @param x
+	 * 		the x coordinate of a cube.
+	 * @param y
+	 * 		the y coordinate of a cube.
+	 * @param z
+	 * 		the z coordinate of a cube.
+	 * @param givenUnit
+	 * 		the unit of which we search the friend of.
+	 * @return ...
+	 * 		| Return true if there is a friend located at that cube.
+	 */
 	public boolean CubeContainFriend(int x, int y, int z, Unit givenUnit){
 		if (!this.CubeContainOtherUnit(x, y, z, givenUnit))
 			return false;
@@ -705,6 +720,20 @@ public class World {
 		}
 	}
 	
+	/**
+	 * Return true if an enemy is located at the given cube. 
+	 * 
+	 * @param x
+	 * 		the x coordinate of a cube.
+	 * @param y
+	 * 		the y coordinate of a cube.
+	 * @param z
+	 * 		the z coordinate of a cube.
+	 * @param givenUnit
+	 * 		the unit of which we search the enemy of.
+	 * @return ...
+	 * 		| Return true if there is an enemy located at that cube.
+	 */
 	public boolean CubeContainEnemy(int x, int y, int z, Unit givenUnit){
 		if (!this.CubeContainOtherUnit(x, y, z, givenUnit))
 			return false;
@@ -718,6 +747,21 @@ public class World {
 		}
 	}
 	
+	/**
+	 * Return a list of all units on that cube that are not equal to the givenUnit.
+	 * 
+	 * @param x
+	 * 		the x coordinate of a cube.
+	 * @param y
+	 * 		the y coordinate of a cube.
+	 * @param z
+	 * 		the z coordinate of a cube.
+	 * @param givenUnit
+	 * 		the unit for which we search an other unit.
+	 * 
+	 * @return ...
+	 * 		Return a list of all units on that cube that are not equal to the givenUnit.
+	 */
 	public ArrayList<Unit> getCubeOtherUnit(int x, int y, int z, Unit givenUnit){
 		ArrayList<Unit> unitsOnCube = new ArrayList<Unit>();
 		for (Unit unit:this.getUnits()){
