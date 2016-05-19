@@ -37,15 +37,14 @@ public class Task {
 	
 	public Set<Scheduler> getSchedulersForTask(){
 		System.out.println("task getschedulersfortask");
-		Set<Scheduler> setOfSchedulers = new HashSet<Scheduler>();
-		for (Faction faction: this.getAssignedUnit().getWorld().getActiveFactions()){
-			if(faction.getScheduler().getScheduledTasks().contains(this)){
-				setOfSchedulers.add(faction.getScheduler());
-			}
-		}
-		return setOfSchedulers;
+		return this.setOfSchedulers;
 	}
 	
+	public void addScheduler(Scheduler scheduler){
+		this.setOfSchedulers.add(scheduler);
+	}
+	
+	private Set<Scheduler> setOfSchedulers = new HashSet<Scheduler>();
 	
 	public Unit getAssignedUnit(){
 		return this.assignedUnit;

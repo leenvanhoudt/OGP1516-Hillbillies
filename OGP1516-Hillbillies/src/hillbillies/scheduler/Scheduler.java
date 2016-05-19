@@ -5,21 +5,55 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import be.kuleuven.cs.som.annotate.Basic;
 import hillbillies.model.Unit;
 import ogp.framework.util.ModelException;
 
+/**
+ * A class that schedules tasks that have to be executed for one faction.
+ * 
+ * @author Laura Vranken & Leen Van Houdt, 
+ * 			2e bach Ingenieurswetenschappen: Objectgericht Programmeren 
+ * 			link code repository: https://github.com/leenvanhoudt/OGP1516-Hillbillies
+ *
+ */
 public class Scheduler {
 
-	
+	/**
+	 * Return the list of scheduled tasks.
+	 */
+	@Basic
 	public List<Task> getScheduledTasks(){
 		return this.scheduledList;
 	}
-		
+	
+	/**
+	 * Schedule a task, in other words adding the task to the list with scheduled tasks.
+	 * 
+	 * @param task
+	 * 		The task that has to be scheduled.
+	 * @effect ...
+	 * 		| the task is scheduled.
+	 * 		| this.scheduledList.add(task)
+	 */
 	public void schedule(Task task){
 		System.out.println("schedule");
 		this.scheduledList.add(task);
+		task.addScheduler(this);
 	}
 	
+	/**
+	 * Remove a task from the list with scheduled tasks and terminate it.
+	 * 
+	 * @param task
+	 * 		The task that has to be scheduled.
+	 * @post ...
+	 * 		| the task is terminated.
+	 * 		| new.isTerminated == true
+	 * @effect ...
+	 * 		| the task is removed.
+	 * 		| this.scheduledList.remove(task)
+	 */
 	public void removeTask(Task task){
 		System.out.println("remove");
 		if (!task.isTerminated()){
@@ -28,8 +62,16 @@ public class Scheduler {
 		}
 	}
 	
+	/**
+	 * List to save all scheduled tasks in.
+	 */
 	private ArrayList<Task> scheduledList = new ArrayList<Task>();
 	
+	/**
+	 * 
+	 * @param original
+	 * @param replacement
+	 */
 	public void replace(Task original, Task replacement){
 		System.out.println("replace");
 		if (original.getAssignedUnit() != null)
