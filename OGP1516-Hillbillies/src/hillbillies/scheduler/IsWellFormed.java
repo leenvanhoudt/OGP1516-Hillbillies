@@ -43,7 +43,6 @@ public class IsWellFormed {
 	private void findBreakAndReadVariableStatements(MyStatement current, 
 			ArrayList<MyStatement> breakList, ArrayList<MyStatement> readVariableStatementList) throws Error{
 		while (!this.task.getActivity().isExecuted() && current != null){
-			System.out.println(current);
 			if (current.getNextWellFormed()==null || current.getNextWellFormed().isExecuted()){
 				try{
 					if (current instanceof BreakStatement)
