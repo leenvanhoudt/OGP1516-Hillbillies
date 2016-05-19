@@ -7,13 +7,33 @@ import hillbillies.statements.BreakStatement;
 import hillbillies.statements.SequenceStatement;
 import hillbillies.statements.WhileStatement;
 
+/**
+ * A class which checks the wellformedness of a task.
+ * 
+ * @author Laura Vranken & Leen Van Houdt, 
+ * 			2e bach Ingenieurswetenschappen: Objectgericht Programmeren 
+ * 			link code repository: https://github.com/leenvanhoudt/OGP1516-Hillbillies
+ *
+ */
 public class IsWellFormed {
 	
-	private Task task;
-
+	/**
+	 * Check if a task is wellformed. This is the case when every breakStatement can break the
+	 * while statement wherein he is used. Also every variable used in ReadVariableExpression,
+	 * has to be assigned before it can be used.
+	 * 
+	 * @param task
+	 * 		The task on which the wellformedness is checked.
+	 */
 	public IsWellFormed(Task task){
 		this.task = task;
 	}
+	
+	/**
+	 * Initializing an object of the class Task.
+	 */
+	private Task task;
+	
 	
 	public boolean CheckWellFormedness() throws Error{
 		ArrayList<MyStatement> breakList = new ArrayList<MyStatement>();
