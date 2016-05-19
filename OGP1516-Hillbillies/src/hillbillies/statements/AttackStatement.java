@@ -31,8 +31,11 @@ public class AttackStatement<E extends UnitExpression,ReadVariableExpression>
 		}else{
 			enemy = this.expressionUnit.evaluateUnit(taskComponents);
 		}
+		System.out.println(enemy);
 		try{
+			System.out.println("before fight");
 			taskComponents.getUnit().fight(enemy);
+			System.out.println("fight ended");
 			this.setExecutedState(true);
 		} catch(Throwable e){
 			taskComponents.getUnit().interruptTask();

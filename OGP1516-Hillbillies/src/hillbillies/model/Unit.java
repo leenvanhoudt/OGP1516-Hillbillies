@@ -1779,7 +1779,7 @@ public class Unit {
 	 * 		| throw an exception if the unit can not attack.
 	 */
 	public void fight(Unit defender) throws IllegalArgumentException{
-		this.interruptTask();
+		defender.interruptTask();
 		if (!this.isFalling && this.getFaction()!=defender.getFaction() 
 				&& defender != this){
 			try{
@@ -2108,6 +2108,8 @@ public class Unit {
 			if (current.getNext(this.taskComponents)==null || current.getNext(this.taskComponents).isExecuted()){
 				try{
 				current.execute(this.taskComponents);
+				System.out.println(current+" executed "+current.isExecuted());
+				System.out.println(this.getAssignedTask());
 				current = this.getAssignedTask().getActivity().getNext(this.taskComponents);
 				dt = dt - 0.001;
 				if (this.isMovingTo || this.isAttacking() || this.isWorking() || this.isFollowing){
@@ -2137,6 +2139,7 @@ public class Unit {
 	 * 		| and the task will be unassigned from the unit.
 	 */
 	private void endTask(){
+		System.out.println("end task");
 		this.getAssignedTask().getActivity().setExecutedState(false);
 		this.getFaction().getScheduler().removeTask(this.getAssignedTask());
 		this.getFaction().getScheduler().reset(this.getAssignedTask(), this);
@@ -2209,6 +2212,7 @@ public class Unit {
 	 * Interrupt task by unassigning the unit and reducing the priority with 100.
 	 */
 	public void interruptTask(){
+		System.out.println("interrupt");
 		if (this.getAssignedTask() != null){
 			this.getAssignedTask().getActivity().setExecutedState(false);
 			this.getAssignedTask().setPriority(this.getAssignedTask().getPriority() - 100);
