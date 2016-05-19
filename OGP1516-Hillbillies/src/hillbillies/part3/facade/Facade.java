@@ -364,8 +364,11 @@ public class Facade implements IFacade {
 
 	@Override
 	public boolean isWellFormed(Task task) throws ModelException {
-		// TODO Auto-generated method stub
-		return task.isWellFormed();
+		try{
+			return task.isWellFormed();
+		} catch (Throwable e){
+			throw new ModelException();
+		}
 	}
 
 	@Override

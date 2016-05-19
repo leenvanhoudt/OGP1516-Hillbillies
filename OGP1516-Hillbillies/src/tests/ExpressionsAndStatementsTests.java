@@ -17,6 +17,7 @@ import hillbillies.part3.programs.TaskParser;
 import hillbillies.scheduler.Scheduler;
 import hillbillies.scheduler.Task;
 import hillbillies.taskFactory.TaskFactory;
+import hillbillies.model.UtilCompareList;
 import ogp.framework.util.ModelException;
 
 public class ExpressionsAndStatementsTests {
@@ -61,8 +62,8 @@ public class ExpressionsAndStatementsTests {
 		TaskFactory factory = new TaskFactory();
 
 		List<Task> tasks = TaskParser.parseTasksFromString(
-				"name: \"follow task\"\npriority: 1\nactivities: follow enemy;",
-				factory, Collections.singletonList(new int[] {}));
+				"name: \"task\"\npriority: 1\nactivities: follow enemy;",
+				factory, Collections.singletonList(null));
 		Task task = tasks.get(0);
 		
 		scheduler.schedule(task);
@@ -71,7 +72,7 @@ public class ExpressionsAndStatementsTests {
 	}
 
 	@Test
-	public void testWhileBreak() throws ModelException{
+	public void testWhileFollowBreak() throws ModelException{
 		int[][][] types = this.cubeTypesFlatSurface();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit unit = new Unit("Test", new int[] { 9, 9, 2 }, 50, 50, 50, 50, true);
@@ -84,8 +85,8 @@ public class ExpressionsAndStatementsTests {
 		TaskFactory factory = new TaskFactory();
 
 		List<Task> tasks = TaskParser.parseTasksFromString(
-				"name: \"while break task\"\npriority: 1\nactivities: print enemy; \nwhile is_alive(enemy) do\nfollow enemy;\nbreak;\ndone",
-				factory, Collections.singletonList(new int[] { 1, 1, 1 }));
+				"name: \"task\"\npriority: 1\nactivities: while is_alive(enemy) do\nfollow enemy;\nbreak;\ndone",
+				factory, Collections.singletonList(null));
 		Task task = tasks.get(0);
 		
 		scheduler.schedule(task);
@@ -109,7 +110,7 @@ public class ExpressionsAndStatementsTests {
 		TaskFactory factory = new TaskFactory();
 
 		List<Task> tasks = TaskParser.parseTasksFromString(
-				"name: \"while break task\"\npriority: 1\nactivities: follow any;",
+				"name: \"task\"\npriority: 1\nactivities: follow any;",
 				factory, Collections.singletonList(new int[] { 1, 1, 1 }));
 		Task task = tasks.get(0);
 		
@@ -119,7 +120,7 @@ public class ExpressionsAndStatementsTests {
 	}
 	
 	@Test
-	public void testCarriesBoulder() throws ModelException{
+	public void testIfCarriesBoulderThenWork() throws ModelException{
 		int[][][] types = this.cubeTypesFlatSurface();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit unit = new Unit("Test", new int[] { 5, 5, 2 }, 50, 50, 50, 50, true);
@@ -134,9 +135,8 @@ public class ExpressionsAndStatementsTests {
 		TaskFactory factory = new TaskFactory();
 
 		List<Task> tasks = TaskParser.parseTasksFromString(
-				"name: \"while break task\"\npriority: 1\nactivities: if carries_item(this) then \n work selected; \nfi",
+				"name: \"task\"\npriority: 1\nactivities: if carries_item(this) then \n work selected; \nfi",
 				factory, Collections.singletonList(new int[] { 5, 5, 1 }));
-		System.out.println("tasks");
 		Task task = tasks.get(0);
 		
 		scheduler.schedule(task);
@@ -144,5 +144,73 @@ public class ExpressionsAndStatementsTests {
 		advanceTimeFor(world, 15, 0.02);
 		assertTrue("working", unit.isWorking());
 	}
+	
+	@Test (expected=Error.class)
+	public void testSelectedNotGiven() throws ModelException{
+		int[][][] types = this.cubeTypesFlatSurface();
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit unit = new Unit("Test", new int[] { 5, 5, 2 }, 50, 50, 50, 50, true);
+		world.addUnit(unit);
+		Faction faction = unit.getFaction();
 
+		Scheduler scheduler = faction.getScheduler();
+		TaskFactory factory = new TaskFactory();
+
+		List<Task> tasks = TaskParser.parseTasksFromString(
+				"name: \"task\"\npriority: 1\nactivities: work selected;",
+				factory, Collections.singletonList(null));
+		Task task = tasks.get(0);
+		
+		scheduler.schedule(task);
+		advanceTimeFor(world, 10, 0.02);
+	}
+	
+	@Test
+	public void testIfAndThenMovePositionOfReadVariable() throws ModelException{
+		int[][][] types = this.cubeTypesFlatSurface();
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit unit = new Unit("Test", new int[] { 5, 5, 2 }, 50, 50, 50, 50, true);
+		Unit enemy = new Unit("Test", new int[] { 7, 7, 2 }, 50, 50, 50, 50, false);
+		world.addUnit(unit);
+		world.addUnit(enemy);
+		Faction faction = unit.getFaction();
+
+		Scheduler scheduler = faction.getScheduler();
+		TaskFactory factory = new TaskFactory();
+
+		List<Task> tasks = TaskParser.parseTasksFromString(
+				"name: \"task\"\npriority: 1"
+				+ "\nactivities: e := enemy; \n if is_solid (5,5,1) && is_enemy e then \nmoveTo position_of e; \n fi",
+				factory, Collections.singletonList(null));
+		Task task = tasks.get(0);
+		
+		scheduler.schedule(task);
+		advanceTimeFor(world, 10, 0.02);
+		assertTrue("unit moved", UtilCompareList.compareIntList(unit.getCubeCoordinate(), enemy.getCubeCoordinate()));
+	}
+	
+	@Test
+	public void testWhileKeepWorking() throws ModelException{
+		int[][][] types = this.cubeTypesFlatSurface();
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit unit = new Unit("Test", new int[] { 5, 5, 2 }, 50, 50, 50, 50, true);
+		Unit enemy = new Unit("Test", new int[] { 7, 7, 2 }, 50, 50, 50, 50, false);
+		world.addUnit(unit);
+		world.addUnit(enemy);
+		Faction faction = unit.getFaction();
+
+		Scheduler scheduler = faction.getScheduler();
+		TaskFactory factory = new TaskFactory();
+
+		List<Task> tasks = TaskParser.parseTasksFromString(
+				"name: \"task\"\npriority: 1"
+				+ "\nactivities: while is_alive(enemy) do\nwork here;\ndone",
+				factory, Collections.singletonList(null));
+		Task task = tasks.get(0);
+		
+		scheduler.schedule(task);
+		advanceTimeFor(world, 100, 0.02);
+		assertTrue("unit worked", unit.isWorking());
+		
+	}
 }
