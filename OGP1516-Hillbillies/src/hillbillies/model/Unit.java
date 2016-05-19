@@ -2160,8 +2160,7 @@ public class Unit {
 	 */
 	private void randomDefaultBehavior(){
 		Random random = new Random();
-		//TODO zet random back
-		int i=2;//random.nextInt(5);
+		int i=random.nextInt(5);
 		int[] randomPosition = new int[] { random.nextInt(this.getWorld().getNbCubesX()), 
 				random.nextInt(this.getWorld().getNbCubesY()), random.nextInt(this.getWorld().getNbCubesZ()) };
 		double[] randomPosition2 = new double[] {randomPosition[0]+ LC/2, randomPosition[1]+LC/2, randomPosition[2]+LC/2};
