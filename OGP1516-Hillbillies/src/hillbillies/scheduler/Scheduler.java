@@ -22,7 +22,6 @@ public class Scheduler {
 	
 	public void removeTask(Task task){
 		System.out.println("remove");
-		System.out.println(task.isTerminated());
 		if (!task.isTerminated()){
 			task.terminate();
 			this.scheduledList.remove(task);
@@ -49,7 +48,6 @@ public class Scheduler {
 	}
 	
 	public Task getTaskHighestPriority(){
-		System.out.println("get highest priority");
 		Task currentHighest = null;
 		for (int i = 0; i<this.getScheduledTasks().size(); i++){
 			if ((this.getScheduledTasks().get(i).getAssignedUnit() == null) && (currentHighest == null || 

@@ -45,11 +45,11 @@ public class Facade implements IFacade {
 
 	@Override
 	public void advanceTime(World world, double dt) throws ModelException {
-		try{
+//		try{
 			world.advanceTime(dt);
-		}catch(Throwable e){
-			throw new ModelException();
-		}		
+//		}catch(Throwable e){
+//			throw new ModelException();
+//		}		
 	}
 
 	@Override
