@@ -21,9 +21,12 @@ public class Cube {
 	 * 		The y coordinate of the position.
 	 * @param z
 	 * 		The z coordinate of the position.
-	 * @effect ...
-	 * 		| The x, y and z coordinate of the cubes position are set to the given x,
-	 * 		| y and z coordinate.
+	 * @post ...
+	 * 		| The x of the cubes position is set to the given x
+	 * @post ...
+	 * 		| The y of the cubes position is set to the given y
+	 * @post ...
+	 * 		| The z of the cubes position is set to the given z
 	 */
 	public Cube (int x, int y, int z){
 		this.x = x;

@@ -38,7 +38,6 @@ public class CreateTasks {
 	 * 		| new.selectedCubes == selectedCubes
 	 */
 	public CreateTasks(String name, int priority, MyStatement activity, List<int[]> selectedCubes){
-		System.out.println("create tasks constructor");
 		this.name = name;
 		this.priority = priority;
 		this.statementActivity = activity;
@@ -64,7 +63,6 @@ public class CreateTasks {
 	 * 		| Throw an error if there are no selectedCubes and a selectedCube is expected.
 	 */
 	public List<Task> tasks() throws Error{
-		System.out.println("create task");
 		List<Task> taskOnMoreCubes = new ArrayList<Task>();
 		if (!this.selectedCubes.isEmpty()){
 			for (int[] cube: this.selectedCubes){

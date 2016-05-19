@@ -40,7 +40,6 @@ public class Scheduler {
 	 * 		| task.addScheduler(this);
 	 */
 	public void schedule(Task task){
-		System.out.println("schedule");
 		this.scheduledList.add(task);
 		task.addScheduler(this);
 	}
@@ -58,7 +57,6 @@ public class Scheduler {
 	 * 		| this.scheduledList.remove(task)
 	 */
 	public void removeTask(Task task){
-		System.out.println("remove");
 		if (!task.isTerminated()){
 			task.terminate();
 			this.scheduledList.remove(task);
@@ -85,7 +83,6 @@ public class Scheduler {
 	 * 		| this.schedule(replacement)
 	 */
 	public void replace(Task original, Task replacement){
-		System.out.println("replace");
 		if (original.getAssignedUnit() != null)
 			original.getAssignedUnit().interruptTask();
 		this.removeTask(original);
@@ -103,7 +100,6 @@ public class Scheduler {
 	 * 		|			then return false
 	 */
 	public boolean areTasksPartOf(Collection<Task> tasks){
-		System.out.println("tasks are part of");
 		for (Task task : tasks){
 			if (!this.getScheduledTasks().contains(task))
 				return false;
@@ -139,7 +135,6 @@ public class Scheduler {
 	 * 		| result == allTasksMeetingCondition
 	 */
 	public List<Task> getAllTasksCondition(Boolean condition){
-		System.out.println("get all tasks condition");
 		List<Task> allTasksMeetingCondition = new ArrayList<Task>();
 		for (Task task: this.getScheduledTasks()){
 			if (condition){
