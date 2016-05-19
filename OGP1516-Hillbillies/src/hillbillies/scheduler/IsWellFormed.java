@@ -46,6 +46,7 @@ public class IsWellFormed {
 			if (current.getNextWellFormed()==null || current.getNextWellFormed().isExecuted()){
 				try{
 					if (current instanceof BreakStatement){
+						System.out.println("break added");
 						breakList.add(current);
 					}
 					if (current.containReadVariableExpression())
@@ -59,6 +60,7 @@ public class IsWellFormed {
 				current = current.getNextWellFormed();
 			}
 		}
+		System.out.println("doorlopen");
 	}
 	
 	private boolean checkBreakStatements(ArrayList<MyStatement> breakList){
