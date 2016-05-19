@@ -14,18 +14,15 @@ public class IfStatement<E extends BooleanExpression,ReadVariableExpression> ext
 	private MyStatement statementElseBody;
 
 	public IfStatement(BooleanExpression condition, MyStatement ifBody, MyStatement elseBody){
-		System.out.println("IF CONSTRUCTOR");
 		this.expressionCondition = condition;
 		this.statementIfBody = ifBody;
 		this.statementElseBody = elseBody;
 		this.statementIfBody.setParent(this);
 		if (this.statementElseBody != null){
-			//System.out.println("parent set");
 			this.statementElseBody.setParent(this);}
 	}
 	
 	public IfStatement(ReadVariableExpression condition, MyStatement ifBody, MyStatement elseBody){
-		System.out.println("IF CONSTRUCTOR");
 		this.expressionVariableCondition = condition;
 		this.statementIfBody = ifBody;
 		this.statementElseBody = elseBody;
@@ -36,7 +33,6 @@ public class IfStatement<E extends BooleanExpression,ReadVariableExpression> ext
 	
 	@Override
 	public void execute(TaskComponents taskComponents) {
-		System.out.println("IF STATEMENT");
 		this.setExecutedState(true);
 	}
 
@@ -65,7 +61,6 @@ public class IfStatement<E extends BooleanExpression,ReadVariableExpression> ext
 		if (bool){
 			return this.statementIfBody;
 		}else if(this.statementElseBody != null){
-			System.out.println("ELSE BODY STATEMENT");
 			return this.statementElseBody;
 		}
 		return null;

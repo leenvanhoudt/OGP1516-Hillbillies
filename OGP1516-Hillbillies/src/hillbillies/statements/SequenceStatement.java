@@ -11,7 +11,6 @@ public class SequenceStatement extends MyStatement {
 	private List<MyStatement> statementList;
 
 	public SequenceStatement(List<MyStatement> statements){
-		System.out.println("SEQ CONSTRUCTOR");
 		this.statementList = statements;
 		for (MyStatement statement: statements){
 			statement.setParent(this);
@@ -20,7 +19,6 @@ public class SequenceStatement extends MyStatement {
 	
 	@Override
 	public void execute(TaskComponents taskComponents) {
-		System.out.println("SEQUENCE");
 		this.setExecutedState(true);
 	}
 

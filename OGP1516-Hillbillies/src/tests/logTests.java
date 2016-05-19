@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import hillbillies.model.CubeType;
 import hillbillies.model.Log;
 import hillbillies.model.Unit;
 import hillbillies.model.World;
@@ -20,7 +21,7 @@ public class logTests {
 	 * @param step
 	 *            The step size, in seconds, by which to advance.
 	 */
-	private static void advanceTimeFor(World world, double time, double step) throws ModelException {
+	private static void advanceTimeFor(World world, double time, double step) {
 		int n = (int) (time / step);
 		for (int i = 0; i < n+1; i++)
 			world.advanceTime(step);
@@ -28,10 +29,10 @@ public class logTests {
 	}
 
 	@Test
-	public void testFalling() throws ModelException {
+	public void testFalling() {
 		int[][][] types = new int[4][4][4];
-		types[1][2][1] = 1;
-		types[2][2][0] = 1;
+		types[1][2][1] = CubeType.ROCK.getCubeType();
+		types[2][2][0] = CubeType.ROCK.getCubeType();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit unit = new Unit("TestUnit", new int[] { 2, 2, 1 }, 50, 50, 50, 50, false);
 		world.addUnit(unit);

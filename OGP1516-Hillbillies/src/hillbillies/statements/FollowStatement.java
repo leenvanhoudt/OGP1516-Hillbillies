@@ -21,7 +21,6 @@ public class FollowStatement<E extends UnitExpression,ReadVariableExpression> ex
 
 	@Override
 	public void execute(TaskComponents taskComponents) throws Error{
-		System.out.println("FOLLOW STATEMENT");
 		Unit followed;
 		if (this.expressionVariableUnit != null){
 			followed = ((IUnitExpression) this.expressionVariableUnit).evaluateUnit(taskComponents);

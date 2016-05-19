@@ -11,7 +11,6 @@ import hillbillies.model.Log;
 import hillbillies.model.Unit;
 import hillbillies.model.World;
 import hillbillies.part2.listener.DefaultTerrainChangeListener;
-import ogp.framework.util.ModelException;
 
 public class worldTests {
 	
@@ -23,7 +22,7 @@ public class worldTests {
 	 * @param step
 	 *            The step size, in seconds, by which to advance.
 	 */
-	private static void advanceTimeFor(World world, double time, double step) throws ModelException {
+	private static void advanceTimeFor(World world, double time, double step) {
 		int n = (int) (time / step);
 		for (int i = 0; i < n; i++)
 			world.advanceTime(step);
@@ -60,26 +59,26 @@ public class worldTests {
 	}
 
 	@Test(expected=IllegalArgumentException.class)
-	public void testValidDurationAdvanceTime() throws ModelException{
+	public void testValidDurationAdvanceTime() {
 		int[][][] types = new int[4][4][4];
-		types[1][2][2] = 1;
-		types[2][2][3] = 1;
+		types[1][2][2] = CubeType.ROCK.getCubeType();
+		types[2][2][3] = CubeType.ROCK.getCubeType();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		world.advanceTime(0.5);
 	}
 	
 	@Test
-	public void testIsPassable() throws ModelException{
+	public void testIsPassable() {
 		int[][][] types = new int[4][4][4];
-		types[1][2][2] = 0;
+		types[1][2][2] = CubeType.AIR.getCubeType();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		assertTrue("cube is passable",world.isPassable(1, 2, 2));
 	}
 	
 	@Test
-	public void testSpawnUnit() throws ModelException{
+	public void testSpawnUnit() {
 		int[][][] types = new int[4][4][4];
-		types[1][2][2] = 1;
+		types[1][2][2] = CubeType.ROCK.getCubeType();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		world.spawnUnit(false);
 		assertTrue("one unit in world", world.getUnits().size()==1);
@@ -87,10 +86,10 @@ public class worldTests {
 	}
 	
 	@Test
-	public void testSpawnUnitOver100() throws ModelException{
+	public void testSpawnUnitOver100() {
 		int[][][] types = new int[102][1][2];
 		for (int i=0;i<101;i++)
-			types[i][0][1] = 1;
+			types[i][0][1] = CubeType.ROCK.getCubeType();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		for (int i=0;i<100;i++)
 			world.spawnUnit(false);
@@ -99,9 +98,9 @@ public class worldTests {
 	}
 	
 	@Test
-	public void testAddUnit() throws ModelException{
+	public void testAddUnit() {
 		int[][][] types = new int[4][4][4];
-		types[1][2][2] = 1;
+		types[1][2][2] = CubeType.ROCK.getCubeType();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit unit = new Unit("TestUnit", new int[] { 1, 2, 3 }, 50, 50, 50, 50, false);
 		world.addUnit(unit);
@@ -110,17 +109,17 @@ public class worldTests {
 	}
 	
 	@Test
-	public void testIsValidStandingPosition() throws ModelException{
+	public void testIsValidStandingPosition() {
 		int[][][] types = new int[4][4][4];
-		types[1][2][2] = 1;
+		types[1][2][2] = CubeType.ROCK.getCubeType();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		assertTrue("valid standing position", world.isValidStandingPosition(1, 2, 3));
 	}
 	
 	@Test
-	public void testMaxAmountOfFactions() throws ModelException{
+	public void testMaxAmountOfFactions() {
 		int[][][] types = new int[4][4][4];
-		types[1][2][2] = 1;
+		types[1][2][2] = CubeType.ROCK.getCubeType();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		for (int i = 0; i<6; i++)
 			world.spawnUnit(false);
@@ -128,7 +127,7 @@ public class worldTests {
 	}
 	
 	@Test
-	public void testAddCubesChanged() throws ModelException{
+	public void testAddCubesChanged() {
 		int[][][] types = new int[4][4][4];
 		World world = new World(types, new DefaultTerrainChangeListener());
 		ArrayList<int[]> cubes = new ArrayList<>();
@@ -138,7 +137,7 @@ public class worldTests {
 	}
 	
 	@Test
-	public void testAddLog() throws ModelException{
+	public void testAddLog() {
 		int[][][] types = new int[4][4][4];
 		World world = new World(types, new DefaultTerrainChangeListener());
 		Log log = new Log();
@@ -149,7 +148,7 @@ public class worldTests {
 	}
 	
 	@Test
-	public void testAddBoulder() throws ModelException{
+	public void testAddBoulder() {
 		int[][][] types = new int[4][4][4];
 		World world = new World(types, new DefaultTerrainChangeListener());
 		Boulder boulder = new Boulder();
@@ -160,9 +159,9 @@ public class worldTests {
 	}
 	
 	@Test
-	public void testCubeContainsLog() throws ModelException{
+	public void testCubeContainsLog() {
 		int[][][] types = new int[4][4][4];
-		types[1][1][1] = 1;
+		types[1][1][1] = CubeType.ROCK.getCubeType();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		Log log = new Log();
 		world.addLog(log);
@@ -171,9 +170,9 @@ public class worldTests {
 	}
 	
 	@Test
-	public void testCubeContainsBoulder() throws ModelException{
+	public void testCubeContainsBoulder() {
 		int[][][] types = new int[4][4][4];
-		types[1][1][1] = 1;
+		types[1][1][1] = CubeType.ROCK.getCubeType();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		Boulder boulder = new Boulder();
 		world.addBoulder(boulder);
@@ -182,46 +181,46 @@ public class worldTests {
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
-	public void testGetCubeLogNoLog() throws ModelException{
+	public void testGetCubeLogNoLog() {
 		int[][][] types = new int[4][4][4];
-		types[1][1][1] = 1;
+		types[1][1][1] = CubeType.ROCK.getCubeType();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		world.getCubeLog(1, 1, 2);
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
-	public void testGetCubeBoulderNoBoulder() throws ModelException{
+	public void testGetCubeBoulderNoBoulder() {
 		int[][][] types = new int[4][4][4];
-		types[1][1][1] = 1;
+		types[1][1][1] = CubeType.ROCK.getCubeType();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		world.getCubeBoulder(1, 1, 2);
 	}
 	
 	@Test
-	public void testAdvanceTimeUpdateCubes() throws ModelException {
+	public void testAdvanceTimeUpdateCubes() {
 		int[][][] types = new int[5][5][5];
-		types[0][1][1] = 1;
-		types[1][1][1] = 1;		
-		types[2][1][1] = 1;
-		types[3][1][1] = 1;
+		types[0][1][1] = CubeType.ROCK.getCubeType();
+		types[1][1][1] = CubeType.ROCK.getCubeType();		
+		types[2][1][1] = CubeType.ROCK.getCubeType();
+		types[3][1][1] = CubeType.ROCK.getCubeType();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit unit = new Unit("TestUnit", new int[] { 0, 1, 2 }, 50, 50, 50, 50, false);
 		world.addUnit(unit);
 		unit.workAt(1, 1, 1);
 		advanceTimeFor(world, 100, 0.1);
-		assertTrue("worked cube is passable",world.getCubeType(1, 1, 1)==0);
-		assertTrue("adjacent cube not connected to border is passable",world.getCubeType(2, 1, 1)==0);		
-		assertTrue("further cube not connected to border is passable",world.getCubeType(3, 1, 1)==0);
-		assertTrue("connected to border cube is solid", world.getCubeType(0, 1, 1)==1);
+		assertTrue("worked cube is passable",world.getCubeType(1, 1, 1)==CubeType.AIR.getCubeType());
+		assertTrue("adjacent cube not connected to border is passable",world.getCubeType(2, 1, 1)==CubeType.AIR.getCubeType());		
+		assertTrue("further cube not connected to border is passable",world.getCubeType(3, 1, 1)==CubeType.AIR.getCubeType());
+		assertTrue("connected to border cube is solid", world.getCubeType(0, 1, 1)==CubeType.ROCK.getCubeType());
 	}
 
 	@Test
-	public void testCaveInWithin5Seconds() throws ModelException{
+	public void testCaveInWithin5Seconds() {
 		int[][][] types = new int[80][80][3];
-		types[1][0][1] = 1;
+		types[1][0][1] = CubeType.ROCK.getCubeType();
 		for (int i = 0; i<77; i++){
 			for (int j = 0; j<77; j++){
-				types[i+1][j+1][1] = 1;
+				types[i+1][j+1][1] = CubeType.ROCK.getCubeType();
 			}
 		}
 		World world = new World(types, new DefaultTerrainChangeListener());
@@ -234,12 +233,12 @@ public class worldTests {
 	}
 	
 	@Test
-	public void testCaveInMakingWorld() throws ModelException{
+	public void testCaveInMakingWorld() {
 		int[][][] types = new int[80][80][3];
-		types[0][0][1] = 1;
+		types[0][0][1] = CubeType.ROCK.getCubeType();
 		for (int i = 0; i<77; i++){
 			for (int j = 0; j<77; j++){
-				types[i+1][j+1][1] = 1;
+				types[i+1][j+1][1] = CubeType.ROCK.getCubeType();
 			}
 		}
 		World world = new World(types, new DefaultTerrainChangeListener());
@@ -249,7 +248,7 @@ public class worldTests {
 	}
 	
 	@Test
-	public void testCubeContainOtherUnit() throws ModelException{
+	public void testCubeContainOtherUnit() {
 		int[][][] types = this.cubeTypesFlatSurface();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit firstUnit = new Unit("TestUnit", new int[] { 0, 0, 2 }, 50, 50, 50, 50, false);
@@ -261,7 +260,7 @@ public class worldTests {
 	}
 	
 	@Test
-	public void testCubeContainFriend() throws ModelException{
+	public void testCubeContainFriend() {
 		int[][][] types = this.cubeTypesFlatSurface();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit unit = new Unit("TestUnit", new int[] { 0, 0, 2 }, 50, 50, 50, 50, false);
@@ -277,7 +276,7 @@ public class worldTests {
 	}
 	
 	@Test
-	public void testCubeContainEnemy() throws ModelException{
+	public void testCubeContainEnemy() {
 		int[][][] types = this.cubeTypesFlatSurface();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit unit = new Unit("TestUnit", new int[] { 0, 0, 2 }, 50, 50, 50, 50, false);
@@ -290,7 +289,7 @@ public class worldTests {
 	}
 	
 	@Test
-	public void testGetCubeOtherUnit() throws ModelException{
+	public void testGetCubeOtherUnit() {
 		int[][][] types = this.cubeTypesFlatSurface();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit firstUnit = new Unit("TestUnit", new int[] { 0, 0, 2 }, 50, 50, 50, 50, false);

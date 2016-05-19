@@ -18,7 +18,6 @@ public class PrintStatement extends MyStatement{
 
 	@Override
 	public void execute(TaskComponents taskComponents) throws Error {
-		System.out.println("PRINT STATEMENT");
 		if (this.expressionValue instanceof BooleanExpression){
 			BooleanExpression exp = (BooleanExpression) this.expressionValue;
 			System.out.println(exp.evaluateBoolean(taskComponents));

@@ -12,14 +12,12 @@ public class WhileStatement<E extends BooleanExpression,ReadVariableExpression> 
 	private MyStatement statementBody;
 
 	public WhileStatement(BooleanExpression condition, MyStatement body){
-		System.out.println("WHILE CONSTRUCTOR");
 		this.expressionCondition = condition;
 		this.statementBody = body;
 		this.statementBody.setParent(this);
 	}
 	
 	public WhileStatement(ReadVariableExpression condition, MyStatement body){
-		System.out.println("WHILE CONSTRUCTOR");
 		this.expressionVariableCondition = condition;
 		this.statementBody = body;
 		this.statementBody.setParent(this);
@@ -27,7 +25,6 @@ public class WhileStatement<E extends BooleanExpression,ReadVariableExpression> 
 	
 	@Override
 	public void execute(TaskComponents taskComponents) {
-		System.out.println("WHILE STATEMENT");
 		boolean con;
 		if (this.expressionVariableCondition != null){
 			con = ((IBooleanExpression) this.expressionVariableCondition).evaluateBoolean(taskComponents);

@@ -11,7 +11,7 @@ import ogp.framework.util.ModelException;
 public class FactionTests {
 	
 	@Test
-	public void addOrRemoveUnitFaction() throws ModelException{
+	public void addOrRemoveUnitFaction() {
 		Unit unit = new Unit("TestUnit", new int[] { 1, 2, 3 }, 50, 50, 50, 50, false);
 		Faction faction = new Faction();
 		faction.addUnitToFaction(unit);
@@ -21,7 +21,7 @@ public class FactionTests {
 	}
 	
 	@Test (expected=IllegalArgumentException.class)
-	public void moreThan50UnitsInFaction() throws ModelException{
+	public void moreThan50UnitsInFaction() {
 		Faction faction = new Faction();
 		for(int i = 0; i<50;i++){
 			Unit unit = new Unit("TestUnit", new int[] { 1, 2, 3 }, 50, 50, 50, 50, false);

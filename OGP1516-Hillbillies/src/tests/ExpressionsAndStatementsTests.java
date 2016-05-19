@@ -19,7 +19,6 @@ import hillbillies.scheduler.Scheduler;
 import hillbillies.scheduler.Task;
 import hillbillies.taskFactory.TaskFactory;
 import hillbillies.model.UtilCompareList;
-import ogp.framework.util.ModelException;
 
 public class ExpressionsAndStatementsTests {
 	
@@ -31,7 +30,7 @@ public class ExpressionsAndStatementsTests {
 	 * @param step
 	 *            The step size, in seconds, by which to advance.
 	 */
-	private static void advanceTimeFor(World world, double time, double step) throws ModelException {
+	private static void advanceTimeFor(World world, double time, double step) {
 		int n = (int) (time / step);
 		for (int i = 0; i < n; i++)
 			world.advanceTime(step);
@@ -51,7 +50,7 @@ public class ExpressionsAndStatementsTests {
 	}
 	
 	@Test
-	public void testSimpleFollowTask() throws ModelException{
+	public void testSimpleFollowTask() {
 		int[][][] types = this.cubeTypesFlatSurface();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit unit = new Unit("Test", new int[] { 9, 9, 2 }, 50, 50, 50, 50, true);
@@ -74,7 +73,7 @@ public class ExpressionsAndStatementsTests {
 	}
 
 	@Test
-	public void testWhileFollowBreak() throws ModelException{
+	public void testWhileFollowBreak() {
 		int[][][] types = this.cubeTypesFlatSurface();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit unit = new Unit("Test", new int[] { 9, 9, 2 }, 50, 50, 50, 50, true);
@@ -100,7 +99,7 @@ public class ExpressionsAndStatementsTests {
 	}
 	
 	@Test
-	public void testFollowAny() throws ModelException{
+	public void testFollowAny() {
 		int[][][] types = this.cubeTypesFlatSurface();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit unit = new Unit("Test", new int[] { 5, 5, 2 }, 50, 50, 50, 50, true);
@@ -123,7 +122,7 @@ public class ExpressionsAndStatementsTests {
 	}
 	
 	@Test
-	public void testIfCarriesBoulderThenWork() throws ModelException{
+	public void testIfCarriesBoulderThenWork() {
 		int[][][] types = this.cubeTypesFlatSurface();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit unit = new Unit("Test", new int[] { 5, 5, 2 }, 50, 50, 50, 50, true);
@@ -149,7 +148,7 @@ public class ExpressionsAndStatementsTests {
 	}
 	
 	@Test (expected=Error.class)
-	public void testSelectedNotGiven() throws ModelException{
+	public void testSelectedNotGiven() {
 		int[][][] types = this.cubeTypesFlatSurface();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit unit = new Unit("Test", new int[] { 5, 5, 2 }, 50, 50, 50, 50, true);
@@ -169,7 +168,7 @@ public class ExpressionsAndStatementsTests {
 	}
 	
 	@Test
-	public void testIfAndThenMovePositionOfReadVariable() throws ModelException{
+	public void testIfAndThenMovePositionOfReadVariable() {
 		int[][][] types = this.cubeTypesFlatSurface();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit unit = new Unit("Test", new int[] { 5, 5, 2 }, 50, 50, 50, 50, true);
@@ -195,7 +194,7 @@ public class ExpressionsAndStatementsTests {
 	}
 	
 	@Test
-	public void testWhileNotKeepWorkingNextTo() throws ModelException{
+	public void testWhileNotKeepWorkingNextTo() {
 		int[][][] types = this.cubeTypesFlatSurface();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit unit = new Unit("Test", new int[] { 5, 5, 2 }, 50, 50, 50, 50, true);
@@ -217,7 +216,7 @@ public class ExpressionsAndStatementsTests {
 	}
 	
 	@Test
-	public void testWhileKeepWorkingHere() throws ModelException{
+	public void testWhileKeepWorkingHere() {
 		int[][][] types = this.cubeTypesFlatSurface();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit unit = new Unit("Test", new int[] { 5, 5, 2 }, 50, 50, 50, 50, true);
@@ -241,7 +240,7 @@ public class ExpressionsAndStatementsTests {
 	}
 	
 	@Test
-	public void testIfNotTrueWorkElseMoveTo() throws ModelException{
+	public void testIfNotTrueWorkElseMoveTo() {
 		int[][][] types = this.cubeTypesFlatSurface();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit unit = new Unit("Test", new int[] { 5, 5, 2 }, 50, 50, 50, 50, true);
@@ -260,13 +259,12 @@ public class ExpressionsAndStatementsTests {
 		Task task = tasks.get(0);
 		
 		scheduler.schedule(task);
-		System.out.println("scheduled");
 		advanceTimeFor(world, 0.5, 0.02);
 		assertTrue("unit is moving", unit.isMoving());
 	}
 	
 	@Test
-	public void testAttack() throws ModelException{
+	public void testAttack() {
 		int[][][] types = this.cubeTypesFlatSurface();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit unit = new Unit("Test", new int[] { 5, 5, 2 }, 50, 50, 50, 50, true);
@@ -285,13 +283,12 @@ public class ExpressionsAndStatementsTests {
 		Task task = tasks.get(0);
 		
 		scheduler.schedule(task);
-		System.out.println("scheduled");
 		advanceTimeFor(world, 0.5, 0.02);
 		assertTrue("unit is attacking", unit.isAttacking());
 	}
 	
 	@Test
-	public void testIfPassableOrFriendMoveToWorkshop() throws ModelException{
+	public void testIfPassableOrFriendMoveToWorkshop() {
 		int[][][] types = this.cubeTypesFlatSurface();
 		types[7][6][2] = CubeType.WORKSHOP.getCubeType();
 		World world = new World(types, new DefaultTerrainChangeListener());
@@ -319,7 +316,7 @@ public class ExpressionsAndStatementsTests {
 	}
 	
 	@Test
-	public void testIfIsNotFriendMoveBoulderCarryLog() throws ModelException{
+	public void testIfIsNotFriendMoveBoulderCarryLog() {
 		int[][][] types = this.cubeTypesFlatSurface();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit unit = new Unit("Test", new int[] { 5, 5, 2 }, 50, 50, 50, 50, true);

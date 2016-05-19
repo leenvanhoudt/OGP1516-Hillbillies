@@ -15,28 +15,23 @@ public class AssignmentStatement extends MyStatement {
 	private MyExpression expressionValue;
 
 	public AssignmentStatement(String variableName, MyExpression value){
-		System.out.println("assign constructor");
 		this.variableName = variableName;
 		this.expressionValue = value;
 	}
 
 	@Override
 	public void execute(TaskComponents taskComponents) throws Error {
-		System.out.println("ASSIGN STATEMENT");	
 		if (this.expressionValue instanceof BooleanExpression){
-			System.out.println("assign boolean");
 			BooleanExpression exp = (BooleanExpression) this.expressionValue;
 			boolean value = exp.evaluateBoolean(taskComponents);
 			taskComponents.addVariable(this.variableName, value);
 		}
 		else if (this.expressionValue instanceof UnitExpression){
-			System.out.println("assign unit");
 			UnitExpression exp = (UnitExpression) this.expressionValue;
 			Unit value = exp.evaluateUnit(taskComponents);
 			taskComponents.addVariable(this.variableName, value);
 		}
 		else if (this.expressionValue instanceof CubePositionExpression){
-			System.out.println("assign position");
 			CubePositionExpression exp = (CubePositionExpression) this.expressionValue;
 			try{
 				int[] value = exp.evaluatePosition(taskComponents);

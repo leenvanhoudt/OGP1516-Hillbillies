@@ -11,18 +11,15 @@ public class MoveToStatement<E extends CubePositionExpression,ReadVariableExpres
 	private ReadVariableExpression expressionVariablePosition;
 
 	public MoveToStatement(CubePositionExpression position){
-		System.out.println("moveto constructor");
 		this.expressionPosition = position;
 	}
 	
 	public MoveToStatement(ReadVariableExpression position){
-		System.out.println("moveto readvar constructor");
 		this.expressionVariablePosition = position;
 	}
 	
 	@Override
 	public void execute(TaskComponents taskComponents) throws Error{
-		System.out.println("MOVE TO STATEMENT");
 		int[] cube = new int[]{};
 		if (this.expressionVariablePosition != null){
 			cube  = ((ICubePositionExpression) this.expressionVariablePosition).evaluatePosition(taskComponents);

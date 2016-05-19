@@ -11,19 +11,16 @@ public class WorkStatement<E extends CubePositionExpression,ReadVariableExpressi
 	private ReadVariableExpression expressionVariablePosition;
 
 	public WorkStatement(CubePositionExpression position){
-		System.out.println("work consturctor");
 		this.expressionPosition = position;
 	}
 	
 	public WorkStatement(ReadVariableExpression position){
-		System.out.println("work consturctor");
 		this.expressionVariablePosition = position;
 	}
 	
 	
 	@Override
 	public void execute(TaskComponents taskComponents) throws Error {
-		System.out.println("WORK STATEMENT");
 		int[] position = new int[]{};
 		if (this.expressionVariablePosition != null){
 			position = ((ICubePositionExpression) this.expressionVariablePosition).evaluatePosition(taskComponents);
@@ -31,11 +28,8 @@ public class WorkStatement<E extends CubePositionExpression,ReadVariableExpressi
 			position = this.expressionPosition.evaluatePosition(taskComponents);
 		}
 		try{
-			System.out.println("try execute work");
-			System.out.println(taskComponents.getUnit());
 			taskComponents.getUnit().workAt(position[0], position[1], position[2]);
 			this.setExecutedState(true);
-			System.out.println("work executed");
 		} catch (Throwable e){
 			taskComponents.getUnit().interruptTask();
 			throw new Error("Can not work on that cube");
