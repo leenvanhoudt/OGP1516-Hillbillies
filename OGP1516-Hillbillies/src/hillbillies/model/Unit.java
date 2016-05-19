@@ -880,9 +880,9 @@ public class Unit {
 				this.resting3MinutesTime = 0;
 				this.rest();
 			}
-		} //else{
-//			throw new IllegalArgumentException();
-//		}
+		} else{
+			throw new IllegalArgumentException();
+		}
 	}
 	
 	/**
@@ -917,6 +917,7 @@ public class Unit {
 		if(!this.isAlive()){
 			this.isFalling = false;
 			this.isWorking = false;
+			this.isFollowing = false;
 			this.isAttacking = false;
 			this.isResting = false;
 			this.isMovingTo = false;
@@ -950,7 +951,7 @@ public class Unit {
 		return this.isCarryingLog;
 	}
 	
-	//TODO isvalid maken? +schrijf hier ook nog commentaar
+	//schrijf hier ook nog commentaar
 	public void setCarryingLog(boolean value){
 		this.isCarryingLog = value;
 	}
@@ -1005,7 +1006,6 @@ public class Unit {
 			this.interruptTask();
 			this.setCurrentSpeed(0);
 			this.isFalling = true;
-			this.isFollowing = false;
 			this.isWorking = false;
 			this.isAttacking = false;
 			this.isResting = false;
@@ -1763,8 +1763,12 @@ public class Unit {
 		this.interruptTask();
 		if (!this.isFalling && this.getFaction()!=defender.getFaction() 
 				&& defender != this){
-			this.attack(defender);
-			defender.defend(this);
+			try{
+				this.attack(defender);
+				defender.defend(this);
+			} catch(Throwable e){
+				throw new IllegalArgumentException();
+			}
 		}
 	}
 
@@ -1783,7 +1787,7 @@ public class Unit {
 	 * 		| Make the unit attack. 
 	 * 		| new.isAttacking == true
 	 */
-	private void attack(Unit defender) {
+	private void attack(Unit defender) throws IllegalArgumentException {
 		double d = Math.sqrt(Math.pow(defender.getPosition()[0] - this.getPosition()[0], 2)
 				+ Math.pow(defender.getPosition()[1] - this.getPosition()[1], 2)
 				+ Math.pow(defender.getPosition()[2] - this.getPosition()[2], 2));
@@ -1793,6 +1797,8 @@ public class Unit {
 			defender.setOrientation(Math.atan2(this.getPosition()[1] - defender.getPosition()[1],
 					this.getPosition()[0] - defender.getPosition()[0]));
 			this.isAttacking = true;
+		}else{
+			throw new IllegalArgumentException();
 		}
 	}
 	
@@ -2050,8 +2056,7 @@ public class Unit {
 					System.out.println("catch exception");
 					System.out.println(this.getAssignedTask());
 					this.interruptTask();
-					break;
-					//TODO throw exception?
+					throw new Error("can not execute this task");
 				}
 			}else{
 				current = current.getNext(this.taskComponents);
@@ -2133,6 +2138,8 @@ public class Unit {
 		if (UtilCompareList.compareIntList(this.followedUnit.getCubeCoordinate(),
 				this.getCubeCoordinate()) || !this.followedUnit.isAlive()){
 			this.isFollowing = false;
+			this.isMovingTo = false;
+			this.setPosition(this.getNextPosition());
 		}
 		else if ((this.oldPositionFollowedUnit == null || 
 				UtilCompareList.compareIntList(this.oldPositionFollowedUnit, this.getCubeCoordinate()))){

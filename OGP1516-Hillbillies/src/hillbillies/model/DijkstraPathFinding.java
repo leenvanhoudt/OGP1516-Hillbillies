@@ -70,7 +70,8 @@ public class DijkstraPathFinding {
 								tempdistance = minimum.getDijkstraCost() + 10;
 							}
 							else if (((i==-1||i==1)&&(j==-1||j==1)&&k==0)||((i==-1||i==1)&&(k==-1||k==1)&&j==0)||((k==-1||k==1)&&(j==-1||j==1)&&i==0)){
-								tempdistance = minimum.getDijkstraCost() + 14;								}
+								tempdistance = minimum.getDijkstraCost() + 14;								
+							}
 							else if ((i==-1||i==1)&&(j==-1||j==1)&&(k==-1||k==1)){
 								tempdistance = minimum.getDijkstraCost() + 17;
 							}
