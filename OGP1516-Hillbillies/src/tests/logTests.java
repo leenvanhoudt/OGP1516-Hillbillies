@@ -9,7 +9,6 @@ import hillbillies.model.Log;
 import hillbillies.model.Unit;
 import hillbillies.model.World;
 import hillbillies.part2.listener.DefaultTerrainChangeListener;
-import ogp.framework.util.ModelException;
 
 public class logTests {
 

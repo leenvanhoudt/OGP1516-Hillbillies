@@ -4,6 +4,7 @@ import java.util.Set;
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Raw;
 import hillbillies.model.Unit;
+
 /**
  * A class that make a task and check its wellformedness. Tasks can be assigned to units and
  * can be terminated.

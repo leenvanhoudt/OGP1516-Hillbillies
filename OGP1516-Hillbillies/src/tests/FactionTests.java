@@ -6,7 +6,6 @@ import org.junit.Test;
 
 import hillbillies.model.Faction;
 import hillbillies.model.Unit;
-import ogp.framework.util.ModelException;
 
 public class FactionTests {
 	
