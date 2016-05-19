@@ -19,7 +19,6 @@ public class IsSolidExpression<E extends CubePositionExpression, ReadVariableExp
 
 	@Override
 	public Boolean evaluateBoolean(TaskComponents taskComponents) throws ClassCastException {
-		System.out.println("ISSOLID EXP");
 		int[] position;
 		if (this.expressionVariablePosition != null)
 			position = ((ICubePositionExpression) this.expressionVariablePosition)

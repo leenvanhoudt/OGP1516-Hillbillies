@@ -5,11 +5,11 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import hillbillies.model.Boulder;
+import hillbillies.model.CubeType;
 import hillbillies.model.Log;
 import hillbillies.model.Unit;
 import hillbillies.model.World;
 import hillbillies.part2.listener.DefaultTerrainChangeListener;
-import ogp.framework.util.ModelException;
 
 public class resultWorkTests {
 	
@@ -21,7 +21,7 @@ public class resultWorkTests {
 	 * @param step
 	 *            The step size, in seconds, by which to advance.
 	 */
-	private static void advanceTimeFor(World world, double time, double step) throws ModelException {
+	private static void advanceTimeFor(World world, double time, double step) {
 		int n = (int) (time / step);
 		for (int i = 0; i < n+1; i++)
 			world.advanceTime(step);
@@ -29,10 +29,10 @@ public class resultWorkTests {
 	}
 	
 	@Test
-	public void testDropBoulder() throws ModelException {
+	public void testDropBoulder() {
 		int[][][] types = new int[4][4][4];
-		types[1][2][0] = 1;
-		types[2][2][0] = 1;
+		types[1][2][0] = CubeType.ROCK.getCubeType();
+		types[2][2][0] = CubeType.ROCK.getCubeType();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit unit = new Unit("TestUnit", new int[] { 2, 2, 1 }, 50, 50, 50, 50, false);
 		world.addUnit(unit);
@@ -48,10 +48,10 @@ public class resultWorkTests {
 	}
 
 	@Test
-	public void testDropLog() throws ModelException {
+	public void testDropLog() {
 		int[][][] types = new int[4][4][4];
-		types[1][2][0] = 1;
-		types[2][2][0] = 1;
+		types[1][2][0] = CubeType.ROCK.getCubeType();
+		types[2][2][0] = CubeType.ROCK.getCubeType();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit unit = new Unit("TestUnit", new int[] { 2, 2, 1 }, 50, 50, 50, 50, false);
 		world.addUnit(unit);
@@ -67,10 +67,10 @@ public class resultWorkTests {
 	}
 	
 	@Test
-	public void testPickUpBoulder() throws ModelException{
+	public void testPickUpBoulder(){
 		int[][][] types = new int[4][4][4];
-		types[1][2][0] = 1;
-		types[2][2][0] = 1;
+		types[1][2][0] = CubeType.ROCK.getCubeType();
+		types[2][2][0] = CubeType.ROCK.getCubeType();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit unit = new Unit("TestUnit", new int[] { 2, 2, 1 }, 50, 50, 50, 50, false);
 		world.addUnit(unit);
@@ -84,10 +84,10 @@ public class resultWorkTests {
 	}
 	
 	@Test
-	public void testPickUpLog() throws ModelException{
+	public void testPickUpLog(){
 		int[][][] types = new int[4][4][4];
-		types[1][2][0] = 1;
-		types[2][2][0] = 1;
+		types[1][2][0] = CubeType.ROCK.getCubeType();
+		types[2][2][0] = CubeType.ROCK.getCubeType();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit unit = new Unit("TestUnit", new int[] { 2, 2, 1 }, 50, 50, 50, 50, false);
 		world.addUnit(unit);
@@ -101,11 +101,11 @@ public class resultWorkTests {
 	}
 	
 	@Test
-	public void testMakeBoulderFromRock() throws ModelException{
+	public void testMakeBoulderFromRock(){
 		int[][][] types = new int[4][4][4];
-		types[1][2][1] = 1;
-		types[1][2][0] = 1;
-		types[2][2][0] = 1;
+		types[1][2][1] = CubeType.ROCK.getCubeType();
+		types[1][2][0] = CubeType.ROCK.getCubeType();
+		types[2][2][0] = CubeType.ROCK.getCubeType();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit unit = new Unit("TestUnit", new int[] { 2, 2, 1 }, 50, 50, 50, 50, false);
 		world.addUnit(unit);
@@ -115,11 +115,11 @@ public class resultWorkTests {
 	}
 	
 	@Test
-	public void testMakeLogFromWood() throws ModelException{
+	public void testMakeLogFromWood() {
 		int[][][] types = new int[4][4][4];
-		types[1][2][1] = 2;
-		types[1][2][0] = 1;
-		types[2][2][0] = 1;
+		types[1][2][1] = CubeType.TREE.getCubeType();
+		types[1][2][0] = CubeType.ROCK.getCubeType();
+		types[2][2][0] = CubeType.ROCK.getCubeType();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit unit = new Unit("TestUnit", new int[] { 2, 2, 1 }, 50, 50, 50, 50, false);
 		world.addUnit(unit);
@@ -129,11 +129,11 @@ public class resultWorkTests {
 	}
 	
 	@Test
-	public void testImproveEquipment() throws ModelException{
+	public void testImproveEquipment(){
 		int[][][] types = new int[4][4][4];
-		types[1][2][1] = 3;
-		types[1][2][0] = 1;
-		types[2][2][0] = 1;
+		types[1][2][1] = CubeType.WORKSHOP.getCubeType();
+		types[1][2][0] = CubeType.ROCK.getCubeType();
+		types[2][2][0] = CubeType.ROCK.getCubeType();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit unit = new Unit("TestUnit", new int[] { 2, 2, 1 }, 50, 50, 50, 50, false);
 		world.addUnit(unit);

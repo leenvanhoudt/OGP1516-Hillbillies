@@ -33,7 +33,6 @@ public class AndExpression<E extends BooleanExpression,ReadVariableExpression>
 
 	@Override
 	public Boolean evaluateBoolean(TaskComponents taskComponents) {
-		System.out.println("AND EXP");
 		boolean left;
 		boolean right;
 		if (this.expressionVariableLeft != null)

@@ -20,7 +20,6 @@ import hillbillies.scheduler.Scheduler;
 import hillbillies.scheduler.Task;
 import hillbillies.statements.PrintStatement;
 import hillbillies.taskFactory.TaskFactory;
-import ogp.framework.util.ModelException;
 
 public class TaskTests {
 	
@@ -32,7 +31,7 @@ public class TaskTests {
 	 * @param step
 	 *            The step size, in seconds, by which to advance.
 	 */
-	private static void advanceTimeFor(World world, double time, double step) throws ModelException {
+	private static void advanceTimeFor(World world, double time, double step) {
 		int n = (int) (time / step);
 		for (int i = 0; i < n; i++)
 			world.advanceTime(step);
@@ -52,7 +51,7 @@ public class TaskTests {
 	}
 
 	@Test
-	public void testPriorityMinValue() throws ModelException{
+	public void testPriorityMinValue(){
 		String name = "name"; int priority = 5; 
 		MyExpression expression = new FriendExpression();
 		MyStatement activity = new PrintStatement(expression); 
@@ -63,7 +62,7 @@ public class TaskTests {
 	}
 	
 	@Test
-	public void testOneTaskInMultipleSchedulers() throws ModelException{
+	public void testOneTaskInMultipleSchedulers() {
 		int[][][] types = this.cubeTypesFlatSurface();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit unit = new Unit("Test", new int[] { 9, 9, 2 }, 50, 50, 50, 50, true);
@@ -103,7 +102,7 @@ public class TaskTests {
 	}
 	
 	@Test (expected=Error.class)
-	public void testNotWellFormedBreakBeforeWhile() throws ModelException{
+	public void testNotWellFormedBreakBeforeWhile() {
 		int[][][] types = this.cubeTypesFlatSurface();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit unit = new Unit("Test", new int[] { 5, 5, 2 }, 50, 50, 50, 50, true);
@@ -116,14 +115,14 @@ public class TaskTests {
 	}
 	
 	@Test (expected=Error.class)
-	public void testNotWellFormedBreakNoWhile() throws ModelException{
+	public void testNotWellFormedBreakNoWhile() {
 		TaskFactory factory = new TaskFactory();
 		TaskParser.parseTasksFromString("name: \"task\"\npriority: 1\nactivities: break;",
 				factory, Collections.singletonList(null));
 	}
 	
 	@Test (expected=Error.class)
-	public void testNotWellFormedReadVariableBeforeAssign() throws ModelException{
+	public void testNotWellFormedReadVariableBeforeAssign() {
 		TaskFactory factory = new TaskFactory();
 		TaskParser.parseTasksFromString(
 				"name: \"task\"\npriority: 1\nactivities: moveTo e; e:=any;",
@@ -131,7 +130,7 @@ public class TaskTests {
 	}
 	
 	@Test (expected=Error.class)
-	public void testNotWellFormedReadVariableNoAssign() throws ModelException{
+	public void testNotWellFormedReadVariableNoAssign() {
 		TaskFactory factory = new TaskFactory();
 		TaskParser.parseTasksFromString(
 				"name: \"task\"\npriority: 1\nactivities: print w;",
@@ -139,7 +138,7 @@ public class TaskTests {
 	}
 	
 	@Test (expected=Error.class)
-	public void testNotWellFormedIfReadVariableElseAssign() throws ModelException{
+	public void testNotWellFormedIfReadVariableElseAssign() {
 		int[][][] types = this.cubeTypesFlatSurface();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit unit = new Unit("Test", new int[] { 5, 5, 2 }, 50, 50, 50, 50, true);
@@ -152,7 +151,7 @@ public class TaskTests {
 	}
 	
 	@Test (expected=Error.class)
-	public void testNotWellFormedIfAssignElseReadVariable() throws ModelException{
+	public void testNotWellFormedIfAssignElseReadVariable() {
 		int[][][] types = this.cubeTypesFlatSurface();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit unit = new Unit("Test", new int[] { 5, 5, 2 }, 50, 50, 50, 50, true);
@@ -165,7 +164,7 @@ public class TaskTests {
 	}
 	
 	@Test (expected=Error.class)
-	public void testNotWellFormedIfWhileElseBreak() throws ModelException{
+	public void testNotWellFormedIfWhileElseBreak(){
 		int[][][] types = this.cubeTypesFlatSurface();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit unit = new Unit("Test", new int[] { 5, 5, 2 }, 50, 50, 50, 50, true);
@@ -178,7 +177,7 @@ public class TaskTests {
 	}
 	
 	@Test (expected=Error.class)
-	public void testNotWellFormedIfBreakElseWhile() throws ModelException{
+	public void testNotWellFormedIfBreakElseWhile(){
 		int[][][] types = this.cubeTypesFlatSurface();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit unit = new Unit("Test", new int[] { 5, 5, 2 }, 50, 50, 50, 50, true);
@@ -191,7 +190,7 @@ public class TaskTests {
 	}
 	
 	@Test (expected=Error.class)
-	public void testNotWellFormedBreakAfterNotInWhile() throws ModelException{
+	public void testNotWellFormedBreakAfterNotInWhile() {
 		int[][][] types = this.cubeTypesFlatSurface();
 		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit unit = new Unit("Test", new int[] { 5, 5, 2 }, 50, 50, 50, 50, true);

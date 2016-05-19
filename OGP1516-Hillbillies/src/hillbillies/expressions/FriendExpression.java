@@ -24,7 +24,6 @@ public class FriendExpression extends UnitExpression {
 			List<Unit> enemies = possibleEnemies.stream().
 			filter(u -> taskComponents.getUnit().getFaction() == u.getFaction())
 				.collect(Collectors.toList());
-			System.out.println(enemies.size());
 			return enemies.get(0);
 		} catch(Throwable e){
 			throw new Error("no friend found");

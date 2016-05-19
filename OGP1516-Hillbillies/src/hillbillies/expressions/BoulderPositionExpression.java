@@ -10,7 +10,6 @@ public class BoulderPositionExpression extends CubePositionExpression {
 
 	@Override
 	public int[] evaluatePosition(TaskComponents taskComponents) throws Error{
-		System.out.println("BOULDER EXP");
 		try{
 			this.dijkstra.setUnit(taskComponents.getUnit());
 			int[] pos = this.dijkstra.Dijkstra(0);

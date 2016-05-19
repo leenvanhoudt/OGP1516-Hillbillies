@@ -11,7 +11,6 @@ public class LogPositionExpression extends CubePositionExpression {
 	@Override
 	public int[] evaluatePosition(TaskComponents taskComponents) throws Error{
 		try{
-			System.out.println("LOG EXP");
 			this.dijkstra.setUnit(taskComponents.getUnit());
 			return this.dijkstra.Dijkstra(1);
 		} catch(Throwable e){

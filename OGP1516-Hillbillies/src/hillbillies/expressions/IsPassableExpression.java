@@ -20,7 +20,6 @@ public class IsPassableExpression<E extends CubePositionExpression,ReadVariableE
 	
 	@Override
 	public Boolean evaluateBoolean(TaskComponents taskComponents) {
-		System.out.println("ISPASSABLE EXP");
 		int[] cube;
 		if (this.expressionVariablePosition != null)
 			cube = ((ICubePositionExpression) this.expressionVariablePosition)

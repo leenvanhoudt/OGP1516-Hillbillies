@@ -32,7 +32,6 @@ public class OrExpression<E extends BooleanExpression,ReadVariableExpression>
 	
 	@Override
 	public Boolean evaluateBoolean(TaskComponents taskComponents) {
-		System.out.println("OR EXP");
 		boolean left;
 		boolean right;
 		if (this.expressionVariableLeft != null)

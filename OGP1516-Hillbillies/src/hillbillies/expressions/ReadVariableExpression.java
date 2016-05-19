@@ -10,14 +10,11 @@ public class ReadVariableExpression extends MyExpression implements IBooleanExpr
 	private String varName;
 
 	public ReadVariableExpression(String variableName){
-		System.out.println("readvar");
 		this.varName = variableName;
-		System.out.println(this.varName);
 	}
 	
 	@Override
 	public Unit evaluateUnit(TaskComponents taskComponents) throws Error {
-		System.out.println("READVARIABLE UNIT EXP");
 		try{
 			return (Unit) taskComponents.getValue(this.varName);
 		} catch (Throwable e){
@@ -27,18 +24,15 @@ public class ReadVariableExpression extends MyExpression implements IBooleanExpr
 	
 	@Override
 	public int[] evaluatePosition(TaskComponents taskComponents) throws Error{
-		System.out.println("READVARIABLE Position EXP");
 		try{
 			return (int[]) taskComponents.getValue(this.varName);
 		} catch(Throwable e){
-			System.out.println("error bij readvar");
 			throw new Error("can not cast to position");
 		}
 	}
 	
 	@Override
 	public Boolean evaluateBoolean(TaskComponents taskComponents) throws Error {
-		System.out.println("READVARIABLE Boolean EXP");
 		try{
 			return (Boolean) taskComponents.getValue(this.varName);
 		} catch (Throwable e){
