@@ -48,7 +48,6 @@ public class Task {
 	 * 		| !this.isWellFormed()
 	 */
 	public Task(String name, int priority, MyStatement activity, int[] selectedCube)throws IllegalArgumentException{
-		System.out.println("task class");
 		this.nameTask = name;
 		this.priority = priority;
 		this.statementactivity = activity;
@@ -92,7 +91,6 @@ public class Task {
 	 */
 	@Basic
 	public Set<Scheduler> getSchedulersForTask(){
-		System.out.println("task getschedulersfortask");
 		return this.setOfSchedulers;
 	}
 	

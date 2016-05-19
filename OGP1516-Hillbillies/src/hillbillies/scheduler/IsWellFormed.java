@@ -96,14 +96,11 @@ public class IsWellFormed {
 	private void findBreakAndReadVariableStatements(MyStatement current, 
 			ArrayList<MyStatement> breakList, ArrayList<MyStatement> readVariableExpressionList){
 		while (!this.task.getActivity().isExecuted() && current != null){
-			System.out.println(current);
 			if (current.getNextWellFormed()==null || current.getNextWellFormed().isExecuted()){
 				if (current instanceof BreakStatement){
-					System.out.println("break added");
 					breakList.add(current);
 				}
 				if (current.containReadVariableExpression()){
-					System.out.println("if");
 					readVariableExpressionList.add(current);
 				}
 				current.setExecutedState(true);
@@ -148,16 +145,12 @@ public class IsWellFormed {
 	private boolean checkReadVariableExpressions(ArrayList<MyStatement> readVariableExpressionList){
 		for (MyStatement variableStatement: readVariableExpressionList){
 			MyStatement parent = variableStatement;
-			System.out.println(parent);
 			MyStatement checking = variableStatement;
 			while (parent != null && !this.checkParentRightAssignmentStatement(parent, variableStatement)){
-				System.out.println(parent);
 				parent = parent.getParent();
-				System.out.println(parent);
 				if (parent instanceof SequenceStatement){
 					for (int i = ((SequenceStatement) parent).getListSequence().indexOf(checking);
 							i>=0; i--){
-						System.out.println("for");
 						if (((SequenceStatement) parent).getListSequence().get(i) instanceof AssignmentStatement &&
 								variableStatement.getReadVariableExpression().getVariableName() ==
 								((AssignmentStatement)((SequenceStatement) parent).getListSequence().get(i)).getVarName()){
