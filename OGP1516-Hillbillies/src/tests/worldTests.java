@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.junit.Test;
 
 import hillbillies.model.Boulder;
+import hillbillies.model.CubeType;
 import hillbillies.model.Log;
 import hillbillies.model.Unit;
 import hillbillies.model.World;
@@ -27,6 +28,35 @@ public class worldTests {
 		for (int i = 0; i < n; i++)
 			world.advanceTime(step);
 		world.advanceTime(time - n * step);
+	}
+	
+	/**
+	 * Check if there still are solid blocks in the world after caving in.
+	 * @param world
+	 * 		the world where the blocks has to cave in.
+	 * @return ...
+	 * 		| Return true if no solid blocks are found.
+	 */
+	public boolean noSolidCubes(World world){
+		for (int i = 1; i<79; i++){
+			for (int j = 1; j<79; j++){
+					if (!world.isPassable(i, j, 1)){
+						return false;
+				}
+			}
+		}
+		return true;
+	}
+	
+	/**
+	 * Method to create cube types for a world with a flat rock surface.
+	 */
+	public int[][][] cubeTypesFlatSurface(){
+		int[][][] types = new int[10][10][5];
+		for (int i=0; i<10; i++)
+			for (int j=0; j<10; j++)
+				types[i][j][1] = CubeType.ROCK.getCubeType();
+		return types;
 	}
 
 	@Test(expected=IllegalArgumentException.class)
@@ -218,21 +248,57 @@ public class worldTests {
 		assertTrue("no cubes left which are not connected to border",noSolidCubes);
 	}
 	
-	/**
-	 * Check if there still are solid blocks in the world after caving in.
-	 * @param world
-	 * 		the world where the blocks has to cave in.
-	 * @return ...
-	 * 		| Return true if no solid blocks are found.
-	 */
-	public boolean noSolidCubes(World world){
-		for (int i = 1; i<79; i++){
-			for (int j = 1; j<79; j++){
-					if (!world.isPassable(i, j, 1)){
-						return false;
-				}
-			}
-		}
-		return true;
+	@Test
+	public void testCubeContainOtherUnit() throws ModelException{
+		int[][][] types = this.cubeTypesFlatSurface();
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit firstUnit = new Unit("TestUnit", new int[] { 0, 0, 2 }, 50, 50, 50, 50, false);
+		Unit secondUnit = new Unit("TestUnit", new int[] { 0, 0, 2 }, 50, 50, 50, 50, false);
+		world.addUnit(firstUnit);
+		assertFalse("no other unit found", world.CubeContainOtherUnit(0, 0, 2, firstUnit));
+		world.addUnit(secondUnit);
+		assertTrue("no other unit found", world.CubeContainOtherUnit(0, 0, 2, firstUnit));
 	}
+	
+	@Test
+	public void testCubeContainFriend() throws ModelException{
+		int[][][] types = this.cubeTypesFlatSurface();
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit unit = new Unit("TestUnit", new int[] { 0, 0, 2 }, 50, 50, 50, 50, false);
+		Unit enemyUnit = new Unit("TestUnit", new int[] { 0, 0, 2 }, 50, 50, 50, 50, false);
+		Unit friendUnit = new Unit("TestUnit", new int[] { 0, 0, 2 }, 50, 50, 50, 50, false);		
+		world.addUnit(unit);
+		for (int i=0; i<7; i++)
+			world.spawnUnit(false);
+		world.addUnit(enemyUnit);
+		assertFalse("no friend found", world.CubeContainFriend(0, 0, 2, unit));
+		world.addUnit(friendUnit);
+		assertTrue("friend found", world.CubeContainFriend(0, 0, 2, unit));
+	}
+	
+	@Test
+	public void testCubeContainEnemy() throws ModelException{
+		int[][][] types = this.cubeTypesFlatSurface();
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit unit = new Unit("TestUnit", new int[] { 0, 0, 2 }, 50, 50, 50, 50, false);
+		Unit enemyUnit = new Unit("TestUnit", new int[] { 0, 0, 2 }, 50, 50, 50, 50, false);
+		Unit secondEnemyUnit = new Unit("TestUnit", new int[] { 0, 0, 2 }, 50, 50, 50, 50, false);
+		world.addUnit(unit);
+		world.addUnit(enemyUnit);
+		world.addUnit(secondEnemyUnit);
+		assertTrue("enemy found", world.CubeContainEnemy(0, 0, 2, unit));
+	}
+	
+	@Test
+	public void testGetCubeOtherUnit() throws ModelException{
+		int[][][] types = this.cubeTypesFlatSurface();
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit firstUnit = new Unit("TestUnit", new int[] { 0, 0, 2 }, 50, 50, 50, 50, false);
+		Unit secondUnit = new Unit("TestUnit", new int[] { 0, 0, 2 }, 50, 50, 50, 50, false);
+		world.addUnit(firstUnit);
+		world.addUnit(secondUnit);
+		ArrayList<Unit> units = world.getCubeOtherUnit(0, 0, 2, firstUnit);
+		assertTrue("cube other unit found", units.get(0)==secondUnit);
+	}
+
 }
