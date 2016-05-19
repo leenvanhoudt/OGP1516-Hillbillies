@@ -18,8 +18,8 @@ public class IsWellFormed {
 	public boolean CheckWellFormedness(){
 		ArrayList<MyStatement> breakList = new ArrayList<MyStatement>();
 		ArrayList<MyStatement> readVariableStatementList = new ArrayList<MyStatement>();
-		MyStatement current = this.task.getActivity().getNextWellFormed();
-		if (current == null){
+		MyStatement current = this.task.getActivity();
+		if (current.getNextWellFormed() == null){
 			if (this.task.getActivity() instanceof BreakStatement)
 				breakList.add(this.task.getActivity());
 			if (this.task.getActivity().containReadVariableExpression())
@@ -45,14 +45,14 @@ public class IsWellFormed {
 		while (!this.task.getActivity().isExecuted() && current != null){
 			if (current.getNextWellFormed()==null || current.getNextWellFormed().isExecuted()){
 				try{
-					if (current instanceof BreakStatement)
+					if (current instanceof BreakStatement){
 						breakList.add(current);
+					}
 					if (current.containReadVariableExpression())
 						readVariableStatementList.add(current);
 					current.setExecutedState(true);
-					current = this.task.getActivity().getNextWellFormed();
+					current = this.task.getActivity();
 				} catch(Throwable e){
-					System.out.println("catch exception");
 					throw new Error("error");
 				}
 			}else{

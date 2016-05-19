@@ -60,6 +60,7 @@ public class WhileStatement<E extends BooleanExpression,ReadVariableExpression> 
 	
 	@Override
 	public MyStatement getNextWellFormed() {
+		//System.out.println("while next");
 		return this.statementBody;
 	}
 
@@ -78,13 +79,11 @@ public class WhileStatement<E extends BooleanExpression,ReadVariableExpression> 
 
 	@Override
 	public boolean containReadVariableExpression() {
-		// TODO Auto-generated method stub
 		return this.expressionVariableCondition != null;
 	}
 
 	@Override
 	public hillbillies.expressions.ReadVariableExpression getReadVariableExpression() {
-		// TODO Auto-generated method stub
 		return (hillbillies.expressions.ReadVariableExpression) this.expressionVariableCondition;
 	}
 
