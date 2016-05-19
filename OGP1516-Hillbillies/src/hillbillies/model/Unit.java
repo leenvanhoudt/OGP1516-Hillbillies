@@ -1808,6 +1808,7 @@ public class Unit {
 	 * 		| throw an excecption if the other unit is to far.
 	 */
 	private void attack(Unit defender) throws IllegalArgumentException {
+		System.out.println("attacking");
 		double d = Math.sqrt(Math.pow(defender.getPosition()[0] - this.getPosition()[0], 2)
 				+ Math.pow(defender.getPosition()[1] - this.getPosition()[1], 2)
 				+ Math.pow(defender.getPosition()[2] - this.getPosition()[2], 2));
@@ -1817,6 +1818,7 @@ public class Unit {
 			defender.setOrientation(Math.atan2(this.getPosition()[1] - defender.getPosition()[1],
 					this.getPosition()[0] - defender.getPosition()[0]));
 			this.isAttacking = true;
+			System.out.println("close enough");
 		}else{
 			throw new IllegalArgumentException();
 		}
@@ -2100,6 +2102,8 @@ public class Unit {
 		if (current == null)
 			this.getAssignedTask().getActivity().execute(this.taskComponents);
 		while (!this.getAssignedTask().getActivity().isExecuted() && dt>0){
+			System.out.println(current+" "+current.isExecuted());
+			System.out.println(current.getParent());
 			if (current.getNext(this.taskComponents)==null || current.getNext(this.taskComponents).isExecuted()){
 				try{
 				current.execute(this.taskComponents);

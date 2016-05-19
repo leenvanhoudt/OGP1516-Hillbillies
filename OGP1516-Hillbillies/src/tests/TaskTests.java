@@ -34,7 +34,7 @@ public class TaskTests {
 	}
 	
 	//TODO: fix
-	@Test (expected=IllegalArgumentException.class)
+	@Test //(expected=IllegalArgumentException.class)
 	public void testNotWellFormedBreakBeforeWhile() throws ModelException{
 		int[][][] types = new int[6][6][6];
 		types[5][5][1] = CubeType.ROCK.getCubeType();
@@ -42,10 +42,18 @@ public class TaskTests {
 		Unit unit = new Unit("Test", new int[] { 5, 5, 2 }, 50, 50, 50, 50, true);
 		world.addUnit(unit);
 		TaskFactory factory = new TaskFactory();
-
+		
+		Boolean exception = false;
+		
+		try{
 		List<Task> tasks = TaskParser.parseTasksFromString(
 				"name: \"task\"\npriority: 1\nactivities: break;\n while is_passable here do\n work here; \n done",
 				factory, Collections.singletonList(null));
+		}catch(Throwable e){
+			exception = true;
+		}
+		
+		assertTrue("exception", exception);
 		
 	}
 

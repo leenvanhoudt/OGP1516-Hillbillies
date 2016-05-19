@@ -19,8 +19,9 @@ public class IfStatement<E extends BooleanExpression,ReadVariableExpression> ext
 		this.statementIfBody = ifBody;
 		this.statementElseBody = elseBody;
 		this.statementIfBody.setParent(this);
-		if (this.statementElseBody != null)
-			this.statementElseBody.setParent(this);
+		if (this.statementElseBody != null){
+			//System.out.println("parent set");
+			this.statementElseBody.setParent(this);}
 	}
 	
 	public IfStatement(ReadVariableExpression condition, MyStatement ifBody, MyStatement elseBody){
@@ -29,7 +30,7 @@ public class IfStatement<E extends BooleanExpression,ReadVariableExpression> ext
 		this.statementIfBody = ifBody;
 		this.statementElseBody = elseBody;
 		this.statementIfBody.setParent(this);
-		if (this.statementElseBody != null)
+		if (elseBody != null)
 			this.statementElseBody.setParent(this);
 	}
 	
