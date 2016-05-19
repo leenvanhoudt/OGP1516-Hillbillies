@@ -272,12 +272,10 @@ public class ExpressionsAndStatementsTests {
 		World world = new World(types, new DefaultTerrainChangeListener());
 		Unit unit = new Unit("Test", new int[] { 5, 5, 2 }, 50, 50, 50, 50, true);
 		world.addUnit(unit);
-		for (int i=0; i<8; i++);
+		for (int i=0; i<8; i++)
 			world.spawnUnit(false);
 		Unit friend = new Unit("Test", new int[] { 7, 7, 2 }, 50, 50, 50, 50, false);
 		world.addUnit(friend);
-		System.out.println("KIJK HIER"+ (friend.getFaction()==unit.getFaction()));
-		System.out.println(world.getActiveFactions().size());
 		Faction faction = unit.getFaction();
 
 		Scheduler scheduler = faction.getScheduler();
