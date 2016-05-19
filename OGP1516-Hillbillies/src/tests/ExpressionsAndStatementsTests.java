@@ -45,6 +45,29 @@ public class ExpressionsAndStatementsTests {
 				types[i][j][1] = CubeType.ROCK.getCubeType();
 		return types;
 	}
+	
+	@Test
+	public void testSimpleFollowTask() throws ModelException{
+		int[][][] types = this.cubeTypesFlatSurface();
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit unit = new Unit("Test", new int[] { 9, 9, 2 }, 50, 50, 50, 50, true);
+		Unit enemy = new Unit("Test", new int[] { 0, 0, 2 }, 50, 50, 50, 50, false);
+		world.addUnit(unit);
+		world.addUnit(enemy);
+		Faction faction = unit.getFaction();
+
+		Scheduler scheduler = faction.getScheduler();
+		TaskFactory factory = new TaskFactory();
+
+		List<Task> tasks = TaskParser.parseTasksFromString(
+				"name: \"follow task\"\npriority: 1\nactivities: follow enemy;",
+				factory, Collections.singletonList(new int[] {}));
+		Task task = tasks.get(0);
+		
+		scheduler.schedule(task);
+		advanceTimeFor(world, 2, 0.02);
+		assertTrue("is following", unit.isMoving());
+	}
 
 	@Test
 	public void testWhileBreak() throws ModelException{
@@ -61,7 +84,8 @@ public class ExpressionsAndStatementsTests {
 
 		List<Task> tasks = TaskParser.parseTasksFromString(
 				"name: \"while break task\"\npriority: 1\nactivities: while is_alive(enemy) do\nfollow enemy;\nbreak;\ndone",
-				factory, Collections.singletonList(new int[] {}));
+				factory, Collections.singletonList(new int[] { 1, 1, 1 }));
+		System.out.println("tasks");
 		Task task = tasks.get(0);
 		
 		scheduler.schedule(task);
