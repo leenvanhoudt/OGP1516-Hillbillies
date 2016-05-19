@@ -12,7 +12,8 @@ import hillbillies.model.UtilCompareList;
 
 /**
  * A class of Hillbillies with their given characteristics.
- * They can execute multiple activities: basic movements, work, attack, rest, fall and die.
+ * They can execute multiple activities: basic movements, work, attack, rest, fall,follow
+ * and die. They can also execute tasks which are scheduled per faction.
  * Also the awarding or losing of 3 sorts of points are worked out.
  * 
  * @author Laura Vranken & Leen Van Houdt, 
@@ -833,7 +834,8 @@ public class Unit {
 	 * - When the unit has received 10 experiencePoints, he will gain 1 extra point for 
 	 * 		agility, toughness or strength.
 	 * - When the unit is sprinting and his staminaPoints are 0, the unit will stop sprinting. 
-	 * - When the unit is sprinting, the staminaPoints will reduce with 1 every 0.1 seconds. 
+	 * - When the unit is sprinting, the staminaPoints will reduce with 1 every 0.1 seconds.
+	 * - The unit will follow an other unit until he has catched up with that unit. 
 	 * - When the unit is moving, the speed, orientation and position will be updated. 
 	 * - When the unit is moving a long distance, he can be interrupted by working, attacking and resting. 
 	 * - When the unit is resting, he will recover first hitPoints and secondly staminaPoints until
@@ -880,9 +882,9 @@ public class Unit {
 				this.resting3MinutesTime = 0;
 				this.rest();
 			}
-		} //else{
-//			throw new IllegalArgumentException();
-//		}
+		} else{
+			throw new IllegalArgumentException();
+		}
 	}
 	
 	/**
@@ -905,7 +907,8 @@ public class Unit {
 	 * 		| The unit terminated every activity.
 	 * 		| new.isFalling == false && new.isWorking == false && new.isAttacking == false
 	 *		| && new.isResting == false && new.isMovingTo == false && new.getCurrentSpeed == 0
-	 *		| && new.isCarryingBoulder == false && new.isCarryingLog == false
+	 *		| && new.isCarryingBoulder == false && new.isCarryingLog == false 
+	 *		| && new.isFollowing == false
 	 * @effect ...
 	 * 		| The unit is removed from the world and faction.
 	 * 		| this.getFaction().removeUnitFromFaction(this)
@@ -951,7 +954,15 @@ public class Unit {
 		return this.isCarryingLog;
 	}
 	
-	//schrijf hier ook nog commentaar
+	/**
+	 * Set if the unit is carrying a log to the given value.
+	 * 
+	 * @param value
+	 * 		the value determining if the unit is carrying a log.
+	 * @post ...
+	 * 		| the carrying state of the unit is set to the given value.
+	 * 		| new.isCarryingLog == value
+	 */
 	public void setCarryingLog(boolean value){
 		this.isCarryingLog = value;
 	}
@@ -971,6 +982,15 @@ public class Unit {
 		return this.isCarryingBoulder;
 	}
 	
+	/**
+	 * Set if the unit is carrying a boulder to the given value.
+	 * 
+	 * @param value
+	 * 		the value determining if the unit is carrying a boulder.
+	 * @post ...
+	 * 		| the carrying state of the unit is set to the given value.
+	 * 		| new.isCarryingBoulder == value
+	 */
 	public void setCarryingBoulder(boolean value){
 		this.isCarryingBoulder = value;
 	}
@@ -1030,6 +1050,7 @@ public class Unit {
 	
 	/**
 	 * Check if a unit can stand/hang in this cube, if not it is a falling position.
+	 * 
 	 * @param x
 	 * 		the x coordinate of the cube.
 	 * @param y
@@ -1753,6 +1774,8 @@ public class Unit {
 	 *      | if(!this.isFalling && this.getFaction()!=defender.getFaction() && defender != this){
 	 *      | 	then this.attack(defender) 
 	 *      | 		defender.defend(this)
+	 * @IllegalArgumentException ...
+	 * 		| throw an exception if the unit can not attack.
 	 */
 	public void fight(Unit defender) throws IllegalArgumentException{
 		this.interruptTask();
@@ -1781,6 +1804,8 @@ public class Unit {
 	 * @post ... 
 	 * 		| Make the unit attack. 
 	 * 		| new.isAttacking == true
+	 * @IllegalArgumentException ...
+	 * 		| throw an excecption if the other unit is to far.
 	 */
 	private void attack(Unit defender) throws IllegalArgumentException {
 		double d = Math.sqrt(Math.pow(defender.getPosition()[0] - this.getPosition()[0], 2)
@@ -1891,8 +1916,10 @@ public class Unit {
 	}
 	
 	/**
-	 * Make the unit rest.
-	 * 
+	 * Make the unit rest. If the unit is executing a task, the task will be interrupted.
+	 * @effect ...
+	 * 		| interrupt the task if the unit is executing one.
+	 * 		| this.interruptTask()
 	 * @post ... 
 	 * 		| The unit starts resting and stops moving. 
 	 * 		| new.isResting == true 
@@ -1985,28 +2012,34 @@ public class Unit {
 		return this.defaultBehaviorEnabled;
 	}
 	
+	/**
+	 * initializing an object of the class TaskComponents.
+	 */
 	private TaskComponents taskComponents;
 
 	/**
-	 * Execute default behaviour by choosing random task: move to a position, work, rest, sprint to a
-	 * position, or attack possible enemy.
+	 * If defaultbehavior is enabled, the unit will first check if there still is an unassigned
+	 * task in the scheduler, if so the unit will be assigned to the unassigned task with the 
+	 * highest priority. 
+	 * If the unit is already assigned to a task and not yet finished with it, it will go on
+	 * executing it.
+	 * If the unit is finished executing his task, he will be unassigned and the task will 
+	 * be removed.
+	 * If there are no unassigned scheduled tasks, the unit will execute random behavior.
 	 * 
-	 * @effect ... 
-	 * 		| The unit will walk to a random position.
-	 *      | this.moveTo(randomPosition)
-	 * @effect ... 
-	 * 		| The unit will work. 
-	 * 		| this.work()
-	 * @effect ... 
-	 * 		| The unit will rest. 
-	 * 		| this.rest()
-	 * @effect ... 
-	 * 		| The unit will sprint to a random position.
-	 *      | this.setCurrentSpeed(this.sprintingSpeed)
-	 *      | this.moveTo(randomPosition)
 	 * @effect ...
-	 * 		| The unit will attack an adjacent rival unit.
-	 * 		| this.fight(unit)
+	 * 		| assign unit to task with highest priority.
+	 * 		| this.assignUnitToTask()
+	 * @effect ...
+	 * 		| execute the task.
+	 * 		| this.executeTask(task)
+	 * @effect ...
+	 * 		| end task.
+	 * 		| this.endTask()
+	 * @effect ...
+	 * 		| execute random behaviour.
+	 * 		| this.randomDefaultBehavior()
+	 * 
 	 */
 	private void defaultBehavior(double dt) throws IllegalArgumentException, IndexOutOfBoundsException {
 		if (!this.getFaction().getScheduler().getScheduledTasks().isEmpty()
@@ -2025,6 +2058,21 @@ public class Unit {
 		}
 	}
 	
+	/**
+	 * Assign a unit to a task and a task to a unit. The chosen task is the task with the 
+	 * highest priority.
+	 * 
+	 * @post ...
+	 * 		| the task is the task with the highest priority.
+	 * 		| new.task == new.getFaction().getScheduler().getTaskHighestPriority()
+	 * 
+	 * @post ...
+	 * 		| task will be assigned to a unit.
+	 * 		| new.getAssignedTask() == task
+	 * @post ...
+	 * 		| unit will be assigned to a task.
+	 * 		| new.getAssigendUnit() == unit
+	 */
 	private void assignUnitToTask(){
 		Task task = this.getFaction().getScheduler().getTaskHighestPriority();
 		this.setAssignedTask(task);
@@ -2032,7 +2080,22 @@ public class Unit {
 		this.taskComponents = new TaskComponents(this.getWorld(), this, this.getAssignedTask().getSelectedCube());
 	}
 	
-	private void executeTask(double dt){
+	/**
+	 * The unit will execute the assigned task. Every statement in the task has a duration of
+	 * 0.001 gametime. If an action (such as working, moving..) takes longer, the executing will
+	 * be stopped temporarly and wait until the next advancetime. If the unit can't execute the
+	 * current statement, the unit will be interrupted in executing the statement.
+	 * 
+	 * @param dt
+	 * 		The time wherein an amount of statements can be executed.
+	 * @effect ...
+	 * 		| the current statement will be executed and gametime will be decreased with 0.001.
+	 * 		| currentStatement.execute()
+	 * 		| dt = dt - 0.001
+	 * @Error ...
+	 * 		| throw an error when the current statement can't be executed.
+	 */
+	private void executeTask(double dt) throws Error{
 		MyStatement current = this.getAssignedTask().getActivity().getNext(this.taskComponents);
 		if (current == null)
 			this.getAssignedTask().getActivity().execute(this.taskComponents);
@@ -2054,16 +2117,50 @@ public class Unit {
 		}
 	}
 	
+	/**
+	 * End a task by unassigning the unit and removing the task from the scheduler. 
+	 * All statements' execute state are put back to false.
+	 * 
+	 * @post ...
+	 * 		| The executed state of the statements are put to false.
+	 * 		| new.getAssignedTask().getActivity().isExecuted == false
+	 * @effect ...
+	 * 		| The task will be removed from the scheduled list.
+	 * 		| this.getFaction().getScheduler().removeTask(this.getAssignedTask())
+	 * @effect ...
+	 * 		| The task will be reset, so the unit will be unassigned from the task
+	 * 		| and the task will be unassigned from the unit.
+	 */
 	private void endTask(){
 		this.getAssignedTask().getActivity().setExecutedState(false);
 		this.getFaction().getScheduler().removeTask(this.getAssignedTask());
 		this.getFaction().getScheduler().reset(this.getAssignedTask(), this);
 	}
 	
+	/**
+	 * Execute default behaviour by choosing random task: move to a position, work, rest, sprint to a
+	 * position, or attack possible enemy.
+	 * 
+	 * @effect ... 
+	 * 		| The unit will walk to a random position.
+	 *      | this.moveTo(randomPosition)
+	 * @effect ... 
+	 * 		| The unit will work. 
+	 * 		| this.work()
+	 * @effect ... 
+	 * 		| The unit will rest. 
+	 * 		| this.rest()
+	 * @effect ... 
+	 * 		| The unit will sprint to a random position.
+	 *      | this.setCurrentSpeed(this.sprintingSpeed)
+	 *      | this.moveTo(randomPosition)
+	 * @effect ...
+	 * 		| The unit will attack an adjacent rival unit.
+	 * 		| this.fight(unit)
+	 */
 	private void randomDefaultBehavior(){
 		Random random = new Random();
-		//TODO zet random back
-		int i=2;//random.nextInt(5);
+		int i=random.nextInt(5);
 		int[] randomPosition = new int[] { random.nextInt(this.getWorld().getNbCubesX()), 
 				random.nextInt(this.getWorld().getNbCubesY()), random.nextInt(this.getWorld().getNbCubesZ()) };
 		double[] randomPosition2 = new double[] {randomPosition[0]+ LC/2, randomPosition[1]+LC/2, randomPosition[2]+LC/2};
@@ -2098,11 +2195,14 @@ public class Unit {
 	}
 	
 	/**
-	 * Variable registering when the unit must start sprinting if he must execute defaultBehavior case 3.
+	 * Variable registering when the unit must start sprinting if he must execute 
+	 * defaultBehavior case 3.
 	 */
 	public boolean defaultBehaviorCase3 = false;
 	
-	
+	/**
+	 * Interrupt task by unassigning the unit and reducing the priority with 100.
+	 */
 	public void interruptTask(){
 		if (this.getAssignedTask() != null){
 			this.getAssignedTask().getActivity().setExecutedState(false);
@@ -2116,6 +2216,15 @@ public class Unit {
 	 */
 	private boolean defaultBehaviorEnabled = false;
 	
+	/**
+	 * The unit will follow the followedUnit.
+	 * 
+	 * @param followedUnit
+	 * 		| the unit to be followed.
+	 * @post ...
+	 * 		| the unit will start following the followedUnit.
+	 * 		| new.isFollowing == true;
+	 */
 	public void follow(Unit followedUnit){
 		this.isFollowing = true;
 		this.followedUnit = followedUnit;
