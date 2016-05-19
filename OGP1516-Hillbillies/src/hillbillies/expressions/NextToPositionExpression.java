@@ -12,18 +12,15 @@ public class NextToPositionExpression<E extends CubePositionExpression, ReadVari
 	private ReadVariableExpression expressionVariablePosition;
 	
 	public NextToPositionExpression(CubePositionExpression position){
-		System.out.println("constructor next to");
 		this.expressionPosition = position;
 	}
 	
 	public NextToPositionExpression(ReadVariableExpression position){
-		System.out.println("constructor next to");
 		this.expressionVariablePosition = position;
 	}
 
 	@Override
 	public int[] evaluatePosition(TaskComponents taskComponents) throws NoSuchElementException {
-		System.out.println("NEXTO EXP");
 		int[] unitPosition;
 		if (this.expressionVariablePosition != null)
 			unitPosition = ((ICubePositionExpression) this.expressionVariablePosition)
@@ -35,7 +32,6 @@ public class NextToPositionExpression<E extends CubePositionExpression, ReadVari
 			if ((taskComponents.getWorld().isPassable(unitPosition[0]+i, unitPosition[1], unitPosition[2]) &&
 					!(taskComponents.getUnit().isFallingPosition(unitPosition[0]+i, unitPosition[1], unitPosition[2])))&&
 					(unitPosition[0]+i<taskComponents.getWorld().getNbCubesX()) && unitPosition[0]+i>=0){
-				System.out.println("next to pos " + unitPosition[0]+i + " " +unitPosition[1] + " "+ unitPosition[2]);
 				return new int[]{unitPosition[0]+i,unitPosition[1],unitPosition[2]};
 			}
 		}
@@ -44,7 +40,6 @@ public class NextToPositionExpression<E extends CubePositionExpression, ReadVari
 			if ((taskComponents.getWorld().isPassable(unitPosition[0], unitPosition[1]+i, unitPosition[2]) &&
 					!(taskComponents.getUnit().isFallingPosition(unitPosition[0], unitPosition[1]+i, unitPosition[2])))&&
 					(unitPosition[1]+i<taskComponents.getWorld().getNbCubesY()) && unitPosition[1]+i>=0){
-				System.out.println("next to pos " + unitPosition[0] + " " +unitPosition[1]+i + " "+ unitPosition[2]);
 				return new int[]{unitPosition[0],unitPosition[1]+i,unitPosition[2]};
 			}
 		}
@@ -53,11 +48,9 @@ public class NextToPositionExpression<E extends CubePositionExpression, ReadVari
 			if ((taskComponents.getWorld().isPassable(unitPosition[0], unitPosition[1], unitPosition[2]+i) &&
 					!(taskComponents.getUnit().isFallingPosition(unitPosition[0], unitPosition[1], unitPosition[2]+i)))&&
 					(unitPosition[2]+i<taskComponents.getWorld().getNbCubesZ()) && unitPosition[2]+i>=0){
-				System.out.println("next to pos " + unitPosition[0] + " " +unitPosition[1] + " "+ unitPosition[2]+i);
 				return new int[]{unitPosition[0],unitPosition[1],unitPosition[2]+i};
 			}
 		}
-		System.out.println("no next to pos");
 		throw new NoSuchElementException();
 	}
 

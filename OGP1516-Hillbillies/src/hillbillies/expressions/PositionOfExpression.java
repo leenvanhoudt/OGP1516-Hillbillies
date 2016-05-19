@@ -21,7 +21,6 @@ public class PositionOfExpression<E extends UnitExpression, ReadVariableExpressi
 	
 	@Override
 	public int[] evaluatePosition(TaskComponents taskComponents) {
-		System.out.println("POSITIONOF EXP");
 		Unit hilly;
 		if (this.expressionVariableUnit != null){
 			hilly = ((IUnitExpression) this.expressionVariableUnit).evaluateUnit(taskComponents);

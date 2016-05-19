@@ -16,7 +16,6 @@ public class LiteralPositionExpression extends CubePositionExpression {
 	
 	@Override
 	public int[] evaluatePosition(TaskComponents taskComponents) {
-		System.out.println("LITERALPOSITION EXP");
 		int [] position = new int[] {this.xcoordinate, this.ycoordinate, this.zcoordinate};
 		return position;
 	}

@@ -19,7 +19,6 @@ public class NotExpression<E extends BooleanExpression, ReadVariableExpression>
 	
 	@Override
 	public Boolean evaluateBoolean(TaskComponents taskComponents) {
-		System.out.println("NOT EXP");
 		if (this.expressionVariableExpression != null)
 			return !((IBooleanExpression) this.expressionVariableExpression)
 					.evaluateBoolean(taskComponents);

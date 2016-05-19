@@ -21,7 +21,6 @@ public class IsAliveExpression<E extends UnitExpression, ReadVariableExpression>
 
 	@Override
 	public Boolean evaluateBoolean(TaskComponents taskComponents) {
-		System.out.println("ISALIVE EXP");
 		Unit hilly;
 		if (this.expressionVariableUnit != null)
 			hilly = ((IUnitExpression) this.expressionVariableUnit).evaluateUnit(taskComponents);

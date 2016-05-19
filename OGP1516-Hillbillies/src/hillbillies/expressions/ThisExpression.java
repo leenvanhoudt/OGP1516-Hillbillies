@@ -8,7 +8,6 @@ public class ThisExpression extends UnitExpression {
 
 	@Override
 	public Unit evaluateUnit(TaskComponents taskComponents) {
-		System.out.println("THIS EXP");
 		return taskComponents.getUnit();
 	}
 

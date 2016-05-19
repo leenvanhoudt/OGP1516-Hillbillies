@@ -12,18 +12,15 @@ public class CarriesItemExpression<E extends UnitExpression,ReadVariableExpressi
 	private ReadVariableExpression expressionVariableUnit;
 
 	public CarriesItemExpression(UnitExpression unit){
-		System.out.println("carries item constructor");
 		this.expressionUnit = unit;
 	}
 	
 	public CarriesItemExpression(ReadVariableExpression unit){
-		System.out.println("carries item constructor");
 		this.expressionVariableUnit = unit;
 	}
 	
 	@Override
 	public Boolean evaluateBoolean(TaskComponents taskComponents ) {
-		System.out.println("Carriesitem EXP");
 		Unit hilly;
 		if (this.expressionVariableUnit != null)
 			hilly = ((IUnitExpression) this.expressionVariableUnit).evaluateUnit(taskComponents);
