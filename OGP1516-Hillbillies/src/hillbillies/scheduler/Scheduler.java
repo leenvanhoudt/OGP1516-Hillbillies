@@ -24,8 +24,9 @@ public class Scheduler {
 	
 	public void removeTask(Task task){
 		System.out.println("remove");
-		if (!this.isTerminated){
-			this.terminate();
+		System.out.println(task.isTerminated());
+		if (!task.isTerminated()){
+			task.terminate();
 			this.scheduledList.remove(task);
 		}
 	}
@@ -129,30 +130,5 @@ public class Scheduler {
 			
 		};
 	}
-	
-	/**
-	 * Terminate this task.
-	 *
-	 * @post   This task  is terminated.
-	 *       | new.isTerminated()
-	 */
-	 public void terminate() {
-		 this.isTerminated = true;
-	 }
-	 
-	 /**
-	  * Return a boolean indicating whether or not this task
-	  * is terminated.
-	  */
-	 @Basic @Raw
-	 public boolean isTerminated() {
-		 return this.isTerminated;
-	 }
-	 
-	 /**
-	  * Variable registering whether this person is terminated.
-	  */
-	 private boolean isTerminated = false;
-	 
 	
 }
