@@ -35,7 +35,6 @@ public class AttackStatement<E extends UnitExpression,ReadVariableExpression>
 			taskComponents.getUnit().fight(enemy);
 			this.setExecutedState(true);
 		} catch(Throwable e){
-			System.out.println("error attack");
 			taskComponents.getUnit().interruptTask();
 			throw new Error("enemy not reachable");
 		}
