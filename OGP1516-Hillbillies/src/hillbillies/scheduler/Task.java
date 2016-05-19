@@ -8,17 +8,21 @@ import hillbillies.model.Unit;
 
 public class Task {
 
+	private String nameTask;
+	private int priority;
+	private MyStatement statementactivity;
+	private int[] selectedCube;
+
 	public Task(String name, int priority, MyStatement activity, int[] selectedCube)throws IllegalArgumentException{
 		System.out.println("task class");
-		this.data.nameTask = name;
-		this.data.priority = priority;
-		this.data.statementactivity = activity;
-		this.data.selectedCube = selectedCube;	
+		this.nameTask = name;
+		this.priority = priority;
+		this.statementactivity = activity;
+		this.selectedCube = selectedCube;	
 		if (!this.isWellFormed())
 			throw new IllegalArgumentException();
 	}
 	
-	//TODO check it
 	public boolean isWellFormed(){
 		return this.isWellFormed.CheckWellFormedness();
 	}
@@ -38,38 +42,38 @@ public class Task {
 	
 	
 	public Unit getAssignedUnit(){
-		return this.data.assignedUnit;
+		return this.assignedUnit;
 	}
 	
 	public void setAssignedUnit(Unit unit){
-		this.data.assignedUnit = unit;
+		this.assignedUnit = unit;
 	}
 	
-	private TaskData data = new TaskData();
+	private Unit assignedUnit;
 
 
 	public String getName(){
-		return this.data.nameTask;
+		return this.nameTask;
 	}
 	
 	public int getPriority(){
-		return this.data.priority;
+		return this.priority;
 	}
 	
 	public void setPriority(int priority){
 		if (priority > Integer.MIN_VALUE+100)
-			this.data.priority = priority; 
+			this.priority = priority; 
 		else{
-			this.data.priority = Integer.MIN_VALUE;
+			this.priority = Integer.MIN_VALUE;
 		}
 	}
 	
 	public MyStatement getActivity(){
-		return this.data.statementactivity;
+		return this.statementactivity;
 	}
 	
 	public int[] getSelectedCube(){
-		return this.data.selectedCube;
+		return this.selectedCube;
 	}
 	
 }

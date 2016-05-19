@@ -614,7 +614,7 @@ public class UnitTests {
 		advanceTimeFor(unit,100,0.1);
 		unit.workAt(1, 2, 3);
 		advanceTimeFor(unit,100,0.1);
-		assertTrue("unit is carrying boulder", unit.isCarryingBoulder);
+		assertTrue("unit is carrying boulder", unit.isCarryingBoulder());
 	}
 	
 	@Test
@@ -629,7 +629,7 @@ public class UnitTests {
 		advanceTimeFor(unit,100,0.1);
 		unit.workAt(1, 2, 3);
 		advanceTimeFor(unit,100,0.1);
-		assertTrue("unit is carrying log", unit.isCarryingLog);
+		assertTrue("unit is carrying log", unit.isCarryingLog());
 	}
 	
 	@Test

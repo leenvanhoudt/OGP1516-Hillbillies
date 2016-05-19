@@ -45,11 +45,11 @@ public class Facade implements IFacade {
 
 	@Override
 	public void advanceTime(World world, double dt) throws ModelException {
-		try{
+//		try{
 			world.advanceTime(dt);
-		}catch(Throwable e){
-			throw new ModelException();
-		}		
+//		}catch(Throwable e){
+//			throw new ModelException();
+//		}		
 	}
 
 	@Override
@@ -96,12 +96,12 @@ public class Facade implements IFacade {
 
 	@Override
 	public boolean isCarryingLog(Unit unit) throws ModelException {
-		return unit.isCarryingLog;
+		return unit.isCarryingLog();
 	}
 
 	@Override
 	public boolean isCarryingBoulder(Unit unit) throws ModelException {
-		return unit.isCarryingBoulder;
+		return unit.isCarryingBoulder();
 	}
 
 	@Override

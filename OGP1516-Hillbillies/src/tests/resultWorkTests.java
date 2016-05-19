@@ -80,7 +80,7 @@ public class resultWorkTests {
 		boulder.setPosition(1, 2, 1);
 		unit.workAt(1, 2, 1);
 		advanceTimeFor(world,100,0.1);
-		assertTrue("unit is carrying boulder", unit.isCarryingBoulder);
+		assertTrue("unit is carrying boulder", unit.isCarryingBoulder());
 	}
 	
 	@Test
@@ -97,7 +97,7 @@ public class resultWorkTests {
 		log.setPosition(1, 2, 1);
 		unit.workAt(1, 2, 1);
 		advanceTimeFor(world,100,0.1);
-		assertTrue("unit is carrying log", unit.isCarryingLog);
+		assertTrue("unit is carrying log", unit.isCarryingLog());
 	}
 	
 	@Test

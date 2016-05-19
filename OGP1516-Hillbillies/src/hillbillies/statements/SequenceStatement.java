@@ -45,6 +45,7 @@ public class SequenceStatement extends MyStatement {
 				return statement;
 			}
 		}
+		this.setExecutedState(true);
 		return null;
 	}
 	

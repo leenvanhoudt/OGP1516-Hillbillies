@@ -8,6 +8,7 @@ import hillbillies.scheduler.MyStatement;
 import hillbillies.scheduler.Task;
 import hillbillies.scheduler.TaskComponents;
 import ogp.framework.util.Util;
+import hillbillies.model.UtilCompareList;
 
 /**
  * A class of Hillbillies with their given characteristics.
@@ -879,9 +880,9 @@ public class Unit {
 				this.resting3MinutesTime = 0;
 				this.rest();
 			}
-		} else{
-			throw new IllegalArgumentException();
-		}
+		} //else{
+//			throw new IllegalArgumentException();
+//		}
 	}
 	
 	/**
@@ -923,13 +924,13 @@ public class Unit {
 			this.stopSprinting();
 			this.setCurrentSpeed(0);
 			if (this.isCarryingBoulder()){
-				this.isCarryingBoulder = false;
+				this.setCarryingBoulder(false);
 				this.boulder.setPosition(this.getPosition()[0]+LC/2,this.getPosition()[1]+LC/2,this.getPosition()[2]+LC/2);
 				this.setWeight(this.getWeight()-this.boulder.getMaterialWeight());
 				this.getWorld().addBoulder(this.boulder);
 			}
 			else if (this.isCarryingLog()){
-				this.isCarryingLog = false;
+				this.setCarryingLog(false);
 				this.log.setPosition(this.getPosition()[0]+LC/2,this.getPosition()[1]+LC/2,this.getPosition()[2]+LC/2);
 				this.setWeight(this.getWeight()-this.log.getMaterialWeight());
 				this.getWorld().addLog(this.log);
@@ -949,10 +950,14 @@ public class Unit {
 		return this.isCarryingLog;
 	}
 	
+	//TODO isvalid maken? +schrijf hier ook nog commentaar
+	public void setCarryingLog(boolean value){
+		this.isCarryingLog = value;
+	}
 	/**
 	 * Variable registering if a unit is carrying a log.
 	 */
-	public boolean isCarryingLog = false;
+	private boolean isCarryingLog = false;
 	
 	/**
 	 * Check if the unit is carrying a boulder.
@@ -965,10 +970,13 @@ public class Unit {
 		return this.isCarryingBoulder;
 	}
 	
+	public void setCarryingBoulder(boolean value){
+		this.isCarryingBoulder = value;
+	}
 	/**
 	 * Variable registering if a unit is carrying a boulder.
 	 */
-	public boolean isCarryingBoulder = false;
+	private boolean isCarryingBoulder = false;
 	
 	/**
 	 * Variables creating a boulder and a log, which the unit can carry.
@@ -997,6 +1005,7 @@ public class Unit {
 			this.interruptTask();
 			this.setCurrentSpeed(0);
 			this.isFalling = true;
+			this.isFollowing = false;
 			this.isWorking = false;
 			this.isAttacking = false;
 			this.isResting = false;
@@ -1336,8 +1345,8 @@ public class Unit {
 	 */
 	private void defaultBehaviorEnabledAdvanceTime(double dt) throws IllegalArgumentException,
 			IndexOutOfBoundsException {
-		if (!this.isAttacking() && !this.isMoving() && !this.isWorking() && !this.isResting() && !this.isFalling) {
-			System.out.println("NOPE");
+		if (!this.isAttacking() && !this.isMoving() && !this.isWorking() && !this.isResting() && !this.isFalling
+				& !this.isFollowing) {
 			this.defaultBehavior(dt);
 		}
 	}
@@ -1646,9 +1655,7 @@ public class Unit {
 				}
 				this.isMovingTo = true;
 			}
-			if (this.getCubeCoordinate()[0] == this.cubeEndPosition[0] 
-					&& this.getCubeCoordinate()[1] == this.cubeEndPosition[1]
-					&& this.getCubeCoordinate()[2] == this.cubeEndPosition[2]){
+			if (UtilCompareList.compareIntList(this.getCubeCoordinate(), this.cubeEndPosition)){
 				System.out.println("arrived move to");
 				this.isMovingTo = false;
 				this.defaultBehaviorCase3 = false;
@@ -2031,6 +2038,7 @@ public class Unit {
 		if (current == null)
 			this.getAssignedTask().getActivity().execute(this.taskComponents);
 		while (!this.getAssignedTask().getActivity().isExecuted() && dt>0){
+			System.out.println(current);
 			if (current.getNext(this.taskComponents)==null || current.getNext(this.taskComponents).isExecuted()){
 				try{
 				current.execute(this.taskComponents);
@@ -2040,7 +2048,10 @@ public class Unit {
 					break;
 				}} catch(Throwable e){
 					System.out.println("catch exception");
+					System.out.println(this.getAssignedTask());
 					this.interruptTask();
+					break;
+					//TODO throw exception?
 				}
 			}else{
 				current = current.getNext(this.taskComponents);
@@ -2053,6 +2064,8 @@ public class Unit {
 		this.getAssignedTask().getActivity().setExecutedState(false);
 		this.getFaction().getScheduler().removeTask(this.getAssignedTask());
 		this.getFaction().getScheduler().reset(this.getAssignedTask(), this);
+		System.out.println(this.getFaction().getScheduler().getScheduledTasks().size());
+		System.out.println(this.getAssignedTask());
 	}
 	
 	private void randomDefaultBehavior(){
@@ -2117,16 +2130,12 @@ public class Unit {
 	}
 	
 	private void followAdvanceTime(){
-		if ((this.followedUnit.getCubeCoordinate()[0] == this.getCubeCoordinate()[0] &&
-				this.followedUnit.getCubeCoordinate()[1] == this.getCubeCoordinate()[1] &&
-				this.followedUnit.getCubeCoordinate()[2] == this.getCubeCoordinate()[2]) || 
-				!this.followedUnit.isAlive()){
+		if (UtilCompareList.compareIntList(this.followedUnit.getCubeCoordinate(),
+				this.getCubeCoordinate()) || !this.followedUnit.isAlive()){
 			this.isFollowing = false;
 		}
 		else if ((this.oldPositionFollowedUnit == null || 
-				(this.oldPositionFollowedUnit[0] == this.getCubeCoordinate()[0] &&
-				this.oldPositionFollowedUnit[1] == this.getCubeCoordinate()[1] &&
-				this.oldPositionFollowedUnit[2] == this.getCubeCoordinate()[2]))){
+				UtilCompareList.compareIntList(this.oldPositionFollowedUnit, this.getCubeCoordinate()))){
 			int [] posFollowedUnit = {this.followedUnit.getCubeCoordinate()[0],
 					this.followedUnit.getCubeCoordinate()[1], this.followedUnit.getCubeCoordinate()[2]};
 			this.oldPositionFollowedUnit = posFollowedUnit;

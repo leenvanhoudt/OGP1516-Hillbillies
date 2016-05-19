@@ -79,12 +79,12 @@ public class ResultWork {
 	 */
 	private void dropLogOrBoulder(int x,int y,int z){
 		if (this.getUnit().isCarryingLog()){
-			this.getUnit().isCarryingLog = false;
+			this.getUnit().setCarryingLog(false);
 			this.getUnit().log.setPosition(x+Unit.LC/2,y+Unit.LC/2,z+Unit.LC/2);
 			this.getUnit().setWeight(this.getUnit().getWeight()-this.getUnit().log.getMaterialWeight());
 			this.getUnit().getWorld().addLog(this.getUnit().log);
 		} else{
-			this.getUnit().isCarryingBoulder = false;
+			this.getUnit().setCarryingBoulder(false);
 			this.getUnit().boulder.setPosition(x+Unit.LC/2,y+Unit.LC/2,z+Unit.LC/2);
 			this.getUnit().setWeight(this.getUnit().getWeight()-this.getUnit().boulder.getMaterialWeight());
 			this.getUnit().getWorld().addBoulder(this.getUnit().boulder);
@@ -132,7 +132,7 @@ public class ResultWork {
 		this.getUnit().boulder.setWorld(this.getUnit().getWorld());
 		this.getUnit().weight = (this.getUnit().getWeight() + this.getUnit().boulder.getMaterialWeight());
 		this.getUnit().getWorld().removeBoulder(this.getUnit().boulder);
-		this.getUnit().isCarryingBoulder = true;
+		this.getUnit().setCarryingBoulder(true);
 	}
 	
 	/**
@@ -154,7 +154,7 @@ public class ResultWork {
 		this.getUnit().log.setWorld(this.getUnit().getWorld());
 		this.getUnit().weight = (this.getUnit().getWeight() + this.getUnit().log.getMaterialWeight());
 		this.getUnit().getWorld().removeLog(this.getUnit().log);
-		this.getUnit().isCarryingLog = true;
+		this.getUnit().setCarryingLog(true);
 	}
 	
 	/**

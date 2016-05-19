@@ -14,7 +14,6 @@ public class Scheduler {
 
 	
 	public List<Task> getScheduledTasks(){
-		System.out.println("get scheduled tasks" + this.scheduledList.size());
 		return this.scheduledList;
 	}
 		
