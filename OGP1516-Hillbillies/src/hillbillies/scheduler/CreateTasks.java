@@ -24,6 +24,18 @@ public class CreateTasks {
 	 * 		The statements out which the task exists.
 	 * @param selectedCubes
 	 * 		The selectedCubes on which the task has to be executed.
+	 * @post ...
+	 * 		| the name of the task is set to the given name.
+	 * 		| new.nameTask == name
+	 * @post ...
+	 * 		| the priority of the task is set to the given priority.
+	 * 		| new.priority == priority
+	 * @post ...
+	 * 		| the activity of the task is set to the given activity.
+	 * 		| new.statementActivity == activity
+	 * @post ...
+	 * 		| the selectedCubes of the task are set to the given selectedCubes.
+	 * 		| new.selectedCubes == selectedCubes
 	 */
 	public CreateTasks(String name, int priority, MyStatement activity, List<int[]> selectedCubes){
 		System.out.println("create tasks constructor");
