@@ -1,12 +1,9 @@
 package hillbillies.scheduler;
-
 import java.util.HashSet;
 import java.util.Set;
-
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Raw;
 import hillbillies.model.Unit;
-
 /**
  * A class that make a task and check its wellformedness. Tasks can be assigned to units and
  * can be terminated.
@@ -17,7 +14,6 @@ import hillbillies.model.Unit;
  *
  */
 public class Task {
-
 	
 	/**
 	 * Create task with a certain name, priority, the activity to be exicuted and the cube
@@ -137,7 +133,6 @@ public class Task {
 	 * Variable registering the assignedUnit.
 	 */
 	private Unit assignedUnit;
-
 	/**
 	 * Return the name of the task.
 	 */
