@@ -10,6 +10,7 @@ import org.junit.Test;
 import hillbillies.expressions.FriendExpression;
 import hillbillies.model.CubeType;
 import hillbillies.model.Faction;
+import hillbillies.model.Log;
 import hillbillies.model.Unit;
 import hillbillies.model.World;
 import hillbillies.part2.listener.DefaultTerrainChangeListener;
@@ -200,5 +201,33 @@ public class TaskTests {
 		TaskParser.parseTasksFromString(
 				"name: \"task\"\npriority: 1\nactivities: while is_alive any do work here; done break;",
 				factory, Collections.singletonList(null));
+	}
+	
+	@Test
+	public void testIsWellFormedLongActivity(){
+		int[][][] types = this.cubeTypesFlatSurface();
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit unit = new Unit("Test", new int[] { 5, 5, 2 }, 50, 50, 50, 50, true);
+		Unit enemy = new Unit("Test", new int[] { 6, 5, 2 }, 50, 50, 50, 50, false);
+		world.addUnit(unit);
+		world.addUnit(enemy);
+		Log log = new Log();
+		world.addLog(log);
+		log.setWorld(world);
+		log.setPosition(2, 2, 2);
+		TaskFactory factory = new TaskFactory();
+		
+		List<Task> tasks = TaskParser.parseTasksFromString(
+				"name: \"task\"\npriority: 1\nactivities: print enemy; e:= enemy; "
+				+ "if is_alive this && !carries_item this then follow enemy; attack enemy; "
+				+ "moveTo next_to log; work log; else while is_alive any do "
+		+ " w:= here; work here; break; done print any; fi while is_enemy e do "
+		+ "while is_alive e do moveTo position_of e; break; done break; done "
+		+ "if is_passable selected then moveTo selected; fi",
+				factory, Collections.singletonList(new int[]{1,1,1}));
+		Task task = tasks.get(0); 
+		
+		assertTrue("wellformed", task.isWellFormed());
+		
 	}
 }
