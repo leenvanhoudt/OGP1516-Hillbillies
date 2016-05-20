@@ -152,8 +152,8 @@ public class IsWellFormed {
 					for (int i = ((SequenceStatement) parent).getListSequence().indexOf(checking);
 							i>=0; i--){
 						if (((SequenceStatement) parent).getListSequence().get(i) instanceof AssignmentStatement &&
-								variableStatement.getReadVariableExpression().getVariableName() ==
-								((AssignmentStatement)((SequenceStatement) parent).getListSequence().get(i)).getVarName()){
+								variableStatement.getReadVariableExpression().getVariableName().equals(
+										((AssignmentStatement)((SequenceStatement) parent).getListSequence().get(i)).getVarName())){
 							parent = ((SequenceStatement) parent).getListSequence().get(i);
 							break;
 						}
@@ -183,8 +183,8 @@ public class IsWellFormed {
 			MyStatement variableStatement){
 		if (!(parent instanceof AssignmentStatement)){
 			return false;
-		}else if (variableStatement.getReadVariableExpression().getVariableName() ==
-				((AssignmentStatement)parent).getVarName()){
+		}else if (variableStatement.getReadVariableExpression().getVariableName().equals(
+				((AssignmentStatement)parent).getVarName())){
 			return true;
 		}
 		return false;

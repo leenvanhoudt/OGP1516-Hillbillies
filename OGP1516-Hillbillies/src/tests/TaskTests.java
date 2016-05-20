@@ -227,6 +227,7 @@ public class TaskTests {
 				factory, Collections.singletonList(new int[]{1,1,1}));
 		Task task = tasks.get(0); 
 		
+		
 		assertTrue("wellformed", task.isWellFormed());
 		
 	}
