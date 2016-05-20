@@ -766,6 +766,4 @@ public class UnitTests {
 		assertFalse("task not executed",task.getActivity().isExecuted());
 		assertEquals(priority-100,task.getPriority());
 	}
-	
-	
 }

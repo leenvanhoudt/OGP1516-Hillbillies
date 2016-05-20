@@ -58,17 +58,6 @@ public class AssignmentStatement extends MyStatement {
 		return null;
 	}
 
-	@Override
-	public boolean isExecuted() {
-		return this.finished;
-	}
-	
-	private boolean finished;
-
-	@Override
-	public void setExecutedState(boolean state) {
-		this.finished = state;
-	}
 
 	@Override
 	public boolean containReadVariableExpression() {

@@ -14,10 +14,6 @@ public abstract class MyStatement {
 	
 	public abstract boolean containSelectedCube();
 	
-	public abstract boolean isExecuted();
-	
-	public abstract void setExecutedState(boolean state);
-	
 	public abstract MyStatement getNext(TaskComponents taskComponents);
 	
 	public abstract MyStatement getNextWellFormed();
@@ -26,6 +22,15 @@ public abstract class MyStatement {
 	
 	public abstract ReadVariableExpression getReadVariableExpression();
 	
+	public boolean isExecuted(){
+		return this.finished;
+	}
+	
+	public void setExecutedState(boolean state){
+		this.finished = state;
+	}
+	
+	private boolean finished;
 	
 	public MyStatement getParent(){
 		return this.parent;

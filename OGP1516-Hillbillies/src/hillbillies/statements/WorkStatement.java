@@ -57,18 +57,6 @@ public class WorkStatement<E extends CubePositionExpression,ReadVariableExpressi
 	}
 
 	@Override
-	public boolean isExecuted() {
-		return this.finished;
-	}
-	
-	private boolean finished = false;
-
-	@Override
-	public void setExecutedState(boolean state) {
-		this.finished = state;
-	}
-
-	@Override
 	public boolean containReadVariableExpression() {
 		return this.expressionVariablePosition != null;
 	}
