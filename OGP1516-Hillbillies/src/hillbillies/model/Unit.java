@@ -1748,7 +1748,6 @@ public class Unit {
 	 *		| this.work()
 	 */
 	public void workAt(int x, int y, int z){
-		System.out.println("work at");
 		double d = Math.sqrt(Math.pow(x-this.getCubeCoordinate()[0],2)+
 				Math.pow(y-this.getCubeCoordinate()[1],2)+Math.pow(z-this.getCubeCoordinate()[2],2));
 		if (!this.isFalling && d<=MAX_DISTANCE_ADJACENT_CUBE ){
@@ -1809,7 +1808,6 @@ public class Unit {
 	 * 		| throw an exception if the other unit is to far.
 	 */
 	private void attack(Unit defender) throws IllegalArgumentException {
-		System.out.println("attacking");
 		double d = Math.sqrt(Math.pow(defender.getPosition()[0] - this.getPosition()[0], 2)
 				+ Math.pow(defender.getPosition()[1] - this.getPosition()[1], 2)
 				+ Math.pow(defender.getPosition()[2] - this.getPosition()[2], 2));
@@ -1819,7 +1817,6 @@ public class Unit {
 			defender.setOrientation(Math.atan2(this.getPosition()[1] - defender.getPosition()[1],
 					this.getPosition()[0] - defender.getPosition()[0]));
 			this.isAttacking = true;
-			System.out.println("close enough");
 		}else{
 			throw new IllegalArgumentException();
 		}
@@ -2103,13 +2100,9 @@ public class Unit {
 		if (current == null)
 			this.getAssignedTask().getActivity().execute(this.taskComponents);
 		while (!this.getAssignedTask().getActivity().isExecuted() && dt>0){
-			System.out.println(current+" "+current.isExecuted());
-			System.out.println(current.getParent());
 			if (current.getNext(this.taskComponents)==null || current.getNext(this.taskComponents).isExecuted()){
 				try{
 				current.execute(this.taskComponents);
-				System.out.println(current+" executed "+current.isExecuted());
-				System.out.println(this.getAssignedTask());
 				current = this.getAssignedTask().getActivity().getNext(this.taskComponents);
 				dt = dt - 0.001;
 				if (this.isMovingTo || this.isAttacking() || this.isWorking() || this.isFollowing){
@@ -2139,7 +2132,6 @@ public class Unit {
 	 * 		| and the task will be unassigned from the unit.
 	 */
 	private void endTask(){
-		System.out.println("end task");
 		this.getAssignedTask().getActivity().setExecutedState(false);
 		this.getFaction().getScheduler().removeTask(this.getAssignedTask());
 		this.getFaction().getScheduler().reset(this.getAssignedTask(), this);
@@ -2212,8 +2204,10 @@ public class Unit {
 	 * Interrupt task by unassigning the unit and reducing the priority with 100.
 	 */
 	public void interruptTask(){
-		System.out.println("interrupt");
 		if (this.getAssignedTask() != null){
+			this.isMovingTo = false;
+			this.isWorking = false;
+			this.isAttacking = false;
 			this.getAssignedTask().getActivity().setExecutedState(false);
 			this.getAssignedTask().setPriority(this.getAssignedTask().getPriority() - 100);
 			this.getFaction().getScheduler().reset(this.getAssignedTask(), this);

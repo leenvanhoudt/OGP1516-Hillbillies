@@ -3,13 +3,21 @@ package tests;
 import static hillbillies.tests.util.PositionAsserts.assertIntegerPositionEquals;
 import static org.junit.Assert.*;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 
 import hillbillies.model.CubeType;
+import hillbillies.model.Faction;
 import hillbillies.model.Unit;
 import hillbillies.model.World;
 import hillbillies.part2.listener.DefaultTerrainChangeListener;
+import hillbillies.part3.programs.TaskParser;
+import hillbillies.scheduler.Scheduler;
+import hillbillies.scheduler.Task;
+import hillbillies.taskFactory.TaskFactory;
 import ogp.framework.util.Util;
 
 public class UnitTests {
@@ -719,6 +727,44 @@ public class UnitTests {
 		follower.follow(followed);
 		advanceTimeFor(world,3,0.1);
 		assertTrue("followed again", follower.getCubeCoordinate()[0]==7);
+	}
+	
+	@Test
+	public void testFollowInterruptTask() {
+		int[][][] types = new int[10][10][5];
+		for (int i=0; i<10; i++)
+			for (int j=0; j<10; j++)
+				types[i][j][1] = CubeType.ROCK.getCubeType();
+		World world = new World(types, new DefaultTerrainChangeListener());
+		Unit unit = new Unit("Test", new int[] { 9, 9, 2 }, 50, 50, 50, 50, true);
+		Unit enemy = new Unit("Test", new int[] { 0, 0, 2 }, 50, 50, 50, 50, false);
+		world.addUnit(unit);
+		world.addUnit(enemy);
+		Faction faction = unit.getFaction();
+
+		Scheduler scheduler = faction.getScheduler();
+		TaskFactory factory = new TaskFactory();
+
+		List<Task> tasks = TaskParser.parseTasksFromString(
+				"name: \"task\"\npriority: 1\nactivities: follow enemy;",
+				factory, Collections.singletonList(null));
+		Task task = tasks.get(0);
+		
+		scheduler.schedule(task);
+		int priority = task.getPriority();
+		advanceTimeFor(world, 1, 0.02);
+		assertTrue("is following", unit.isMoving());
+		
+		unit.setDefaultBehaviorEnabled(false);
+		unit.interruptTask();
+		advanceTimeFor(world, 1, 0.02);
+		
+		assertEquals(unit.getAssignedTask(), null);
+		assertEquals(task.getAssignedUnit(),null);		
+		assertFalse("task interrupted",unit.isMoving());
+		
+		assertFalse("task not executed",task.getActivity().isExecuted());
+		assertEquals(priority-100,task.getPriority());
 	}
 	
 	
