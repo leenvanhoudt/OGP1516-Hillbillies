@@ -20,7 +20,6 @@ public class FriendExpression extends UnitExpression {
 			ArrayList<Unit> possibleEnemies = taskComponents.getWorld()
 					.getCubeOtherUnit(cube[0], cube[1], cube[2],
 					taskComponents.getUnit());
-			System.out.println(possibleEnemies.size());
 			List<Unit> enemies = possibleEnemies.stream().
 			filter(u -> taskComponents.getUnit().getFaction() == u.getFaction())
 				.collect(Collectors.toList());
